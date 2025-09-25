@@ -5,17 +5,18 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Link, NavLink } from 'react-router-dom';
 
-
-const NavigationBar = () => {
+const NavigationBar = () => { 
     return (
         <div>
+            
             <Navbar expand="lg" className="bg-body-tertiary">
                 <Container>
                     <Navbar.Brand href="#home">
                         <img
                             alt=""
-                            src="public/logo1.jpeg"
+                            src="/logo1.jpeg"
                             width="30"
                             height="30"
                             className="d-inline-block align-top"
@@ -51,8 +52,8 @@ const NavigationBar = () => {
                                 <Nav.Link href="#pricing">Pricing</Nav.Link>
                                 <Nav.Link href="#about">About</Nav.Link>
                                 {/* <Nav.Link href="#deets">Mark Otto</Nav.Link> */}
-                                <Nav.Link href="#deets">Sign In</Nav.Link> 
-                                <Nav.Link href="#deets">Sign Up</Nav.Link>
+                                <Nav.Link as={Link} to="/auth/login">Sign In</Nav.Link> 
+                                <Nav.Link as={Link} to="/auth/signup">Sign Up</Nav.Link>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
