@@ -50,7 +50,9 @@ const NavigationBar = () => {
                                 <Nav.Link href="#features">Features</Nav.Link>
                                 <Nav.Link href="#pricing">Pricing</Nav.Link>
                                 <Nav.Link href="#about">About</Nav.Link>
-                                <Nav.Link href="#deets">Mark Otto</Nav.Link>
+                                {/* <Nav.Link href="#deets">Mark Otto</Nav.Link> */}
+                                <Nav.Link href="#deets">Sign In</Nav.Link> 
+                                <Nav.Link href="#deets">Sign Up</Nav.Link>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
