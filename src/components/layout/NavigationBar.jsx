@@ -6,8 +6,10 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthProvider';
 
 const NavigationBar = () => { 
+    const { user } = useAuth();
     return (
         <div>
             
@@ -47,13 +49,15 @@ const NavigationBar = () => {
                                     gap-1
                                 "
                             >
-                                <Nav.Link href="#home">Home</Nav.Link>
+                                <Nav.Link as={Link} to="/">Home</Nav.Link>
                                 <Nav.Link href="#features">Features</Nav.Link>
                                 <Nav.Link href="#pricing">Pricing</Nav.Link>
                                 <Nav.Link href="#about">About</Nav.Link>
-                                {/* <Nav.Link href="#deets">Mark Otto</Nav.Link> */}
-                                <Nav.Link as={Link} to="/auth/login">Sign In</Nav.Link> 
-                                <Nav.Link as={Link} to="/auth/signup">Sign Up</Nav.Link>
+                                {user ? (
+                                    <Nav.Link as={Link} to="/dashboard">{user.user_metadata.full_name || "User"}</Nav.Link>
+                                ) : (
+                                    <Nav.Link as={Link} to="/auth/signin">Sign In</Nav.Link>
+                                )}
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
