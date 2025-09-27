@@ -23,11 +23,19 @@
 }
 
 .loginButton {
-    background-color: #098a38;
-    color: white;
+    background-color: #ecf0ee;
+    color: rgb(8, 8, 8);
     border: none;
     padding: 10px 20px;
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+    border: 3px solid #353232;
+    /* transition: background-color 0.3s, color 0.3s; */
+}
+.loginButton:hover {
+    background-color: #353232;
+    color: white;
+    border: 3px solid #353232;
+    /* transition: background-color 0.3s, color 0.3s; */
 }

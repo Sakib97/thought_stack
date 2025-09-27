@@ -13,6 +13,8 @@ import ProtectedRoute from './components/common/ProjectedRoute'
 import ProfilePage from './features/dashboard/pages/ProfilePage'
 import AuthRedirect from './components/common/AuthRedirect'
 import NotFound from './components/common/NotFound'
+import DashboardPage from './features/dashboard/pages/DashboardPage'
+
 function App() {
   return (
     <>
@@ -33,7 +35,7 @@ function App() {
 
         <Route path='/dashboard' element={
           <ProtectedRoute>
-            <ProfilePage />
+            <DashboardPage />
           </ProtectedRoute>
         }> </Route>
 
