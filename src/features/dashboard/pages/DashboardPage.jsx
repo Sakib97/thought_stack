@@ -13,15 +13,15 @@ const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
 
 const DashboardPage = () => {
-    const { user } = useAuth();
-    const [collapsed, setCollapsed] = useState(false);
+    const { user, userMeta } = useAuth();
+    const [collapsed, setCollapsed] = useState(true);
     const screens = useBreakpoint();
 
     const {
         token: { borderRadiusLG },
     } = theme.useToken();
 
-    if (!user) {
+    if (!user || !userMeta) {
         return <p>Not Logged In !</p>;
     }
 
@@ -45,24 +45,37 @@ const DashboardPage = () => {
                         background: "rgba(0, 0, 0, 0.15)",
                         borderRadius: 8,
                         textAlign: "center",
-                        lineHeight: "30px",
                         color: "black",
                         fontWeight: "bold",
                         fontSize: 18,
-                        // display: "flex",
+                        display: "flex", 
+                        alignItems: "center", // Vertically center items
+                        justifyContent: "center", // Horizontally center items
+                        gap: 8, 
                     }}
-                > <i className="fi fi-sr-dashboard-monitor"
-                    style={{ fontSize: collapsed ? 21 : 15 }}
-                ></i> {!collapsed && "Dashboard"}
+                >
+                    <div style={{ transform: `translateY(7%) ${collapsed ? "translateX(20%)" : "translateX(0%)"}` }}>
+                        <i className="fi fi-rr-dashboard-panel"
+                            style={{ fontSize: collapsed ? 21 : 19 }}
+                        ></i> 
+                    </div>
+                    <div>
+                        {!collapsed && "Dashboard"}
+                    </div>
                 </div>
                 <Menu
                     theme="light"
                     mode="inline"
                     defaultSelectedKeys={["1"]}
                     items={[
-                        { key: "1", icon: <i className="fi fi-sr-user" style={{fontSize:  15 }}></i>, label: "Profile" },
-                        { key: "2", icon: <i className="fi fi-sr-settings" style={{fontSize:  15 }}></i>, label: "Settings" },
-                        { key: "3", icon: <i className="fi fi-sr-upload" style={{fontSize:  15 }}></i>, label: "Uploads" },
+                        { key: "1", icon: <i className="fi fi-br-user" style={{ fontSize: 15 }}></i>, label: "Profile" },
+                        // ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.isactive)
+                        ...(((userMeta.role === "editor" || userMeta.role === "admin") )
+                            ? [{ key: "2", icon: <i className="fi fi-br-scroll-document-story" style={{ fontSize: 15 }}></i>, label: "Write Article" }]
+                            : []),
+                        ...(userMeta.role === "admin" && userMeta.isactive
+                            ? [{ key: "3", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 15 }}></i>, label: "Manage Users" }]
+                            : []),
                     ]}
                     style={{ background: "#e0e0e0" }}
                 />

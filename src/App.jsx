@@ -14,6 +14,7 @@ import AuthRedirect from './components/common/AuthRedirect'
 import NotFound from './components/common/NotFound'
 import DashboardPage from './features/dashboard/pages/DashboardPage'
 import AppRoutes from './components/common/AppRoutes'
+import Footer from './components/layout/Footer'
 
 function App() {
   return (
@@ -43,6 +44,10 @@ function App() {
       </Routes> */}
 
       <AppRoutes />
+
+      <div>
+        <Footer />
+      </div>
     </>
   )
 }
