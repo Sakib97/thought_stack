@@ -54,7 +54,7 @@ const NavigationBar = () => {
                                 <Nav.Link href="#pricing">Pricing</Nav.Link>
                                 <Nav.Link href="#about">About</Nav.Link>
                                 {user ? (
-                                    <Nav.Link as={Link} to="/dashboard">{user.user_metadata.full_name || "User"}</Nav.Link>
+                                    <Nav.Link as={Link} to="/dashboard/profile">{user.user_metadata.full_name || "User"}</Nav.Link>
                                 ) : (
                                     <Nav.Link as={Link} to="/auth/signin">Sign In</Nav.Link>
                                 )}

@@ -6,7 +6,6 @@ import NavigationBar from './components/layout/NavigationBar'
 import AuthPage from './features/auth/pages/authPage'
 import LoginForm from './features/auth/components/LoginForm'
 import { Route, Routes } from 'react-router-dom'
-import RegisterForm from './features/auth/components/RegisterForm'
 import HomePage from './features/home/pages/HomePage'
 import WriteArticlePage from './features/articles/pages/WriteArticlePage'
 import ProtectedRoute from './components/common/ProjectedRoute'
@@ -14,6 +13,7 @@ import ProfilePage from './features/dashboard/pages/ProfilePage'
 import AuthRedirect from './components/common/AuthRedirect'
 import NotFound from './components/common/NotFound'
 import DashboardPage from './features/dashboard/pages/DashboardPage'
+import AppRoutes from './components/common/AppRoutes'
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <NavigationBar />
       </div>
 
-      <Routes>
+      {/* <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/articles/write' element={<WriteArticlePage />} />
         <Route path='/auth' element={<AuthPage />}>
@@ -39,9 +39,10 @@ function App() {
           </ProtectedRoute>
         }> </Route>
 
-        {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
-      </Routes>
+      </Routes> */}
+
+      <AppRoutes />
     </>
   )
 }

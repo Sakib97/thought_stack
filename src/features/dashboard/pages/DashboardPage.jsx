@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../../context/AuthProvider";
 import ProfilePage from "./ProfilePage";
+import { Outlet } from "react-router-dom";
 
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, Grid, Select } from "antd";
 
@@ -53,7 +51,7 @@ const DashboardPage = () => {
                         fontSize: 18,
                         // display: "flex",
                     }}
-                > <i class="fi fi-sr-dashboard-monitor"
+                > <i className="fi fi-sr-dashboard-monitor"
                     style={{ fontSize: collapsed ? 21 : 15 }}
                 ></i> {!collapsed && "Dashboard"}
                 </div>
@@ -62,7 +60,6 @@ const DashboardPage = () => {
                     mode="inline"
                     defaultSelectedKeys={["1"]}
                     items={[
-                        // { key: "1", icon: <UserOutlined style={{ fontSize: 15 }} />, label: "Profile" },
                         { key: "1", icon: <i className="fi fi-sr-user" style={{fontSize:  15 }}></i>, label: "Profile" },
                         { key: "2", icon: <i className="fi fi-sr-settings" style={{fontSize:  15 }}></i>, label: "Settings" },
                         { key: "3", icon: <i className="fi fi-sr-upload" style={{fontSize:  15 }}></i>, label: "Uploads" },
@@ -101,9 +98,7 @@ const DashboardPage = () => {
                         overflowX: "hidden",
                     }}
                 >
-                    <h1>Dashboard</h1>
-                    <p>Welcome to your dashboard, {user.email}!</p>
-                    <ProfilePage />
+                    <Outlet />
                 </Content>
             </Layout>
 
