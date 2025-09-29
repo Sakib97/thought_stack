@@ -3,7 +3,7 @@ import ArticleDetails from "./pages/ArticleDetails";
 
 const articleRoutes = [
     {
-        path: "/article",
+        path: "/article/:articleID/:articleTitleSlug",
         element: <ArticleDetails />,
     },
 ];

@@ -5,10 +5,14 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import styles from "../styles/HomePage.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
+import { encodeId, decodeId } from "../../../utils/hashUtil";
+import { useLanguage } from "../../../context/LanguageProvider";
 
 const pageSize = 1;
 
 export default function HomePage() {
+    const { language } = useLanguage();
+
     const [mainArticle, setMainArticle] = useState(null);
     const [others, setOthers] = useState([]);
     const [page, setPage] = useState(1);
@@ -30,6 +34,10 @@ export default function HomePage() {
             console.error("Error fetching main article:", error.message);
         } else if (data && data.length > 0) {
             setMainArticle(data[0]);
+            // console.log("main article encode id", encodeId(data[0].id));
+            // console.log("main article decode id", decodeId(encodeId(data[0].id)));
+
+
         }
         setLoadingMain(false);
     };
@@ -79,9 +87,9 @@ export default function HomePage() {
                         <div className={styles.textSection}>
                             <Link
                                 className={styles.linkStyle}
-                                to={`/article/${mainArticle.article_slug}`}>
-                                <h2>{mainArticle.title_en}</h2>
-                                <p>{mainArticle.subtitle_en}</p>
+                                to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
+                                <h2>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
+                                <p>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
                             </Link>
 
 
@@ -107,7 +115,7 @@ export default function HomePage() {
                 )
             )
             }
-
+            <hr />
             {/* Other Articles List */}
             <div className={styles.articlesSection}>
                 {loadingOthers ? (
@@ -142,8 +150,10 @@ export default function HomePage() {
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.author_img_link} />}
                                     title={
-                                        <Link to={`/article/${item.article_slug}`}>
-                                            <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{item.title_en}</span>
+                                        <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}>
+                                            <span style={{ fontSize: '20px', fontWeight: 'bold' }}>
+                                                {language === "en" ? item.title_en : item.title_bn}
+                                            </span>
                                         </Link>
                                     }
                                     //   description={item.subtitle_en}
@@ -158,7 +168,7 @@ export default function HomePage() {
                                 <div>
                                     {/* {item.content_en?.substring(0, 200)}... */}
                                     <div style={{ fontSize: '16px', fontWeight: '500' }}>
-                                        {item.subtitle_en}
+                                        {language === "en" ? item.subtitle_en : item.subtitle_bn}
                                     </div>
 
                                     <br />

@@ -8,6 +8,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
 import { useState } from 'react';
+import LanguageToggle from './LanguageToggle';
 
 const NavigationBar = () => {
     const { user, userMeta } = useAuth();
@@ -68,6 +69,9 @@ const NavigationBar = () => {
                                 ) : (
                                     <Nav.Link onClick={handleClose} as={Link} to="/auth/signin">Sign In</Nav.Link>
                                 )}
+                                 <Navbar.Text onClick={handleClose}>
+                                    <LanguageToggle/>
+                                </Navbar.Text>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>

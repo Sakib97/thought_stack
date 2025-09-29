@@ -1,5 +1,7 @@
 .article {
     background-color: rgb(232, 223, 213);
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .articleMenu {

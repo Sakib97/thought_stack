@@ -1,0 +1,68 @@
+.toggleContainer {
+    width: 60px;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 2px;
+}
+  
+  .slider {
+    width: 30px;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    position: absolute;
+    font-size: 12px;
+  }
+  
+  .english {
+    left: 0px;
+    background-color: #097b0b; /* Green for English */
+  }
+  
+  .bengali {
+    left: 30px;
+    /* right: 1px; */
+    background-color: #035db6; /* Red for Bengali */
+  }
+  
+  .sliderText {
+    color: #fff;
+  }
+  
+  .languageLabel {
+    font-weight: bold;
+    color: #121212;
+    font-size: 12px;
+    transition: opacity 0.2s ease;
+  }
+  
+  .showBN {
+    position: absolute;
+    right:7px;
+    opacity: 1;
+  }
+  
+  .showEN {
+    position: absolute;
+    left:7px;
+    opacity: 1;
+  }
+  
+  .hide {
+    opacity: 0;
+    pointer-events: none;
+  }

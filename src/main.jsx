@@ -6,13 +6,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@flaticon/flaticon-uicons/css/all/all.css';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.jsx';
+import { LanguageProvider } from './context/LanguageProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </LanguageProvider>
   </StrictMode>
 )
