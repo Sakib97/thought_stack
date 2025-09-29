@@ -1,6 +1,8 @@
 import ProtectedRoute from "../../components/common/ProjectedRoute";
 import DashboardPage from "../dashboard/pages/DashboardPage";
 import ProfilePage from "../dashboard/pages/ProfilePage";
+import WriteArticlePage from "../articles/pages/WriteArticlePage";
+
 import { Navigate } from "react-router-dom";
 const dashboardRoutes = [
   {
@@ -18,6 +20,10 @@ const dashboardRoutes = [
       {
         path: "profile",
         element: <ProfilePage />
+      },
+      {
+        path: "write-article",
+        element: <WriteArticlePage />
       },
     ]
   },

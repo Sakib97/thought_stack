@@ -1,0 +1,61 @@
+.formStyle{
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+    margin-top: 24px;
+    width: 85%;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.inputError{
+    border-color: red;
+    border-width: 2px;
+}
+
+.inputDiv{
+    margin-bottom: 25px;
+}
+
+.errorMessage{
+    color: red;
+    font-size: 14px;
+    margin-top: 2px;    
+    margin-bottom: 5px;
+}
+
+.saveButton{
+    margin-bottom: 24px;
+    /* width: 100%; */
+    height: 50px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 10px;
+    background-color: #0b7d20;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+.saveButton:hover:not(:disabled) {
+    background-color: #0a6b1a !important;
+}
+
+
+.deleteButton{
+    margin-bottom: 24px;
+    /* width: 100%; */
+    height: 50px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 10px;
+    background-color: #d04040;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.deleteButton:hover {
+    background-color: #c03030 !important;
+}
+
