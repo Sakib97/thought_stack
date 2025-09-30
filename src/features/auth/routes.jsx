@@ -1,4 +1,4 @@
-import AuthPage from "./pages/authPage";
+import AuthPage from "./pages/AuthPage";
 import LoginForm from "./components/LoginForm";
 import AuthRedirect from "../../components/common/AuthRedirect";
 import { Navigate } from "react-router-dom";
