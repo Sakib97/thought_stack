@@ -33,9 +33,9 @@ const NavigationBar = () => {
                     <Navbar.Brand href="/">
                         <img
                             alt=""
-                            src="/logo1.jpeg"
-                            width="30"
-                            height="30"
+                            src="/logo3.png"
+                            width="35"
+                            height="35"
                             className="d-inline-block align-top"
                         />
                         &nbsp;
