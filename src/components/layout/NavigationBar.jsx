@@ -9,6 +9,8 @@ import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider';
 import { useState } from 'react';
 import LanguageToggle from './LanguageToggle';
+import useScrollDirection from '../../hooks/useScrollDirection';
+import styles from "../styles/Navbar.module.css";
 
 const NavigationBar = () => {
     const { user, userMeta } = useAuth();
@@ -18,12 +20,17 @@ const NavigationBar = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const showNavbar = useScrollDirection();
+
     return (
         <div>
 
-            <Navbar expand="lg" className="bg-body-tertiary">
+            {/* <Navbar expand="lg" className="bg-body-tertiary"> */}
+            <Navbar bg="light" expand="lg"
+                // className="shadow-sm mb-3"
+                className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
                 <Container>
-                    <Navbar.Brand href="#home">
+                    <Navbar.Brand href="/">
                         <img
                             alt=""
                             src="/logo1.jpeg"
@@ -60,17 +67,15 @@ const NavigationBar = () => {
                                 "
                             >
                                 <Nav.Link onClick={handleClose} as={Link} to="/">Home</Nav.Link>
-                                {/* <Nav.Link onClick={handleClose} href="#features">Features</Nav.Link> */}
-                                {/* <Nav.Link onClick={handleClose} href="#pricing">Pricing</Nav.Link> */}
-                                <Nav.Link onClick={handleClose} href="#about">About</Nav.Link>
-                                <Nav.Link onClick={handleClose} href="#contact">Contact</Nav.Link>
+                                {/* <Nav.Link onClick={handleClose} href="#about">About</Nav.Link> */}
+                                <Nav.Link onClick={handleClose} as={Link} to="/contact">Contact</Nav.Link>
                                 {user ? (
                                     <Nav.Link onClick={handleClose} as={Link} to="/dashboard/profile">{user.user_metadata.full_name || "User"}</Nav.Link>
                                 ) : (
                                     <Nav.Link onClick={handleClose} as={Link} to="/auth/signin">Sign In</Nav.Link>
                                 )}
-                                 <Navbar.Text onClick={handleClose}>
-                                    <LanguageToggle/>
+                                <Navbar.Text onClick={handleClose}>
+                                    <LanguageToggle />
                                 </Navbar.Text>
                             </Nav>
                         </Offcanvas.Body>

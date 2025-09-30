@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import JoditEditor from 'jodit-react';
 import styles from "../styles/ArticleInfo.module.css";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import toast, { Toaster } from "react-hot-toast";
-const RTE = ({ contentLanguage }) => {
+
+const RTE = ({ contentLanguage, content, setContent  }) => {
+    const [showModal, setShowModal] = useState(false);
     const editor = useRef(null);
-    const [content, setContent] = useState('');
+    // const [content, setContent] = useState('');
 
     // storage key based on language
     const storageKey = `articleContent_${contentLanguage}`;
@@ -28,6 +30,8 @@ const RTE = ({ contentLanguage }) => {
             maxWidth: 900,
             // toolbarSticky: true,
             toolbarStickyOffset: 50,
+            askBeforePasteHTML: false,
+            defaultActionOnPaste: "insert_only_text",
             removeButtons:
                 // language === 'bn' ?
                 // ['font', 'speechRecognize', 'about', 'copyformat', 'classSpan', 'source', 'ai-commands', 'ai-assistant'] :
@@ -69,7 +73,29 @@ const RTE = ({ contentLanguage }) => {
     // save draft
     const handleSaveDraft = () => {
         if (content.trim()) {
-            localStorage.setItem(storageKey, content);
+            // localStorage.setItem(storageKey, content);
+            // Prevent horizontal scrolling in the editor by indenting the first line of paragraphs
+            // Create a temporary div to manipulate the HTML
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = content;
+
+            // Add the "rteImage" class to all images
+            const images = tempDiv.getElementsByTagName("img");
+            for (let img of images) {
+                for (let img of images) {
+                    img.removeAttribute("width");
+                    img.removeAttribute("height");
+                    img.style.maxWidth = "100%";
+                    img.style.height = "auto";
+                    img.style.display = "block";
+                    img.style.objectFit = "contain";
+                }
+            }
+
+            // Save updated content back to localStorage
+            const updatedContent = tempDiv.innerHTML;
+            localStorage.setItem(storageKey, updatedContent);
+
             toast(
                 contentLanguage === "en"
                     ? "Draft saved successfully"
@@ -107,6 +133,7 @@ const RTE = ({ contentLanguage }) => {
 
     // clear draft
     const handleClearDraft = () => {
+        setShowModal(false);
         if (localStorage.getItem(storageKey)) {
             localStorage.removeItem(storageKey);
             setContent("");
@@ -115,7 +142,7 @@ const RTE = ({ contentLanguage }) => {
                     ? "Draft cleared"
                     : "ড্রাফট মুছে ফেলা হয়েছে",
                 {
-                    icon: <i style={{ color: "red" }} className="fa-solid fa-trash-can"></i>,
+                    icon: <i style={{ color: "red" }} className="fi fi-rr-trash"></i>,
                     style: {
                         borderRadius: '10px',
                         background: '#fff',
@@ -123,7 +150,7 @@ const RTE = ({ contentLanguage }) => {
                         border: '2px solid red',
                         fontSize: '18px',
                     },
-                    duration: 1000
+                    duration: 2000
                 }
             );
         } else {
@@ -147,10 +174,10 @@ const RTE = ({ contentLanguage }) => {
 
     return (<div style={{ marginTop: 24 }}>
         <Toaster />
-        
-        <div style={{justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+
+        <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {contentLanguage === 'en' ? <h1>Article Content in English</h1> :
-            <h1 style={{ marginTop: 40 }}>Article Content in Bangla</h1>}
+                <h1 style={{ marginTop: 40 }}>Article Content in Bangla</h1>}
             <JoditEditor
                 ref={editor}
                 value={content}
@@ -173,12 +200,36 @@ const RTE = ({ contentLanguage }) => {
             &nbsp;&nbsp;&nbsp;&nbsp;
             <Button className={styles.deleteButton}
                 type="primary"
-                onClick={handleClearDraft}
+                onClick={() => setShowModal(true)}
             >
                 <i className="fi fi-rr-trash"></i>
                 {contentLanguage === 'en' ? 'Clear Draft' : 'ড্রাফট মুছে ফেলুন'}
             </Button>
         </div>
+
+        <Modal
+            title="Confirm Clear"
+            centered
+            open={showModal}
+            onOk={handleClearDraft}
+            onCancel={() => setShowModal(false)}
+            okText="Clear Draft"
+            okButtonProps={{ danger: true }}
+            cancelText="Cancel"
+        >
+            {contentLanguage === 'en' ?
+                <>
+                    Are you sure you want to clear this draft content ?
+                    This action cannot be undone.
+                </>
+                :
+                <>
+                    আপনি কি নিশ্চিত যে আপনি এই খসড়া কন্টেন্টটি মুছে ফেলতে চান?
+                    এটি আর ফেরত পাওয়া যাবে না।
+                </>
+            }
+
+        </Modal>
 
     </div>);
 }

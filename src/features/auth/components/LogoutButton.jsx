@@ -13,16 +13,6 @@ const LogoutButton = () => {
     };
 
     return (
-
-        // <button onClick={handleLogout}
-        //     style={{
-        //         cursor: "pointer", backgroundColor: "red",
-        //         color: "white", padding: "10px", borderRadius: "5px",
-        //         border: "none", fontWeight: "bold"
-        //     }}>
-        //     Logout
-        // </button>
-
         <>
             {/* Trigger button */}
             <Button variant="danger" onClick={() => setShow(true)}>

@@ -22,9 +22,25 @@ const ArticleDetails = () => {
     const fetchArticle = async () => {
         setLoading(true);
         const { data, error } = await supabase
-            .from("articles")
-            .select("*")
+            // .from("articles")
+            .from("articles_secure")
+            // .select("*")
+            .select("title_en,\
+                    title_bn,\
+                    subtitle_en,\
+                    subtitle_bn,\
+                    content_en,\
+                    content_bn,\
+                    created_at,\
+                    cover_img_link,\
+                    cover_img_cap_en,\
+                    cover_img_cap_bn,\
+                    author_name,\
+                    author_img_link,\
+                    publish_author_email,\
+                    author_email")
             .eq("id", articleId)
+            // .eq("article_status", "accepted")
             .single();
 
         if (error) {
@@ -50,7 +66,7 @@ const ArticleDetails = () => {
 
     if (error || !article) {
         return (
-            <div className={styles.article} style={{ textAlign: "center", padding: "2rem" }}>
+            <div className={styles.article} style={{ textAlign: "center", padding: "2rem", height: "100vh" }}>
                 <p>Could not load article.</p>
             </div>
         );
@@ -64,7 +80,6 @@ const ArticleDetails = () => {
                     <div className={`${styles.articleHead}`}>
                         <h1>{language === "en" ? article.title_en : article.title_bn}</h1>
                         <span>{language === "en" ? article.subtitle_en : article.subtitle_bn}</span>
-
                         <img
                             src={article.cover_img_link}
                             alt={language === "en" ? article.title_en : article.title_bn}
@@ -112,6 +127,24 @@ const ArticleDetails = () => {
                                 }}
                             />
                             {/* {!isEnglish && <SafeHtmlRenderer html={articleData.article.content_bn} />} */}
+                        </div>
+
+                        <hr />
+                        {/* disclaimer section*/}
+                        <div>
+                            <div style={{ fontStyle: "italic", fontSize: "14px", color: "#666", marginBottom: "13px" }}>
+                                {language === "en" ?
+                                    "* The views and opinions expressed in this article are author's own and does not necessarily reflect the publisher's point of view."
+                                    : "* লেখকের নিজস্ব মতামত "}
+
+                            </div>
+                            <div style={{ fontSize: "14px", fontWeight: "bold", color: "#666", marginBottom: "13px" }}>
+
+                                {article.publish_author_email && <>
+                                    Author Email: {article.author_email}
+                                </>}
+
+                            </div>
                         </div>
 
                     </div>

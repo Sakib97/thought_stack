@@ -15,6 +15,7 @@ import NotFound from './components/common/NotFound'
 import DashboardPage from './features/dashboard/pages/DashboardPage'
 import AppRoutes from './components/common/AppRoutes'
 import Footer from './components/layout/Footer'
+import GoToTopButton from './components/layout/GoToTopButton'
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
       <div>
         <NavigationBar />
       </div>
+      <GoToTopButton />
+
 
       {/* <Routes>
         <Route path='/' element={<HomePage />} />

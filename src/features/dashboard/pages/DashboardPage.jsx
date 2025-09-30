@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useAuth } from "../../../context/AuthProvider";
 import ProfilePage from "./ProfilePage";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 
 import {
     MenuFoldOutlined,
@@ -25,6 +26,13 @@ const DashboardPage = () => {
     if (!user || !userMeta) {
         return <p>Not Logged In !</p>;
     }
+
+    const getSelectedKey = () => {
+        if (location.pathname.includes("/dashboard/profile")) return "1";
+        if (location.pathname.includes("/dashboard/write-article")) return "2";
+        if (location.pathname.includes("/dashboard/manage-users")) return "3";
+        return "1"; // fallback
+    };
 
     return (
         <Layout style={{ minHeight: "100vh", background: "#f0f0f0", overflowX: "hidden" }}>
@@ -67,20 +75,20 @@ const DashboardPage = () => {
                 <Menu
                     theme="light"
                     mode="inline"
-                    defaultSelectedKeys={["1"]}
+                    defaultSelectedKeys={[getSelectedKey()]}
                     items={[
                         {
                             key: "1", icon: <i className="fi fi-br-user" style={{ fontSize: 15 }}></i>,
                             label: <Link style={{ textDecoration: 'none' }} to="/dashboard/profile">Profile</Link>
                         },
-                        // ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.isactive)
-                        ...(((userMeta.role === "editor" || userMeta.role === "admin"))
+                        ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.is_active)
+                        // ...(((userMeta.role === "editor" || userMeta.role === "admin"))
                             ? [{
                                 key: "2", icon: <i className="fi fi-br-scroll-document-story" style={{ fontSize: 15 }}></i>,
-                                label: <Link style={{textDecoration: 'none'}} to="/dashboard/write-article">Write Article</Link> 
+                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/write-article">Write Article</Link>
                             }]
                             : []),
-                        ...(userMeta.role === "admin" && userMeta.isactive
+                        ...(userMeta.role === "admin" && userMeta.is_active
                             ? [{ key: "3", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 15 }}></i>, label: "Manage Users" }]
                             : []),
                     ]}

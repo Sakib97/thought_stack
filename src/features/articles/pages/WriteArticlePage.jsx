@@ -1,18 +1,48 @@
 import { useState } from "react";
 import RTE from "../components/RTE";
 import ArticleInfo from "../components/ArticleInfo";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import styles from "../styles/WriteArticlePage.module.css";
 import toast, { Toaster } from "react-hot-toast";
 import { supabase } from "../../../config/supabaseClient";
+import { deSlugify, slugify } from "../../../utils/slugAndStringUtil";
+import { useAuth } from "../../../context/AuthProvider";
+import { encodeId } from "../../../utils/hashUtil";
+import GoToTopButton from "../../../components/layout/GoToTopButton";
 
 const WriteArticlePage = () => {
+    const [showModal, setShowModal] = useState(false);
+    const { user, userMeta } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [uploadedArticleLink, setUploadedArticleLink] = useState(null);
+
+    // Lifting RTE state to parent (WriteArticlePage)
+    const [contentEn, setContentEn] = useState(localStorage.getItem("articleContent_en") || "");
+    const [contentBn, setContentBn] = useState(localStorage.getItem("articleContent_bn") || "");
+
 
     const handlePublish = async () => {
         setLoading(true);
 
         try {
+            if (!userMeta?.is_active || !["admin", "editor"].includes(userMeta?.role)) {
+                // toast.error("You are not allowed to publish articles.");
+                toast('You are not allowed to publish articles !',
+                    {
+                        icon: <i style={{ color: "red", fontSize: '23px' }} className="fi fi-br-cross-circle"></i>,
+                        style: {
+                            borderRadius: '10px',
+                            background: '#fff',
+                            color: 'black',
+                            border: '2px solid red',
+                            fontSize: '18px',
+                        },
+                        duration: 2000
+                    })
+                setLoading(false);
+                setShowModal(false);
+                return;
+            }
             // Get local storage values
             const articleInfo = JSON.parse(localStorage.getItem("articleInfo"));
             const articleContentEn = localStorage.getItem("articleContent_en");
@@ -34,6 +64,7 @@ const WriteArticlePage = () => {
                         duration: 3000
                     })
                 setLoading(false);
+                setShowModal(false);
                 return;
             }
 
@@ -74,14 +105,20 @@ const WriteArticlePage = () => {
             }
 
             // Insert into Supabase
-            const { data, error } = await supabase.from("article").insert([
+            const { data, error } = await supabase.from("articles").insert([
                 {
                     ...articleInfo,
                     content_en: articleContentEn,
                     content_bn: articleContentBn,
                     created_at: new Date(),
+                    article_status: "accepted",
+                    article_slug: slugify(articleInfo.title_en),
+                    editor_name: userMeta?.name,
+                    editor_email: userMeta?.email
                 },
-            ]);
+            ])
+                .select();
+            console.log("data", data);
 
             if (error) {
                 console.error(error);
@@ -98,25 +135,38 @@ const WriteArticlePage = () => {
                         },
                         duration: 3000
                     });
-            } else {
+            } else if (data) {
+                console.log("data", data);
+
+                const insertedArticle = data[0];
+                const articleId = encodeId(insertedArticle.id);
+                const articleSlug = slugify(articleInfo.title_en);
+                const articleUrl = `${window.location.origin}/article/${articleId}/${articleSlug}`;
+
+                setUploadedArticleLink(articleUrl);
+
                 // toast.success("Article published successfully!");
                 toast('Article published successfully!',
                     {
-                    icon: <i style={{ color: "green", fontSize: '23px' }} className="fi fi-rr-check-circle"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid green',
-                        fontSize: '18px',
-                    },
-                    duration: 3000
-                });
+                        icon: <i style={{ color: "green", fontSize: '23px' }} className="fi fi-rr-check-circle"></i>,
+                        style: {
+                            borderRadius: '10px',
+                            background: '#fff',
+                            color: 'black',
+                            border: '2px solid green',
+                            fontSize: '18px',
+                        },
+                        duration: 3000
+                    });
 
                 // Optionally clear localStorage after publishing
                 localStorage.removeItem("articleInfo");
                 localStorage.removeItem("articleContent_en");
                 localStorage.removeItem("articleContent_bn");
+
+                // Clear RTE editors
+                setContentEn("");
+                setContentBn("");
             }
         } catch (err) {
             console.error(err);
@@ -124,6 +174,7 @@ const WriteArticlePage = () => {
         }
 
         setLoading(false);
+        setShowModal(false);
     };
 
     return (
@@ -131,26 +182,80 @@ const WriteArticlePage = () => {
             <Toaster />
             <ArticleInfo />
 
-            <RTE contentLanguage="en" />
+            <RTE contentLanguage="en" content={contentEn} setContent={setContentEn} />
             <hr />
-            <RTE contentLanguage="bn" />
+            <RTE contentLanguage="bn" content={contentBn} setContent={setContentBn} />
 
             <hr />
 
-            <div className={styles.buttonContainer}>
-                <div className={styles.warningMessage}>
-                    Please save all your drafts before publishing !
+            {userMeta?.is_active && ["admin", "editor"].includes(userMeta?.role)
+                && !uploadedArticleLink &&
+                (
+                    <div className={styles.buttonContainer}>
+                        <div className={styles.warningMessage}>
+                            Please save all your drafts before publishing !
+                        </div>
+                        <Button className={styles.publishButton}
+                            type="primary"
+                            // onClick={handlePublish}
+                            onClick={() => setShowModal(true)}
+                            loading={loading}
+                            iconPosition="end"
+                        >
+                            <i style={{ fontSize: 24, transform: "translateY(8%)" }} className="fi fi-sr-progress-complete"></i>
+                            Publish Article
+                        </Button>
+                    </div>
+                )}
+
+            < Modal
+                title={<span style={{ fontSize: "20px", fontWeight: "bold" }}>Publish Article ?</span>}
+                centered
+                open={showModal}
+                onOk={handlePublish}
+                onCancel={() => setShowModal(false)}
+                okText="Confirm"
+                confirmLoading={loading}
+                okButtonProps={{
+                    style: {
+                        backgroundColor: "green",
+                        borderColor: "green",
+                        fontSize: "16px",   // increase font size
+                    },
+                }}
+                cancelText="Cancel"
+                cancelButtonProps={{
+                    style: {
+                        fontSize: "16px",   // match cancel button size if you want
+                    },
+                }}
+            >
+                <div style={{ fontSize: "18px", marginBottom: "15px" }}>
+                    Please save all the drafts before publishing.
                 </div>
-                <Button className={styles.publishButton}
-                    type="primary"
-                    onClick={handlePublish}
-                    loading={loading}
-                >
-                    <i style={{ fontSize: 24, transform: "translateY(11%)" }} className="fi fi-br-progress-complete"></i>
-                    Publish Article
-                </Button>
-            </div>
-        </div>
+
+            </Modal>
+
+            {uploadedArticleLink && (
+                <div className={styles.articleLinkContainer}
+                    style={{
+                        marginTop: "20px", fontSize: "20px",
+                        textAlign: "center"
+                    }}>
+                    <span>View your published article: </span>
+                    <a
+                        href={uploadedArticleLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "green", fontWeight: "bold" }}
+                    >
+                        {uploadedArticleLink}
+                    </a>
+                </div>
+
+            )}
+
+        </div >
     );
 }
 

@@ -28,7 +28,7 @@ const ProfilePage = () => {
                         Welcome {user.user_metadata?.full_name || "User"}
                     </h2>
                     <p className={styles.email}>{user.email}</p>
-                    {userMeta?.isactive ? (
+                    {userMeta?.is_active ? (
                         <>
                             Role : <Badge
                                 bg={

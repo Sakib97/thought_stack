@@ -1,11 +1,15 @@
 import { useFormik } from 'formik';
 import { ArticleInfoSchema } from '../../../schemas/ArticleValidationSchema';
-import { Button, Input, Checkbox } from "antd";
+import { Button, Input, Checkbox, Modal } from "antd";
 import styles from "../styles/ArticleInfo.module.css";
 import toast, { Toaster } from 'react-hot-toast';
+import { useState } from 'react';
+// import { Modal } from 'react-bootstrap';
 
 const ArticleInfo = () => {
     // console.log("article", ArticleInfoSchema);
+    const [showModal, setShowModal] = useState(false);
+
     // Load draft if available
     const savedDraft = localStorage.getItem("articleInfo");
     const parsedDraft = savedDraft ? JSON.parse(savedDraft) : null;
@@ -47,13 +51,14 @@ const ArticleInfo = () => {
     });
 
     const handleClearDraft = () => {
+        setShowModal(false);
         if (localStorage.getItem("articleInfo")) {
             localStorage.removeItem("articleInfo");
             formik.resetForm({ values: defaultValues });
             // toast.success("Draft cleared");
             toast('Draft Info Cleared !',
                 {
-                    icon: <i style={{ color: "red" }} className="fa-solid fa-trash-can"></i>,
+                    icon: <i style={{ color: "red" }} className="fi fi-rr-trash"></i>,
                     style: {
                         borderRadius: '10px',
                         background: '#fff',
@@ -61,7 +66,7 @@ const ArticleInfo = () => {
                         border: '2px solid red',
                         fontSize: '18px',
                     },
-                    duration: 1000
+                    duration: 2000
                 })
         } else {
             toast('Nothing to clear !',
@@ -92,6 +97,7 @@ const ArticleInfo = () => {
                         <Input
                             size='large'
                             name="title_en"
+                            placeholder='Title (EN)'
                             value={formik.values.title_en}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -107,6 +113,7 @@ const ArticleInfo = () => {
                         <label>Subtitle (EN) *</label>
                         <Input size='large'
                             name="subtitle_en"
+                            placeholder='Subtitle (EN) [2 / 3 lines]'
                             value={formik.values.subtitle_en}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -117,14 +124,15 @@ const ArticleInfo = () => {
                         )}
 
                     </div>
-                    
-                    <hr style={{border: '2px solid black'}} />
+
+                    <hr style={{ border: '2px solid black' }} />
 
                     {/* Title BN */}
                     <div className={styles.inputDiv}>
                         <label>Title (বাংলা) *</label>
                         <Input size='large'
                             name="title_bn"
+                            placeholder='Title (বাংলা)'
                             value={formik.values.title_bn}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -140,6 +148,7 @@ const ArticleInfo = () => {
                         <label>Subtitle (বাংলা) *</label>
                         <Input size='large'
                             name="subtitle_bn"
+                            placeholder='Subtitle (বাংলা) [2 / 3 lines]'
                             value={formik.values.subtitle_bn}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -149,13 +158,14 @@ const ArticleInfo = () => {
                             <div className={styles.errorMessage}>{formik.errors.subtitle_bn}</div>
                         )}
                     </div>
-                    <hr style={{border: '2px solid black'}} />
+                    <hr style={{ border: '2px solid black' }} />
 
                     {/* Cover Image Link */}
                     <div className={styles.inputDiv}>
                         <label>Cover Image Link *</label>
                         <Input size='large'
                             name="cover_img_link"
+                            placeholder='Cover Image Link (ideal size: 900x400)'
                             value={formik.values.cover_img_link}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -171,6 +181,7 @@ const ArticleInfo = () => {
                         <label>Cover Image Caption (EN) *</label>
                         <Input size='large'
                             name="cover_img_cap_en"
+                            placeholder='Cover Image Caption (EN)'
                             value={formik.values.cover_img_cap_en}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -186,6 +197,7 @@ const ArticleInfo = () => {
                         <label>Cover Image Caption (বাংলা) *</label>
                         <Input size='large'
                             name="cover_img_cap_bn"
+                            placeholder='Cover Image Caption (বাংলা)'
                             value={formik.values.cover_img_cap_bn}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -196,13 +208,14 @@ const ArticleInfo = () => {
                         )}
                     </div>
 
-                    <hr style={{border: '2px solid black'}} />
+                    <hr style={{ border: '2px solid black' }} />
 
                     {/* Author Name */}
                     <div className={styles.inputDiv}>
                         <label>Author Name *</label>
                         <Input size='large'
                             name="author_name"
+                            placeholder='Author Name'
                             value={formik.values.author_name}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -218,6 +231,7 @@ const ArticleInfo = () => {
                         <label>Author Profile Image Link *</label>
                         <Input size='large'
                             name="author_img_link"
+                            placeholder='Author Profile Image Link (ideal size: 300x300)'
                             value={formik.values.author_img_link}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -233,6 +247,7 @@ const ArticleInfo = () => {
                         <label>Author Email *</label>
                         <Input size='large'
                             name="author_email"
+                            placeholder='Author Email'
                             value={formik.values.author_email}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -259,15 +274,35 @@ const ArticleInfo = () => {
 
                     {/* Buttons */}
                     <div style={{ textAlign: 'center' }}>
-                        <Button disabled={!formik.isValid} className={styles.saveButton} type="primary" htmlType="submit">
+                        <Button disabled={!formik.isValid}
+                            className={styles.saveButton} type="primary"
+                            htmlType="submit">
                             <i className="fi fi-rr-disk"></i> Save Draft
                         </Button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <Button className={styles.deleteButton} type="primary" onClick={handleClearDraft}>
+                        <Button className={styles.deleteButton}
+                            type="primary"
+                            // onClick={handleClearDraft}
+                            onClick={() => setShowModal(true)}
+                        >
                             <i className="fi fi-rr-trash"></i> Clear Draft
                         </Button>
                     </div>
                 </form>
+                {/* Ant Design Modal */}
+                <Modal
+                    title="Confirm Clear"
+                    centered
+                    open={showModal}
+                    onOk={handleClearDraft}
+                    onCancel={() => setShowModal(false)}
+                    okText="Clear Draft"
+                    okButtonProps={{ danger: true }}
+                    cancelText="Cancel"
+                >
+                    Are you sure you want to clear this draft? This action cannot be undone.
+                </Modal>
+
 
             </div>
             <hr />

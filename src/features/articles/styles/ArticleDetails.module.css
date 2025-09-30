@@ -14,6 +14,7 @@
 }
 
 .articleImage {
+    margin-top: 20px;
     width: 100%;
     height: auto;
     /* Ensure height is the same as width */

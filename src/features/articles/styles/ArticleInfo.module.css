@@ -59,3 +59,21 @@
     background-color: #c03030 !important;
 }
 
+:global(.jodit-wysiwyg) {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scrolling in the editor by indenting the first line of paragraphs */
+:global(.jodit-wysiwyg p[style*="margin-left"]), 
+:global(.jodit-wysiwyg div[style*="margin-left"]) {
+  margin-left: min(12%, 40px) !important;
+}
+
+
+.jodit-wysiwyg img {
+  max-width: 100% !important;
+  height: auto !important;
+}

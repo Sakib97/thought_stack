@@ -8,7 +8,7 @@ import { getFormattedTime } from "../../../utils/dateUtil";
 import { encodeId, decodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 
-const pageSize = 1;
+const pageSize = 2;
 
 export default function HomePage() {
     const { language } = useLanguage();
@@ -25,8 +25,23 @@ export default function HomePage() {
     const fetchMainArticle = async () => {
         setLoadingMain(true);
         const { data, error } = await supabase
-            .from("articles")
-            .select("*")
+            .from("articles_secure")
+            .select("id,\
+                title_en,\
+                    title_bn,\
+                    subtitle_en,\
+                    subtitle_bn,\
+                    content_en,\
+                    content_bn,\
+                    created_at,\
+                    cover_img_link,\
+                    cover_img_cap_en,\
+                    cover_img_cap_bn,\
+                    article_slug,\
+                    author_name,\
+                    author_img_link,\
+                    publish_author_email,\
+                    author_email")
             .order("created_at", { ascending: false })
             .limit(1);
 
@@ -50,8 +65,22 @@ export default function HomePage() {
         const to = from + pageSize - 1;
 
         const { data, count, error } = await supabase
-            .from("articles")
-            .select("*", { count: "exact" })
+            .from("articles_secure")
+            .select("id,\
+                title_en,\
+                    title_bn,\
+                    subtitle_en,\
+                    subtitle_bn,\
+                    content_en,\
+                    content_bn,\
+                    created_at,\
+                    cover_img_link,\
+                    article_slug,\
+                    author_name,\
+                    author_img_link,\
+                    publish_author_email,\
+                    author_email", { count: "exact" })
+            // .eq("article_status", "accepted")
             .order("created_at", { ascending: false })
             .range(from, to);
 
