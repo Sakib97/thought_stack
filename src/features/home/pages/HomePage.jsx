@@ -8,7 +8,7 @@ import { getFormattedTime } from "../../../utils/dateUtil";
 import { encodeId, decodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 
-const pageSize = 2;
+const pageSize = 4;
 
 export default function HomePage() {
     const { language } = useLanguage();
@@ -103,7 +103,8 @@ export default function HomePage() {
     }, [page]);
 
     return (
-        <div className={`${styles.homeContainer} container`}>
+	<>
+        <div className={styles.homeContainer}>
             {/* Main Article */}
             {loadingMain ? (
                 <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
@@ -113,33 +114,41 @@ export default function HomePage() {
             ) : (
                 mainArticle && (
                     <div className={styles.mainSection}>
-                        <div className={styles.textSection}>
-                            <Link
-                                className={styles.linkStyle}
-                                to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
-                                <h2>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
-                                <p>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
-                            </Link>
-
-
-                            <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#666', marginBottom: '13px' }}>
-                                <i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
-                                &nbsp;&nbsp;
-                                {mainArticle.author_name}
-                            </div>
-                            <div className={styles.date}>
-                                <i className="fi fi-br-clock" style={{ fontSize: 15 }}></i>
-                                &nbsp;&nbsp;
-                                {getFormattedTime(mainArticle.created_at)}
-                            </div>
-                        </div>
                         <div className={styles.imageSection}>
                             <img
                                 src={mainArticle.cover_img_link}
                                 alt={mainArticle.title_en}
                                 className={styles.mainImage}
                             />
+
                         </div>
+
+	
+			<div className={styles.inner_text_area}>
+				<div className={styles.textSection}>
+				    <Link
+					className={styles.linkStyle}
+					to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
+					<h2>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
+					<p>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
+				    </Link>
+
+
+				    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
+					<i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
+					&nbsp;&nbsp;
+					{mainArticle.author_name}
+				    </div>
+				    <div className={styles.date}>
+					<i className="fi fi-br-clock" style={{ fontSize: 15 }}></i>
+					&nbsp;&nbsp;
+					{getFormattedTime(mainArticle.created_at)}
+				    </div>
+				</div>
+
+			</div>
+	
+
                     </div>
                 )
             )
@@ -153,7 +162,7 @@ export default function HomePage() {
                     </div>
                 ) : (
                     <List
-                        itemLayout="vertical"
+			itemLayout="vertical"
                         size="large"
                         pagination={{
                             onChange: (pageNum) => setPage(pageNum),
@@ -163,11 +172,14 @@ export default function HomePage() {
                             align: "center",
                         }}
                         dataSource={others}
+			className={styles.articleContainer}
                         renderItem={(item) => (
                             <List.Item
-                                key={item.article_id}
+				className={styles.articleItem}
+	                        key={item.article_id}
                                 extra={
                                     <img
+					className={styles.trailing_image}
                                         draggable={false}
                                         width={300}
                                         height={"auto"}
@@ -179,8 +191,8 @@ export default function HomePage() {
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.author_img_link} />}
                                     title={
-                                        <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}>
-                                            <span style={{ fontSize: '20px', fontWeight: 'bold' }}>
+                                        <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}  className={styles.header_text}>
+                                            <span style={{ fontSize: '20px', fontWeight: 'bold'}} >
                                                 {language === "en" ? item.title_en : item.title_bn}
                                             </span>
                                         </Link>
@@ -201,8 +213,8 @@ export default function HomePage() {
                                     </div>
 
                                     <br />
-                                    <span className={styles.date}>
-                                        <i className="fi fi-br-clock" style={{ fontSize: 17 }}></i>
+                                    <span className={styles.date} style={{ fontSize: 17, color:'black' }}>
+                                        <i className="fi fi-br-clock" style={{ fontSize: 17, color:'black' }}></i>
                                         &nbsp;&nbsp;
                                         {getFormattedTime(item.created_at)}
                                     </span>
@@ -213,5 +225,14 @@ export default function HomePage() {
                 )}
             </div>
         </div >
+	<div className={styles.blured_background}>
+		<div className={styles.blured_color}></div>
+	</div>
+	</>
     );
 }
+
+
+
+
+

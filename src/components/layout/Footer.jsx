@@ -1,7 +1,7 @@
 import styles from "../styles/Footer.module.css";
 const Footer = () => {
     return (
-        <div style={{ backgroundColor: 'white' }}>
+        <div className={styles.footer_background}>
          {/* <div style={{ backgroundColor: 'rgb(230, 226, 222)' }}> */}
             {/* <hr /> */}
             <div style={{

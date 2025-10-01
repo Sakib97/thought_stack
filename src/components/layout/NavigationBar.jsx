@@ -23,13 +23,13 @@ const NavigationBar = () => {
     const showNavbar = useScrollDirection();
 
     return (
-        <div>
+        <div >
 
             {/* <Navbar expand="lg" className="bg-body-tertiary"> */}
             <Navbar bg="light" expand="lg"
                 // className="shadow-sm mb-3"
                 className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
-                <Container>
+                <Container style={{ padding:'0px 0px', margin: '0 0 0 5vw' }}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""
@@ -55,7 +55,7 @@ const NavigationBar = () => {
                                 Menu
                             </Offcanvas.Title>
                         </Offcanvas.Header>
-                        <Offcanvas.Body>
+                        <Offcanvas.Body  style={{ width:'75vw' }}>
                             <Nav style={{ fontSize: '1.1rem' }}
                                 className="
                                     ms-auto        /* push to right on large screens */
