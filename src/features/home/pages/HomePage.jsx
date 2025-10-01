@@ -113,7 +113,7 @@ export default function HomePage() {
                 </div>
             ) : (
                 mainArticle && (
-                    <div className={styles.mainSection}>
+                    <Link to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`} className={styles.mainSection}>
                         <div className={styles.imageSection}>
                             <img
                                 src={mainArticle.cover_img_link}
@@ -149,7 +149,7 @@ export default function HomePage() {
 			</div>
 	
 
-                    </div>
+                    </Link>
                 )
             )
             }
