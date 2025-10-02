@@ -178,8 +178,7 @@
 	width:110%;
 	height:25vh;
 	margin:0 0 0 -5%;
-	border-bottom-left-radius:0;
-	border-bottom-right-radius:0;
+	border-radius:0;
     }
 
 
