@@ -115,29 +115,32 @@
     display:flex;
     flex-direction: row; 
     align-items: center;
-/*     grid-template-columns:1fr 1fr; */	
     gap: 20px;
 }
 /* .articleContainer{ */
 /*     display:grid; */
 /*     grid-template-columns:1fr 1fr; */
+/*     grid-template-rows:1fr 1fr; */
 /*     gap:1vw 1vh; */
 /* } */
+
 .articleItem {
     flex:1;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 0px solid #ccc;
+    border-top-left-radius: 8px;
+    border-top-right-radius:8px;
     padding: 15px;
     margin:5vh 0 0 0;
     /* width: 100%; */
     /* max-width: 600px; */
     transform:scale(1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -10px 10px rgba(0, 0, 0, 0.1);
     transition:0.4s;
 }
 .articleItem:hover{
     box-shadow: 0 0 25px black;
     transform:scale(1.05);	
+    border-radius:8px;
 }
 .trailing_image{  
     height:100%;
