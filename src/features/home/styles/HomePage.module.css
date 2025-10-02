@@ -131,7 +131,13 @@
     margin:5vh 0 0 0;
     /* width: 100%; */
     /* max-width: 600px; */
+    transform:scale(1);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition:0.4s;
+}
+.articleItem:hover{
+    box-shadow: 0 0 25px black;
+    transform:scale(1.05);	
 }
 .trailing_image{  
     height:100%;

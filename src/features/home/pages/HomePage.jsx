@@ -174,52 +174,55 @@ export default function HomePage() {
                         dataSource={others}
 			className={styles.articleContainer}
                         renderItem={(item) => (
-                            <List.Item
-				className={styles.articleItem}
-	                        key={item.article_id}
-                                extra={
-                                    <img
-					className={styles.trailing_image}
-                                        draggable={false}
-                                        width={300}
-                                        height={"auto"}
-                                        alt="cover"
-                                        src={item.cover_img_link}
-                                    />
-                                }
-                            >
-                                <List.Item.Meta
-                                    avatar={<Avatar src={item.author_img_link} />}
-                                    title={
-                                        <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}  className={styles.header_text}>
-                                            <span style={{ fontSize: '20px', fontWeight: 'bold'}} >
-                                                {language === "en" ? item.title_en : item.title_bn}
-                                            </span>
-                                        </Link>
-                                    }
-                                    //   description={item.subtitle_en}
-                                    description={
-                                        <div style={{ fontSize: '14px', fontWeight: 'bold' }}>
-                                            <i className="fi fi-br-user-pen" style={{ fontSize: 17 }}></i>
-                                            &nbsp;&nbsp;
-                                            {item.author_name}
-                                        </div>
-                                    }
-                                />
-                                <div>
-                                    {/* {item.content_en?.substring(0, 200)}... */}
-                                    <div style={{ fontSize: '16px', fontWeight: '500' }}>
-                                        {language === "en" ? item.subtitle_en : item.subtitle_bn}
-                                    </div>
+				<Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} style={{ textDecoration:'none' }}>
+				    <List.Item
+					to={`/article/${encodeId(item.id)}/${item.article_slug}`}
+					className={styles.articleItem}
+					key={item.article_id}
+					extra={
+					    <img
+						className={styles.trailing_image}
+						draggable={false}
+						width={300}
+						height={"auto"}
+						alt="cover"
+						src={item.cover_img_link}
+					    />
+					}
+				    >
+					<List.Item.Meta
+					    avatar={<Avatar src={item.author_img_link} />}
+					    title={
+						<Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}  className={styles.header_text}>
+						    <span style={{ fontSize: '20px', fontWeight: 'bold'}} >
+							{language === "en" ? item.title_en : item.title_bn}
+						    </span>
+						</Link>
+					    }
+					    //   description={item.subtitle_en}
+					    description={
+						<div style={{ fontSize: '14px', fontWeight: 'bold' }}>
+						    <i className="fi fi-br-user-pen" style={{ fontSize: 17 }}></i>
+						    &nbsp;&nbsp;
+						    {item.author_name}
+						</div>
+					    }
+					/>
+					<div>
+					    {/* {item.content_en?.substring(0, 200)}... */}
+					    <div style={{ fontSize: '16px', fontWeight: '500' }}>
+						{language === "en" ? item.subtitle_en : item.subtitle_bn}
+					    </div>
 
-                                    <br />
-                                    <span className={styles.date} style={{ fontSize: 17, color:'black' }}>
-                                        <i className="fi fi-br-clock" style={{ fontSize: 17, color:'black' }}></i>
-                                        &nbsp;&nbsp;
-                                        {getFormattedTime(item.created_at)}
-                                    </span>
-                                </div>
-                            </List.Item>
+					    <br />
+					    <span className={styles.date} style={{ fontSize: 17, color:'black' }}>
+						<i className="fi fi-br-clock" style={{ fontSize: 17, color:'black' }}></i>
+						&nbsp;&nbsp;
+						{getFormattedTime(item.created_at)}
+					    </span>
+					</div>
+				    </List.Item>
+				</Link>
                         )}
                     />
                 )}
