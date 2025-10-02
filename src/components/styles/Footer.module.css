@@ -1,3 +1,135 @@
 .footer_backgrounod{
-	background:none;
+	background:black;
+	color:white;
+}
+.footer_area{
+	height:40vh;
+	width:100vw;
+	background:black;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	gap:1vw;
+
+}
+.logo{
+	flex:0.7;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	color:white;
+	font-family:"Dancing Script", cursive;
+	font-weight:700;
+	font-size:40px;
+	text-decoration:none;
+	
+
+}
+.logo:hover{
+	color:white;
+}
+.about_area{
+	flex:1;
+	height:50%;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	flex-direction:column;
+	color:white;
+}
+.about_text{
+	flex:1.5;
+	font-family:verdana;
+}
+
+.about{
+	flex:1;
+	font-family:verdana;
+	text-decoration:none;
+	color:grey;
+}
+.about:hover{
+	color:grey;
+}
+
+.blog{
+	flex:1;
+	font-family:verdana;
+	text-decoration:none;
+	color:grey;
+}
+.blog:hover{
+	color:grey;
+}
+
+
+.contact_area{
+	flex:1;
+	height:50%;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	flex-direction:column;
+	color:white;
+}
+.support_text{
+	flex:1.5;
+	font-family:verdana;
+}
+
+.contact{
+	flex:1;
+	font-family:verdana;
+	text-decoration:none;
+	color:grey;
+}
+.contact:hover{
+	color:grey;
+}
+
+.faq{
+	flex:1;
+	font-family:verdana;
+	text-decoration:none;
+	color:grey;
+}
+.faq:hover{
+	color:grey;
+}
+
+
+.socials_area{
+	flex:0.4;
+	height:25%;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	margin:0 5vw 0 0;
+
+}
+.social{
+	flex:1;
+	color:white;
+	font-size:25px;
+
+}
+.social:hover{
+	color:white;
+}
+.copyright_area{
+	background:black;
+}
+@media (max-width: 768px){
+	.footer_area{
+		height:auto;
+		padding:5vh 0;
+		flex-direction:column;
+		gap:5vh;
+
+	}
+	.socials_area{
+		flex:1;
+		width:50%;
+		margin:0 0 0 15vw;
+	}
 }
