@@ -129,6 +129,8 @@
     flex-direction: row; 
     align-items: center;
     gap: 20px;
+    margin-left:50%;
+    transform:translate(-50%,0);
 }
 /* .articleContainer{ */
 /*     display:grid; */
@@ -151,7 +153,7 @@
     transition:0.4s;
 }
 .articleItem:hover{
-    box-shadow: 0 0 12px black;
+    box-shadow: 0 0 6px black;
     transform:scale(1.025);	
     border-radius:8px;
 }
@@ -192,7 +194,10 @@
 	margin:-5% 0 0 -5%;
 	border-radius:0;
     }
-
+    .articlesSection{
+	    margin-left:0%;
+	    transform:translate(0%,0);
+    }
 
  /*    .blured_color{ */
 	/* opacity:1; */
