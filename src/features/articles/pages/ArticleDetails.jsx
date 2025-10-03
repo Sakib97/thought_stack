@@ -19,6 +19,15 @@ const ArticleDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+	const [fontFamily,setFontFamily] = useState('Roboto Serif');
+
+
+
+	useEffect(()=>{
+		if(language === "en") setFontFamily('Roboto Serif');
+		if(language === "bn") setFontFamily('"Noto Serif Bengali", serif');
+	},[language]);
+
     const fetchArticle = async () => {
         setLoading(true);
         const { data, error } = await supabase
@@ -73,20 +82,21 @@ const ArticleDetails = () => {
     }
     return (
         <div>
+			<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet"/>
             <div className={`${styles.article}`}>
                 <div className={`container`}>
                     {/* <GoToTopButton /> */}
 
                     <div className={`${styles.articleHead}`}>
-                        <h1>{language === "en" ? article.title_en : article.title_bn}</h1>
-                        <span>{language === "en" ? article.subtitle_en : article.subtitle_bn}</span>
+                        <h1 style={{ fontFamily: fontFamily }}>{language === "en" ? article.title_en : article.title_bn}</h1>
+                        <span style={{ fontFamily: fontFamily }}>{language === "en" ? article.subtitle_en : article.subtitle_bn}</span>
                         <img
                             src={article.cover_img_link}
                             alt={language === "en" ? article.title_en : article.title_bn}
                             className={styles.articleImage}
                         />
 
-                        <div className={`${styles.articleImageCaption}`}>
+                        <div className={`${styles.articleImageCaption}`} style={{ fontFamily: fontFamily }}>
                             {language === "en"
                                 ? article.cover_img_cap_en
                                 : article.cover_img_cap_bn}
@@ -101,7 +111,7 @@ const ArticleDetails = () => {
                                 />
                             </div>
                             <div className={`${styles.authorNameOfArticle}`}>
-                                <span style={{ color: "black", fontSize: "18px", fontWeight: "bold" }}>
+                                <span style={{ color: "black", fontSize: "18px", fontWeight: "bold", fontFamily: fontFamily }}>
                                     {article.author_name}
                                 </span>
 
@@ -119,7 +129,7 @@ const ArticleDetails = () => {
                     <div className={`${styles.articleBody}`}>
                         <div style={{ textAlign: "justify", fontSize: "18px" }} className={`${styles.articleBodyText}`}>
                             <div
-                                style={{ textAlign: "justify", fontSize: "18px" }}
+                                style={{ textAlign: "justify", fontSize: "18px", fontFamily: fontFamily }}
                                 className={styles.articleBodyText}
                                 dangerouslySetInnerHTML={{
                                     __html:
@@ -132,7 +142,7 @@ const ArticleDetails = () => {
                         <hr />
                         {/* disclaimer section*/}
                         <div>
-                            <div style={{ fontStyle: "italic", fontSize: "14px", color: "#666", marginBottom: "13px" }}>
+                            <div style={{ fontStyle: "italic", fontSize: "14px", color: "#666", marginBottom: "13px",  fontFamily: fontFamily }}>
                                 {language === "en" ?
                                     "* The views and opinions expressed in this article are author's own and does not necessarily reflect the publisher's point of view."
                                     : "* লেখকের নিজস্ব মতামত "}
