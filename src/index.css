@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
-*{
-  font-family: "Roboto Serif";
-}
+/* *{ */
+/*   font-family: "Roboto Serif"; */
+/* } */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

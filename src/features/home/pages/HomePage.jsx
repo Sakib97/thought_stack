@@ -101,9 +101,20 @@ export default function HomePage() {
         // fetchMainArticle();
         fetchArticles(page);
     }, [page]);
+	
+
+	const [fontFamily,setFontFamily] = useState('Roboto Serif');
+
+
+
+	useEffect(()=>{
+		if(language === "en") setFontFamily('Roboto Serif');
+		if(language === "bn") setFontFamily('"Noto Serif Bengali", serif');
+	},[language]);
 
     return (
 	<>
+			<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet"/>
         <div className={styles.homeContainer}>
             {/* Main Article */}
             {loadingMain ? (
@@ -129,8 +140,8 @@ export default function HomePage() {
 				    <Link
 					className={styles.linkStyle}
 					to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
-					<h2>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
-					<p>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
+					<h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
+					<p  style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
 				    </Link>
 
 
@@ -194,7 +205,7 @@ export default function HomePage() {
 					    avatar={<Avatar src={item.author_img_link} />}
 					    title={
 						<Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}  className={styles.header_text}>
-						    <span style={{ fontSize: '20px', fontWeight: 'bold'}} >
+						    <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily}} >
 							{language === "en" ? item.title_en : item.title_bn}
 						    </span>
 						</Link>
@@ -210,13 +221,13 @@ export default function HomePage() {
 					/>
 					<div>
 					    {/* {item.content_en?.substring(0, 200)}... */}
-					    <div style={{ fontSize: '16px', fontWeight: '500' }}>
+					    <div style={{ fontSize: '16px', fontWeight: '500', fontFamily: fontFamily }}>
 						{language === "en" ? item.subtitle_en : item.subtitle_bn}
 					    </div>
 
 					    <br />
-					    <span className={styles.date} style={{ fontSize: 17, color:'black' }}>
-						<i className="fi fi-br-clock" style={{ fontSize: 17, color:'black' }}></i>
+					    <span className={styles.date} style={{ fontSize: 17, color:'grey' }}>
+						<i className="fi fi-br-clock" style={{ fontSize: 17, color:'grey' }}></i>
 						&nbsp;&nbsp;
 						{getFormattedTime(item.created_at)}
 					    </span>

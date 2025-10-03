@@ -1,6 +1,15 @@
+
+:root {
+  --font-family: "Bitcount Prop Single Ink", system-ui;
+}
+
+
+
+
 .loader{
 	margin:20vh 0 20vh 50%;
 	transform:translate(-50%,0);
+	font-family:var(--font-family);
 
 }
 
