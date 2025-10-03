@@ -108,7 +108,7 @@ export default function HomePage() {
             {/* Main Article */}
             {loadingMain ? (
                 <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
-                    <Spin indicator={<LoadingOutlined spin />} size="large" />
+                    <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
 
                 </div>
             ) : (
@@ -158,7 +158,7 @@ export default function HomePage() {
             <div className={styles.articlesSection}>
                 {loadingOthers ? (
                     <div className={styles.listLoader}>
-                        <Spin indicator={<LoadingOutlined spin />} size="large" />
+                        <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" />
                     </div>
                 ) : (
                     <List
