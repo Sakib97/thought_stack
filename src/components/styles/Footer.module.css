@@ -133,3 +133,20 @@
 		margin:0 0 0 15vw;
 	}
 }
+@media (min-width: 1920px) {
+
+	.logo{
+		font-size:50px;
+	}
+
+	.about_area{
+		font-size:30px;
+	}
+	
+	.contact_area{
+		font-size:30px;
+	}
+	.social{
+		font-size:50px;
+	}
+}
