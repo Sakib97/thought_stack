@@ -1,8 +1,7 @@
-
 .container {
   width: 100%;
   max-width: 1100px;
-  margin: 0 auto; 
+  margin: 0 auto;
   display: flex;
   justify-content: center;
 }
@@ -72,30 +71,33 @@
 @media (max-width: 768px) {
   .container,
   .searchBarCenter {
-    max-width: 90%;
+    max-width: 95%;
   }
 
-  .title{
-    font-size: 8px;
+  .container :global(.ant-select) {
+    width: 100% !important;
   }
 
-  .author{
-    font-size: 6px;
+  .title {
+    font-size: 14px;
   }
 
-  .thumb{
-    display: none;
+  .author {
+    font-size: 12px;
   }
 
-  .date{
-    display: none;
-  }
-
-  .row {
-    grid-template-columns: 72px 1fr;
+  .thumb {
+    width: 40px;
+    height: 40px;
+    display: block;
   }
 
   .date {
-    display: none;
+    margin-top: 4px;
+    align-self: flex-end;
+  }
+
+  .row {
+    grid-template-columns: 40px 1fr;
   }
 }
