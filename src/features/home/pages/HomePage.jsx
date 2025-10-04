@@ -2,20 +2,24 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../config/supabaseClient";
 import { List, Avatar, Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import styles from "../styles/HomePage.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
-import { encodeId, decodeId } from "../../../utils/hashUtil";
+import { encodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 
 const pageSize = 4;
 
 export default function HomePage() {
     const { language } = useLanguage();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [mainArticle, setMainArticle] = useState(null);
     const [others, setOthers] = useState([]);
-    const [page, setPage] = useState(1);
+
+    const currentPage = parseInt(searchParams.get("page") || "1", 10);
+    const [page, setPage] = useState(currentPage);
+
     const [total, setTotal] = useState(0);
 
     const [loadingMain, setLoadingMain] = useState(true);
@@ -31,8 +35,6 @@ export default function HomePage() {
                     title_bn,\
                     subtitle_en,\
                     subtitle_bn,\
-                    content_en,\
-                    content_bn,\
                     created_at,\
                     cover_img_link,\
                     cover_img_cap_en,\
@@ -71,8 +73,6 @@ export default function HomePage() {
                     title_bn,\
                     subtitle_en,\
                     subtitle_bn,\
-                    content_en,\
-                    content_bn,\
                     created_at,\
                     cover_img_link,\
                     article_slug,\
@@ -101,148 +101,155 @@ export default function HomePage() {
         // fetchMainArticle();
         fetchArticles(page);
     }, [page]);
-	
 
-	const [fontFamily,setFontFamily] = useState('Roboto Serif');
+    useEffect(() => {
+        setPage(currentPage);  // update when query changes
+    }, [currentPage]);
+
+    const handlePageChange = (pageNum) => {
+        setSearchParams({ page: pageNum }); // updates URL ?page=2
+    };
 
 
+    const [fontFamily, setFontFamily] = useState('Roboto Serif');
 
-	useEffect(()=>{
-		if(language === "en") setFontFamily('Roboto Serif');
-		if(language === "bn") setFontFamily('"Noto Serif Bengali", serif');
-	},[language]);
+    useEffect(() => {
+        if (language === "en") setFontFamily('Roboto Serif');
+        if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
+    }, [language]);
 
     return (
-	<>
-			<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet"/>
-        <div className={styles.homeContainer}>
-            {/* Main Article */}
-            {loadingMain ? (
-                <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
-                    <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
+        <>
+            <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet" />
+            <div className={styles.homeContainer}>
+                {/* Main Article */}
+                {loadingMain ? (
+                    <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
+                        <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
 
-                </div>
-            ) : (
-                mainArticle && (
-                    <Link to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`} className={styles.mainSection}>
-                        <div className={styles.imageSection}>
-                            <img
-                                src={mainArticle.cover_img_link}
-                                alt={mainArticle.title_en}
-                                className={styles.mainImage}
-                            />
-
-                        </div>
-
-	
-			<div className={styles.inner_text_area}>
-				<div className={styles.textSection}>
-				    <Link
-					className={styles.linkStyle}
-					to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
-					<h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
-					<p  style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
-				    </Link>
-
-
-				    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
-					<i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
-					&nbsp;&nbsp;
-					{mainArticle.author_name}
-				    </div>
-				    <div className={styles.date}>
-					<i className="fi fi-br-clock" style={{ fontSize: 15 }}></i>
-					&nbsp;&nbsp;
-					{getFormattedTime(mainArticle.created_at)}
-				    </div>
-				</div>
-
-			</div>
-	
-
-                    </Link>
-                )
-            )
-            }
-            <hr />
-            {/* Other Articles List */}
-            <div className={styles.articlesSection}>
-                {loadingOthers ? (
-                    <div className={styles.listLoader}>
-                        <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" />
                     </div>
                 ) : (
-                    <List
-			itemLayout="vertical"
-                        size="large"
-                        pagination={{
-                            onChange: (pageNum) => setPage(pageNum),
-                            pageSize: pageSize,
-                            current: page,
-                            total: total,
-                            align: "center",
-                        }}
-                        dataSource={others}
-			className={styles.articleContainer}
-                        renderItem={(item) => (
-				<Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} style={{ textDecoration:'none' }}>
-				    <List.Item
-					to={`/article/${encodeId(item.id)}/${item.article_slug}`}
-					className={styles.articleItem}
-					key={item.article_id}
-					extra={
-					    <img
-						className={styles.trailing_image}
-						draggable={false}
-						width={300}
-						height={"auto"}
-						alt="cover"
-						src={item.cover_img_link}
-					    />
-					}
-				    >
-					<List.Item.Meta
-					    avatar={<Avatar src={item.author_img_link} />}
-					    title={
-						<Link to={`/article/${encodeId(item.id)}/${item.article_slug}`}  className={styles.header_text}>
-						    <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily}} >
-							{language === "en" ? item.title_en : item.title_bn}
-						    </span>
-						</Link>
-					    }
-					    //   description={item.subtitle_en}
-					    description={
-						<div style={{ fontSize: '14px', fontWeight: 'bold' }}>
-						    <i className="fi fi-br-user-pen" style={{ fontSize: 17 }}></i>
-						    &nbsp;&nbsp;
-						    {item.author_name}
-						</div>
-					    }
-					/>
-					<div>
-					    {/* {item.content_en?.substring(0, 200)}... */}
-					    <div style={{ fontSize: '16px', fontWeight: '500', fontFamily: fontFamily }}>
-						{language === "en" ? item.subtitle_en : item.subtitle_bn}
-					    </div>
+                    mainArticle && (
+                        <Link to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`} className={styles.mainSection}>
+                            <div className={styles.imageSection}>
+                                <img
+                                    src={mainArticle.cover_img_link}
+                                    alt={mainArticle.title_en}
+                                    className={styles.mainImage}
+                                />
 
-					    <br />
-					    <span className={styles.date} style={{ fontSize: 17, color:'grey' }}>
-						<i className="fi fi-br-clock" style={{ fontSize: 17, color:'grey' }}></i>
-						&nbsp;&nbsp;
-						{getFormattedTime(item.created_at)}
-					    </span>
-					</div>
-				    </List.Item>
-				</Link>
-                        )}
-                    />
-                )}
+                            </div>
+
+
+                            <div className={styles.inner_text_area}>
+                                <div className={styles.textSection}>
+                                    <Link
+                                        className={styles.linkStyle}
+                                        to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
+                                        <h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
+                                        <p style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
+                                    </Link>
+
+
+                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
+                                        <i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
+                                        &nbsp;&nbsp;
+                                        {mainArticle.author_name}
+                                    </div>
+                                    <div className={styles.date}>
+                                        <i className="fi fi-br-clock" style={{ fontSize: 15 }}></i>
+                                        &nbsp;&nbsp;
+                                        {getFormattedTime(mainArticle.created_at)}
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </Link>
+                    )
+                )
+                }
+                <hr />
+                {/* Other Articles List */}
+                <div className={styles.articlesSection}>
+                    {loadingOthers ? (
+                        <div className={styles.listLoader}>
+                            <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" />
+                        </div>
+                    ) : (
+                        <List
+                            itemLayout="vertical"
+                            size="large"
+                            pagination={{
+                                // onChange: (pageNum) => setPage(pageNum),
+                                onChange: handlePageChange,
+                                pageSize: pageSize,
+                                current: page,
+                                total: total,
+                                align: "center",
+                            }}
+                            dataSource={others}
+                            className={styles.articleContainer}
+                            renderItem={(item) => (
+                                <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} style={{ textDecoration: 'none' }}>
+                                    <List.Item
+                                        to={`/article/${encodeId(item.id)}/${item.article_slug}`}
+                                        className={styles.articleItem}
+                                        key={item.article_id}
+                                        extra={
+                                            <img
+                                                className={styles.trailing_image}
+                                                draggable={false}
+                                                width={300}
+                                                height={"auto"}
+                                                alt="cover"
+                                                src={item.cover_img_link}
+                                            />
+                                        }
+                                    >
+                                        <List.Item.Meta
+                                            avatar={<Avatar src={item.author_img_link} />}
+                                            title={
+                                                <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} className={styles.header_text}>
+                                                    <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily }} >
+                                                        {language === "en" ? item.title_en : item.title_bn}
+                                                    </span>
+                                                </Link>
+                                            }
+                                            //   description={item.subtitle_en}
+                                            description={
+                                                <div style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                                                    <i className="fi fi-br-user-pen" style={{ fontSize: 17 }}></i>
+                                                    &nbsp;&nbsp;
+                                                    {item.author_name}
+                                                </div>
+                                            }
+                                        />
+                                        <div>
+                                            {/* {item.content_en?.substring(0, 200)}... */}
+                                            <div style={{ fontSize: '16px', fontWeight: '500', fontFamily: fontFamily }}>
+                                                {language === "en" ? item.subtitle_en : item.subtitle_bn}
+                                            </div>
+
+                                            <br />
+                                            <span className={styles.date} style={{ fontSize: 17, color: 'grey' }}>
+                                                <i className="fi fi-br-clock" style={{ fontSize: 17, color: 'grey' }}></i>
+                                                &nbsp;&nbsp;
+                                                {getFormattedTime(item.created_at)}
+                                            </span>
+                                        </div>
+                                    </List.Item>
+                                </Link>
+                            )}
+                        />
+                    )}
+                </div>
+            </div >
+            <div className={styles.blured_background}>
+                <div className={styles.blured_color}></div>
             </div>
-        </div >
-	<div className={styles.blured_background}>
-		<div className={styles.blured_color}></div>
-	</div>
-	</>
+        </>
     );
 }
 
