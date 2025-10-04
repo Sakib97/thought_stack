@@ -128,14 +128,13 @@ const ArticleDetails = () => {
                     {/* Article Body */}
                     <div className={`${styles.articleBody}`}>
                         <div style={{ textAlign: "justify", fontSize: "18px" }} className={`${styles.articleBodyText}`}>
-                            <div
-                                style={{ textAlign: "justify", fontSize: "18px", fontFamily: fontFamily }}
-                                className={styles.articleBodyText}
-                                dangerouslySetInnerHTML={{
-                                    __html:
-                                        language === "en" ? article.content_en : article.content_bn,
-                                }}
-                            />
+                            <div style={{ textAlign: "justify" }} className={styles.articleBodyText}>
+                                <div
+                                    style={{ textAlign: "justify", fontFamily: fontFamily }}
+                                    className={styles.articleBodyText}
+                                    dangerouslySetInnerHTML={{ __html: language === "en" ? article.content_en : article.content_bn }}
+                                />
+                                </div>
                             {/* {!isEnglish && <SafeHtmlRenderer html={articleData.article.content_bn} />} */}
                         </div>
 

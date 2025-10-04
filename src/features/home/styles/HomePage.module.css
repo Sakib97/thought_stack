@@ -183,7 +183,6 @@
 
     .imageSection {
         order: -1;
-        /* show image on top */
         width: 100%;
         height: auto;
         border-radius: 6px;

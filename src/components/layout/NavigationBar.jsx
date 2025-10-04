@@ -29,7 +29,7 @@ const NavigationBar = () => {
             <Navbar bg="light" expand="lg"
                 // className="shadow-sm mb-3"
                 className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
-                <Container style={{ padding:'0px 0px', margin: '0 0 0 5vw' }}>
+                <Container style={{ padding:'0px 12px', margin: '0 0 0 5vw' }}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""

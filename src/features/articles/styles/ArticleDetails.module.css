@@ -248,6 +248,7 @@
     margin: 10px 0 0px 30px;
 }
 
+
 @media (max-width: 991px) {
     .articleReactionsIcons {
         margin-left: 15px;
@@ -280,4 +281,48 @@
 
 
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* From features/search-bar branch*/
+
+.articleBodyText p, 
+.articleBodyText{
+  font-size: 17px;
+  line-height: 1.6;
+  text-align: justify;
+  padding: 0 2px;
+  max-width: 1100;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+
+
+@media (max-width: 768px) {
+
+  .articleBodyText p,
+  .articleBodyText {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    padding: 0 4px !important;
+    text-align: justify !important;
+    box-sizing: border-box;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .articleHead h1 { font-size: 24px !important; }
+  .articleHead span { font-size: 15px !important; }
 }

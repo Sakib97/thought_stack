@@ -7,6 +7,8 @@ import styles from "../styles/HomePage.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
 import { encodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
+import SearchBar from "../../../components/layout/SearchBar";
+
 
 const pageSize = 4;
 
@@ -123,8 +125,12 @@ export default function HomePage() {
             <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet" />
             <div className={styles.homeContainer}>
                 {/* Main Article */}
+                <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+                    <SearchBar className={styles.searchBarCenter} />
+                </div>
                 {loadingMain ? (
                     <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
+                        
                         <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
 
                     </div>
