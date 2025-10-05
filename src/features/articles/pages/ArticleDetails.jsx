@@ -7,8 +7,13 @@ import { getFormattedTime } from "../../../utils/dateUtil";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
+import ArticleReactions from "../components/ArticleReactions";
+import { useAuth } from "../../../context/AuthProvider";
 
 const ArticleDetails = () => {
+    const { user, userMeta } = useAuth();
+    // console.log("user", userMeta.is_active);
+    
     const { articleID, articleTitleSlug } = useParams();
     const articleId = decodeId(articleID);
     // console.log("articleId", articleId);
@@ -157,6 +162,8 @@ const ArticleDetails = () => {
                         </div>
 
                     </div>
+                    <hr />
+                    <ArticleReactions articleId={articleId} userId={user?.id} isActive={userMeta?.is_active} />
                 </div>
 
             </div>

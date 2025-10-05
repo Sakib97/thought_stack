@@ -60,7 +60,11 @@
     border-radius: 8px;
     padding: 00px;
     text-decoration:none;
-   
+}
+
+.mainSection:hover{
+    /* box-shadow: 0 0 6px rgb(212, 203, 203); */
+    filter: brightness(0.9) saturate(0.8);
 }
 
 .imageSection {
@@ -158,11 +162,11 @@
     /* max-width: 600px; */
     transform:scale(1);
     box-shadow: 0 -10px 10px rgba(0, 0, 0, 0.1);
-    transition:0.4s;
+    /* transition:0.2s; */
 }
 .articleItem:hover{
     box-shadow: 0 0 6px black;
-    transform:scale(1.025);	
+    transform:scale(1.001);	
     border-radius:8px;
 }
 .trailing_image{  
