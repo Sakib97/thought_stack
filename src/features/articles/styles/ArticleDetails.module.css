@@ -133,7 +133,7 @@
 
 .commentSubmitButton {
     background-color: rgb(208, 216, 196);
-    color:#000000;
+    color: #000000;
     border-radius: 10px;
     margin: 4px;
     padding: 5px;
@@ -144,7 +144,7 @@
     cursor: pointer;
 }
 
-.commentSortDropdown{
+.commentSortDropdown {
     background-color: #e7eaee;
     color: rgb(0, 0, 0);
     border: none;
@@ -155,46 +155,45 @@
     border: 1px solid #141415;
 }
 
-.comments{
+.comments {
     margin: 20px 0 5px 20px;
 }
-.commentHead{
+.commentHead {
     display: flex;
     /* margin: 20px 0 5px 20px; */
 }
-.commenterPic{
+.commenterPic {
     width: 30px;
     height: 30px;
     border-radius: 50%;
     /* Keeps the image proportions and covers the circle */
-    object-fit: cover; 
+    object-fit: cover;
 }
-.commenterInfo{
+.commenterInfo {
     display: flex;
     align-items: center;
     /* margin: 10px 0; */
 }
-.commenterName{
+.commenterName {
     margin: 0 0 0 10px;
     font-size: 16px;
     font-weight: bold;
 }
 
-.commentDate{
+.commentDate {
     margin: 0 0 0 5px;
     font-size: 13px;
 }
 
-.commentBody{
+.commentBody {
     margin: 0px 0 0px 35px;
 }
 
-.commentReactions{
+.commentReactions {
     margin: 5px 0 0px 35px;
 }
 
-
-.commentReplyBtn{
+.commentReplyBtn {
     background-color: #d4ddea;
     color: #061361;
     border: none;
@@ -204,19 +203,19 @@
     cursor: pointer;
     /* border: 1px solid #141415; */
 }
-.commentReplyBtn:hover{
+.commentReplyBtn:hover {
     background-color: #c4c4dff2;
     /* color: white; */
     cursor: pointer;
 }
 
-.commentReplyForm{
+.commentReplyForm {
     display: flex;
     /* justify-content: center; */
     margin: 5px 0 0 30px;
     /* background-color: white; */
 }
-.commentReplyFormInput{
+.commentReplyFormInput {
     width: 100%;
     max-width: 500px;
     height: 50px;
@@ -225,9 +224,9 @@
     border: 1px solid #ccc;
     border-radius: 10px;
 }
-.commentReplySubmitButton{
+.commentReplySubmitButton {
     background-color: rgb(208, 216, 196);
-    color:#000000;
+    color: #000000;
     border-radius: 10px;
     margin: 4px;
     padding: 5px;
@@ -244,10 +243,122 @@
     border: 1px solid #0a0a0a;
 } */
 
-.commentReply{
+.commentReply {
     margin: 10px 0 0px 30px;
 }
+.commentsSection {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
 
+.commentForm {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 12px;
+}
+
+.commentFormAvatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.commentInputContainer {
+    flex: 1;
+}
+
+.commentInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+.commentInput:focus {
+    border-color: #065fd4;
+}
+
+.commentFormActive {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.commentTextarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+    background-color: white;
+    color: black;
+    line-height: 1.4;
+}
+
+.commentTextarea:focus {
+    border-color: #065fd4;
+    background-color: white;
+}
+
+.commentTextarea::placeholder {
+    color: #606060;
+}
+
+.commentFormButtons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.commentCancelBtn,
+.commentSubmitBtn {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.commentCancelBtn {
+    background: none;
+    color: #065fd4;
+    border: 1px solid #065fd4;
+}
+
+.commentCancelBtn:hover {
+    background-color: #def1ff;
+}
+
+.commentSubmitBtn {
+    background-color: #065fd4;
+    color: white;
+}
+
+.commentSubmitBtn:hover:not(:disabled) {
+    background-color: #0544b4;
+}
+
+.commentSubmitBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
 
 @media (max-width: 991px) {
     .articleReactionsIcons {
@@ -262,67 +373,54 @@
         z-index: 700;
     } */
 
-    .commentForm , .commentReplyForm{
-        display: flex;          
+    .commentForm,
+    .commentReplyForm {
+        display: flex;
         /* Stack items vertically */
-        flex-direction: column;  
+        flex-direction: column;
         /* Align items to the right */
-        align-items: flex-end;   
+        align-items: flex-end;
     }
     .commentFormInput {
         /* Added bottom margin for spacing */
-        margin: 0 10px 10px 10px; 
+        margin: 0 10px 10px 10px;
         width: 95%;
     }
     .commentSubmitButton {
         /* Right margin instead of left */
-        margin-right: 10px;      
+        margin-right: 10px;
     }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* From features/search-bar branch*/
 
-.articleBodyText p, 
-.articleBodyText{
-  font-size: 17px;
-  line-height: 1.6;
-  text-align: justify;
-  padding: 0 2px;
-  max-width: 1100;
-  margin: 0 auto;
-  box-sizing: border-box;
+.articleBodyText p,
+.articleBodyText {
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: justify;
+    padding: 0 2px;
+    max-width: 1100;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-
-
 @media (max-width: 768px) {
+    .articleBodyText p,
+    .articleBodyText {
+        font-size: 18px !important;
+        line-height: 1.6 !important;
+        padding: 0 1px !important;
+        text-align: justify !important;
+        box-sizing: border-box;
+        word-break: break-word;
+        hyphens: auto;
+    }
 
-  .articleBodyText p,
-  .articleBodyText {
-    font-size: 18px !important;
-    line-height: 1.6 !important;
-    padding: 0 1px !important;
-    text-align: justify !important;
-    box-sizing: border-box;
-    word-break: break-word;
-    hyphens: auto;
-  }
-
-  .articleHead h1 { font-size: 24px !important; }
-  .articleHead span { font-size: 15px !important; }
+    .articleHead h1 {
+        font-size: 24px !important;
+    }
+    .articleHead span {
+        font-size: 15px !important;
+    }
 }

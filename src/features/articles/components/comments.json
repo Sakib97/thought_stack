@@ -1,0 +1,69 @@
+{
+    "comments": [
+        {
+            "id": 1,
+            "user_id": "user1",
+            "user_name": "Rahim",
+            "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+            "content": "This is a great article! Very informative and well-written.",
+            "created_at": "2024-09-15 18:03:42+00",
+            "likes": 15,
+            "dislikes": 2,
+            "replies": [
+                {
+                    "id": 101,
+                    "user_id": "user2",
+                    "user_name": "User",
+                    "user_avatar": "https://i.pinimg.com/736x/3a/e3/09/3ae30910de65d6e91dd739ffc6f0435d.jpg",
+                    "content": "I completely agree! The author did an excellent job explaining complex topics.",
+                    "created_at": "2024-09-15 19:15:23+00",
+                    "likes": 8,
+                    "dislikes": 0
+                },
+                {
+                    "id": 102,
+                    "user_id": "user3",
+                    "user_name": "Mike Johnson",
+                    "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+                    "content": "Yes, and the examples were very helpful for understanding the concepts.",
+                    "created_at": "2024-09-15 19:45:10+00",
+                    "likes": 5,
+                    "dislikes": 1
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "user_id": "user4",
+            "user_name": "User",
+            "user_avatar": "https://i.pinimg.com/736x/3a/e3/09/3ae30910de65d6e91dd739ffc6f0435d.jpg",
+            "content": "I have a question about section 3. Could someone clarify the main point?",
+            "created_at": "2024-09-15 17:30:15+00",
+            "likes": 3,
+            "dislikes": 0,
+            "replies": []
+        },
+        {
+            "id": 3,
+            "user_id": "user5",
+            "user_name": "Barkat",
+            "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+            "content": "Excellent research and presentation. Looking forward to more articles from this author!",
+            "created_at": "2024-09-15 16:22:05+00",
+            "likes": 22,
+            "dislikes": 1,
+            "replies": [
+                {
+                    "id": 103,
+                    "user_id": "user1",
+                    "user_name": "Rahim",
+                    "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+                    "content": "Same here! The author's writing style is very engaging.",
+                    "created_at": "2024-09-15 18:45:33+00",
+                    "likes": 4,
+                    "dislikes": 0
+                }
+            ]
+        }
+    ]
+}

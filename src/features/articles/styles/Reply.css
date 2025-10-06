@@ -1,0 +1,171 @@
+.reply {
+    display: flex;
+    padding: 8px 0;
+}
+
+.reply-avatar {
+    margin-right: 12px;
+}
+
+.reply-avatar img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.reply-content {
+    flex: 1;
+}
+
+.reply-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.reply-author {
+    font-weight: 500;
+    color: #0f0f0f;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+.reply-time {
+    color: #606060;
+    font-size: 11px;
+}
+
+.reply-text {
+    color: #0f0f0f;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    word-break: break-word;
+}
+
+.reply-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reply .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #606060;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 16px;
+    transition: all 0.2s;
+}
+
+.reply .action-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.reply .action-btn.active {
+    color: #065fd4;
+}
+
+.reply .action-btn .icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+}
+
+.reply .action-btn .count {
+    font-size: 11px;
+}
+
+/* Nested Reply Form */
+.nested-reply-form {
+    display: flex;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.nested-reply-avatar {
+    margin-right: 12px;
+}
+
+.nested-reply-avatar img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nested-reply-input-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nested-reply-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    resize: vertical;
+    min-height: 70px;
+    font-family: inherit;
+    background-color: white;
+    color: black;
+    line-height: 1.4;
+}
+
+.nested-reply-textarea:focus {
+    border-color: #065fd4;
+    background-color: white;
+}
+
+.nested-reply-textarea::placeholder {
+    color: #606060;
+}
+
+.nested-reply-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.nested-reply-buttons .cancel-btn,
+.nested-reply-buttons .submit-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .reply-avatar img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .reply-actions {
+        gap: 8px;
+    }
+
+    .reply .action-btn {
+        font-size: 10px;
+        padding: 3px 5px;
+    }
+
+    .nested-reply-avatar img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .nested-reply-textarea {
+        font-size: 12px;
+    }
+}
