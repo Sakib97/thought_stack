@@ -84,14 +84,18 @@
     font-size: 12px;
 }
 
+/* Reply Form */
 .reply-form {
     display: flex;
     margin-top: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 5px;
+    align-items: flex-start;
+    gap: 2px;
 }
 
 .reply-avatar {
-    margin-right: 12px;
+    flex-shrink: 0;
+    margin-right: 0;
 }
 
 .reply-avatar img {
@@ -105,7 +109,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
 }
 
 .reply-textarea {
@@ -116,7 +120,7 @@
     font-size: 14px;
     outline: none;
     resize: vertical;
-    min-height: 80px;
+    height: 50px;
     font-family: inherit;
     background-color: white;
     color: black;
@@ -212,20 +216,156 @@
     margin-left: 8px;
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive - Improved for reply forms */
 @media (max-width: 768px) {
+    .comment {
+        padding: 10px 0;
+    }
+
+    .comment-avatar {
+        margin-right: 10px;
+    }
+
+    .comment-avatar img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .comment-author {
+        font-size: 14px;
+    }
+
+    .comment-time {
+        font-size: 11px;
+    }
+
+    .comment-text {
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    .comment-actions {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    .action-btn .icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Improved Reply Form for Mobile */
+    .reply-form {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+        margin-bottom: 12px;
+    }
+
+    .reply-avatar {
+        align-self: flex-start;
+        margin-right: 0;
+    }
+
+    .reply-avatar img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .reply-input-container {
+        flex: 1;
+    }
+
+    .reply-textarea {
+        font-size: 15px;
+        height: 50px;
+        padding: 10px;
+    }
+
+    .reply-buttons {
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .view-replies-btn {
+        font-size: 15px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .comment {
+        padding: 8px 0;
+    }
+
     .comment-avatar img {
         width: 32px;
         height: 32px;
     }
 
     .comment-actions {
-        gap: 12px;
+        gap: 8px;
     }
 
     .action-btn {
-        font-size: 11px;
-        padding: 4px 6px;
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    /* Enhanced Reply Form for Small Mobile */
+    .reply-form {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .reply-avatar img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .reply-textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .reply-buttons {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 80px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .reply-form {
+        gap: 6px;
     }
 
     .reply-avatar img {
@@ -235,5 +375,16 @@
 
     .reply-textarea {
         font-size: 13px;
+    }
+
+    .reply-buttons {
+        gap: 6px;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 70px;
     }
 }

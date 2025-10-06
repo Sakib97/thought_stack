@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faPaperPlane, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import { faComment, faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 import Comment from "../components/Comment";
 import commentsData from "../components/comments.json";
 
@@ -314,10 +314,6 @@ const ArticleDetails = () => {
                                             className={styles.commentCancelBtn}
                                             onClick={handleCommentCancel}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faCircleXmark}
-                                                style={{ marginRight: "5px" }}
-                                            />
                                             Cancel
                                         </button>
                                         <button

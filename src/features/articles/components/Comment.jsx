@@ -72,6 +72,9 @@ const Comment = ({ comment, user }) => {
         return date.toLocaleString();
     };
 
+    // Get user avatar - fixed this line
+    const userAvatar = user?.user_metadata?.avatar_url || "https://via.placeholder.com/40";
+
     return (
         <div className="comment">
             <div className="comment-avatar">
@@ -139,40 +142,39 @@ const Comment = ({ comment, user }) => {
                     </button>
                 </div>
 
-                {/* Reply Form */}
+                {/* Reply Form - Fixed layout */}
                 {showReplyForm && user && (
                     <div className="reply-form">
                         <div className="reply-avatar">
-                            <img src={user.avatar} alt={user.name} />
+                            <img src={userAvatar} alt={user.user_metadata?.full_name || "User"} />
                         </div>
-                        <form
-                            onSubmit={handleReplySubmit}
-                            className="reply-input-container"
-                        >
-                            <textarea
-                                placeholder="Write a reply..."
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                                className="reply-textarea"
-                                rows="3"
-                            />
-                            <div className="reply-buttons">
-                                <button
-                                    type="button"
-                                    className="cancel-btn"
-                                    onClick={handleReplyCancel}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="submit-btn"
-                                    disabled={!replyText.trim()}
-                                >
-                                    Reply
-                                </button>
-                            </div>
-                        </form>
+                        <div className="reply-input-container">
+                            <form onSubmit={handleReplySubmit}>
+                                <textarea
+                                    placeholder="Write a reply..."
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    className="reply-textarea"
+                                    rows="3"
+                                />
+                                <div className="reply-buttons">
+                                    <button
+                                        type="button"
+                                        className="cancel-btn"
+                                        onClick={handleReplyCancel}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="submit-btn"
+                                        disabled={!replyText.trim()}
+                                    >
+                                        Reply
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 )}
 
@@ -185,7 +187,6 @@ const Comment = ({ comment, user }) => {
                             }`}
                             onClick={() => setShowReplies(!showReplies)}
                         >
-                            <span className="dropdown-arrow">▶</span>
                             {comment.replies.length}{" "}
                             {comment.replies.length === 1 ? "reply" : "replies"}
                         </button>

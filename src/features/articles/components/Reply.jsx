@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faThumbsUp,
@@ -70,6 +70,9 @@ const Reply = ({ reply, user }) => {
         return date.toLocaleString();
     };
 
+    // Get user avatar - fixed this line
+    const userAvatar = user?.user_metadata?.avatar_url || "https://via.placeholder.com/40";
+
     return (
         <div className="reply">
             <div className="reply-avatar">
@@ -137,40 +140,39 @@ const Reply = ({ reply, user }) => {
                     </button>
                 </div>
 
-                {/* Nested Reply Form */}
+                {/* Nested Reply Form - Fixed layout */}
                 {showReplyForm && user && (
                     <div className="nested-reply-form">
                         <div className="nested-reply-avatar">
-                            <img src={user.avatar} alt={user.name} />
+                            <img src={userAvatar} alt={user.user_metadata?.full_name || "User"} />
                         </div>
-                        <form
-                            onSubmit={handleReplySubmit}
-                            className="nested-reply-input-container"
-                        >
-                            <textarea
-                                placeholder="Write a reply..."
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                                className="nested-reply-textarea"
-                                rows="3"
-                            />
-                            <div className="nested-reply-buttons">
-                                <button
-                                    type="button"
-                                    className="cancel-btn"
-                                    onClick={handleReplyCancel}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="submit-btn"
-                                    disabled={!replyText.trim()}
-                                >
-                                    Reply
-                                </button>
-                            </div>
-                        </form>
+                        <div className="nested-reply-input-container">
+                            <form onSubmit={handleReplySubmit}>
+                                <textarea
+                                    placeholder="Write a reply..."
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    className="nested-reply-textarea"
+                                    rows="3"
+                                />
+                                <div className="nested-reply-buttons">
+                                    <button
+                                        type="button"
+                                        className="cancel-btn"
+                                        onClick={handleReplyCancel}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="submit-btn"
+                                        disabled={!replyText.trim()}
+                                    >
+                                        Reply
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 )}
             </div>
