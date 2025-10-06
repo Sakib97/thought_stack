@@ -215,6 +215,36 @@
     padding-left: 16px;
     margin-left: 8px;
 }
+/* Load More Replies Button Styles */
+.load-more-replies-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    padding-left: 16px;
+}
+
+.load-more-replies-btn {
+    background: none;
+    border: 1px solid #065fd4;
+    color: #065fd4;
+    padding: 8px 16px;
+    border-radius: 18px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.load-more-replies-btn:hover {
+    background-color: #def1ff;
+    transform: translateY(-1px);
+}
+
+.load-more-replies-btn:active {
+    transform: translateY(0);
+}
 
 /* Mobile Responsive - Improved for reply forms */
 @media (max-width: 768px) {
@@ -310,6 +340,22 @@
         font-size: 15px;
         padding: 8px 12px;
     }
+    .load-more-replies-container {
+        margin-top: 10px;
+        margin-bottom: 6px;
+        padding-left: 12px;
+    }
+
+    .load-more-replies-btn {
+        padding: 10px 18px;
+        font-size: 13px;
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .comment {
+        margin: 6px 8px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -359,6 +405,21 @@
         padding: 8px 12px;
         font-size: 13px;
         min-width: 80px;
+    }
+    .load-more-replies-container {
+        margin-top: 8px;
+        margin-bottom: 4px;
+        padding-left: 8px;
+    }
+
+    .load-more-replies-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+        max-width: 180px;
+    }
+
+    .comment {
+        margin: 4px 6px;
     }
 }
 

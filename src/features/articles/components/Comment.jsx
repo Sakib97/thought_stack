@@ -19,6 +19,40 @@ const Comment = ({ comment, user }) => {
     const [likes, setLikes] = useState(comment.likes || 0);
     const [dislikes, setDislikes] = useState(comment.dislikes || 0);
     const [userReaction, setUserReaction] = useState(null);
+    
+    // Reply pagination states
+    const [visibleReplies, setVisibleReplies] = useState([]);
+    const [currentReplyPage, setCurrentReplyPage] = useState(1);
+    const [hasMoreReplies, setHasMoreReplies] = useState(false);
+    const repliesPerPage = 3;
+    const initialRepliesCount = 3;
+
+    // Initialize replies pagination
+    React.useEffect(() => {
+        if (comment.replies && comment.replies.length > 0) {
+            // Show first 2 replies initially
+            const initialReplies = comment.replies.slice(0, initialRepliesCount);
+            setVisibleReplies(initialReplies);
+            
+            // Check if there are more replies to load
+            setHasMoreReplies(comment.replies.length > initialRepliesCount);
+        }
+    }, [comment.replies]);
+
+    // Load more replies
+    const loadMoreReplies = () => {
+        const nextPage = currentReplyPage + 1;
+        const startIndex = initialRepliesCount + (nextPage - 2) * repliesPerPage;
+        const endIndex = startIndex + repliesPerPage;
+        
+        const newReplies = comment.replies.slice(startIndex, endIndex);
+        setVisibleReplies(prev => [...prev, ...newReplies]);
+        setCurrentReplyPage(nextPage);
+        
+        // Check if there are still more replies to load
+        const remainingReplies = comment.replies.length - endIndex;
+        setHasMoreReplies(remainingReplies > 0);
+    };
 
     const handleLike = () => {
         if (userReaction === "like") {
@@ -51,6 +85,27 @@ const Comment = ({ comment, user }) => {
         if (replyText.trim()) {
             // TODO: Implement reply submission to backend
             console.log("Submitting reply:", replyText);
+            
+            // For demo purposes, add the new reply to the visible replies
+            const newReply = {
+                id: Date.now(), // Temporary ID
+                user_name: user?.user_metadata?.full_name || "You",
+                user_avatar: user?.user_metadata?.avatar_url || "https://via.placeholder.com/40",
+                content: replyText,
+                created_at: new Date().toISOString(),
+                likes: 0,
+                dislikes: 0,
+                replies: []
+            };
+            
+            // Add the new reply and update the state
+            const updatedReplies = [...visibleReplies, newReply];
+            setVisibleReplies(updatedReplies);
+            
+            // Update hasMoreReplies based on the new total
+            const totalRepliesAfterAdd = comment.replies ? comment.replies.length + 1 : 1;
+            setHasMoreReplies(totalRepliesAfterAdd > updatedReplies.length);
+            
             setReplyText("");
             setShowReplyForm(false);
         }
@@ -72,8 +127,14 @@ const Comment = ({ comment, user }) => {
         return date.toLocaleString();
     };
 
-    // Get user avatar - fixed this line
+    // Get user avatar
     const userAvatar = user?.user_metadata?.avatar_url || "https://via.placeholder.com/40";
+
+    // Calculate total replies count (including nested replies)
+    const getTotalRepliesCount = () => {
+        if (!comment.replies) return 0;
+        return comment.replies.length;
+    };
 
     return (
         <div className="comment">
@@ -142,7 +203,7 @@ const Comment = ({ comment, user }) => {
                     </button>
                 </div>
 
-                {/* Reply Form - Fixed layout */}
+                {/* Reply Form */}
                 {showReplyForm && user && (
                     <div className="reply-form">
                         <div className="reply-avatar">
@@ -178,7 +239,7 @@ const Comment = ({ comment, user }) => {
                     </div>
                 )}
 
-                {/* Replies Dropdown */}
+                {/* Replies Section with Pagination */}
                 {comment.replies && comment.replies.length > 0 && (
                     <div className="replies-section">
                         <button
@@ -187,19 +248,32 @@ const Comment = ({ comment, user }) => {
                             }`}
                             onClick={() => setShowReplies(!showReplies)}
                         >
-                            {comment.replies.length}{" "}
-                            {comment.replies.length === 1 ? "reply" : "replies"}
+                            {getTotalRepliesCount()}{" "}
+                            {getTotalRepliesCount() === 1 ? "reply" : "replies"}
                         </button>
 
                         {showReplies && (
                             <div className="replies-list">
-                                {comment.replies.map((reply) => (
+                                {visibleReplies.map((reply) => (
                                     <Reply
                                         key={reply.id}
                                         reply={reply}
                                         user={user}
+                                        parentAuthor={comment.user_name}
                                     />
                                 ))}
+                                
+                                {/* Load More Replies Button */}
+                                {hasMoreReplies && (
+                                    <div className="load-more-replies-container">
+                                        <button
+                                            className="load-more-replies-btn"
+                                            onClick={loadMoreReplies}
+                                        >
+                                            View more replies ({comment.replies.length - visibleReplies.length} more)
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

@@ -29,6 +29,66 @@
                     "created_at": "2024-09-15 19:45:10+00",
                     "likes": 5,
                     "dislikes": 1
+                },
+                {
+                    "id": 101,
+                    "user_id": "user2",
+                    "user_name": "User",
+                    "user_avatar": "https://i.pinimg.com/736x/3a/e3/09/3ae30910de65d6e91dd739ffc6f0435d.jpg",
+                    "content": "I completely agree! The author did an excellent job explaining complex topics.",
+                    "created_at": "2024-09-15 19:15:23+00",
+                    "likes": 8,
+                    "dislikes": 0
+                },
+                {
+                    "id": 102,
+                    "user_id": "user3",
+                    "user_name": "Sadik",
+                    "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+                    "content": "Yes, and the examples were very helpful for understanding the concepts.",
+                    "created_at": "2024-09-15 19:45:10+00",
+                    "likes": 5,
+                    "dislikes": 1
+                },
+                {
+                    "id": 101,
+                    "user_id": "user2",
+                    "user_name": "User",
+                    "user_avatar": "https://i.pinimg.com/736x/3a/e3/09/3ae30910de65d6e91dd739ffc6f0435d.jpg",
+                    "content": "I completely agree! The author did an excellent job explaining complex topics.",
+                    "created_at": "2024-09-15 19:15:23+00",
+                    "likes": 8,
+                    "dislikes": 0
+                },
+                {
+                    "id": 102,
+                    "user_id": "user3",
+                    "user_name": "Sadik",
+                    "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+                    "content": "Yes, and the examples were very helpful for understanding the concepts.",
+                    "created_at": "2024-09-15 19:45:10+00",
+                    "likes": 5,
+                    "dislikes": 1
+                },
+                {
+                    "id": 101,
+                    "user_id": "user2",
+                    "user_name": "User",
+                    "user_avatar": "https://i.pinimg.com/736x/3a/e3/09/3ae30910de65d6e91dd739ffc6f0435d.jpg",
+                    "content": "I completely agree! The author did an excellent job explaining complex topics.",
+                    "created_at": "2024-09-15 19:15:23+00",
+                    "likes": 8,
+                    "dislikes": 0
+                },
+                {
+                    "id": 102,
+                    "user_id": "user3",
+                    "user_name": "Sadik",
+                    "user_avatar": "https://png.pngtree.com/png-clipart/20211011/ourlarge/pngtree-faceless-arabic-man-cartoon-with-white-clothes-png-image_3979873.png",
+                    "content": "Yes, and the examples were very helpful for understanding the concepts.",
+                    "created_at": "2024-09-15 19:45:10+00",
+                    "likes": 5,
+                    "dislikes": 1
                 }
             ]
         },
