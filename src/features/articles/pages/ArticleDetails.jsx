@@ -10,35 +10,79 @@ import { useState, useEffect } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faComment, faPaperPlane } from '@fortawesome/free-regular-svg-icons';
+import { faComment, faPaperPlane} from '@fortawesome/free-regular-svg-icons';
 import Comment from "../components/Comment";
 import commentsData from "../components/comments.json";
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
-    // console.log("user", userMeta.is_active);
-
     const { articleID, articleTitleSlug } = useParams();
     const articleId = decodeId(articleID);
-    // console.log("articleId", articleId);
-    // console.log("articleTitleSlug", articleTitleSlug);
     const { language } = useLanguage();
 
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const [fontFamily, setFontFamily] = useState("Roboto Serif");
-    // ArticleDetails component
+    
+    // Comment states
     const [commentText, setCommentText] = useState("");
     const [showCommentForm, setShowCommentForm] = useState(false);
+    
+    // Pagination states
+    const [visibleComments, setVisibleComments] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMoreComments, setHasMoreComments] = useState(false);
+    const commentsPerPage = 5;
+    const initialCommentsCount = 7;
 
-    // handle comment submission
+    // Initialize comments pagination
+    useEffect(() => {
+        if (commentsData.comments.length > 0) {
+            // Show first 7 comments initially
+            const initialComments = commentsData.comments.slice(0, initialCommentsCount);
+            setVisibleComments(initialComments);
+            
+            // Check if there are more comments to load
+            setHasMoreComments(commentsData.comments.length > initialCommentsCount);
+        }
+    }, []);
+
+    // Load more comments
+    const loadMoreComments = () => {
+        const nextPage = currentPage + 1;
+        const startIndex = initialCommentsCount + (nextPage - 2) * commentsPerPage;
+        const endIndex = startIndex + commentsPerPage;
+        
+        const newComments = commentsData.comments.slice(startIndex, endIndex);
+        setVisibleComments(prev => [...prev, ...newComments]);
+        setCurrentPage(nextPage);
+        
+        // Check if there are still more comments to load
+        const remainingComments = commentsData.comments.length - endIndex;
+        setHasMoreComments(remainingComments > 0);
+    };
+
+    // Handle comment submission
     const handleCommentSubmit = (e) => {
         e.preventDefault();
         if (commentText.trim()) {
             // TODO: Implement comment submission to backend
             console.log("Submitting comment:", commentText);
+            
+            // For demo purposes, add the new comment to the visible comments
+            const newComment = {
+                id: Date.now(), // Temporary ID
+                user_name: user?.user_metadata?.full_name || "You",
+                user_avatar: user?.user_metadata?.avatar_url || "https://via.placeholder.com/40",
+                content: commentText,
+                created_at: new Date().toISOString(),
+                likes: 0,
+                dislikes: 0,
+                replies: []
+            };
+            
+            setVisibleComments(prev => [newComment, ...prev]);
             setCommentText("");
             setShowCommentForm(false);
         }
@@ -57,9 +101,7 @@ const ArticleDetails = () => {
     const fetchArticle = async () => {
         setLoading(true);
         const { data, error } = await supabase
-            // .from("articles")
             .from("articles_secure")
-            // .select("*")
             .select(
                 "title_en,\
                     title_bn,\
@@ -77,7 +119,6 @@ const ArticleDetails = () => {
                     author_email"
             )
             .eq("id", articleId)
-            // .eq("article_status", "accepted")
             .single();
 
         if (error) {
@@ -118,6 +159,7 @@ const ArticleDetails = () => {
             </div>
         );
     }
+
     return (
         <div>
             <link
@@ -126,8 +168,6 @@ const ArticleDetails = () => {
             />
             <div className={`${styles.article}`}>
                 <div className={`container`}>
-                    {/* <GoToTopButton /> */}
-
                     <div className={`${styles.articleHead}`}>
                         <h1 style={{ fontFamily: fontFamily }}>
                             {language === "en"
@@ -213,7 +253,6 @@ const ArticleDetails = () => {
                                     }}
                                 />
                             </div>
-                            {/* {!isEnglish && <SafeHtmlRenderer html={articleData.article.content_bn} />} */}
                         </div>
 
                         <hr />
@@ -253,6 +292,8 @@ const ArticleDetails = () => {
                         isActive={userMeta?.is_active}
                     />
                 </div>
+                
+                {/* Comments Section */}
                 <div className={styles.commentsSection}>
                     <h3
                         style={{ marginBottom: "20px", fontFamily: fontFamily }}
@@ -335,13 +376,25 @@ const ArticleDetails = () => {
 
                     {/* Comments List */}
                     <div className={styles.commentsList}>
-                        {commentsData.comments.map((comment) => (
+                        {visibleComments.map((comment) => (
                             <Comment
                                 key={comment.id}
                                 comment={comment}
                                 user={user}
                             />
                         ))}
+                        
+                        {/* Load More Button */}
+                        {hasMoreComments && (
+                            <div className={styles.loadMoreContainer}>
+                                <button
+                                    className={styles.loadMoreBtn}
+                                    onClick={loadMoreComments}
+                                >
+                                    {language === "en" ? "See more comments" : "আরো মন্তব্য দেখুন"} ({commentsData.comments.length - visibleComments.length} {language === "en" ? "more" : "অবশিষ্ট"})
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
