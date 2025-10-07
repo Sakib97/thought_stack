@@ -1,0 +1,266 @@
+.commentSection {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #eee;
+    margin: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.icon {
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.commentInput {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 8px 14px;
+    margin-bottom: 25px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.commentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment {
+    border-top: 1px solid #f1f1f1;
+    padding-top: 10px;
+}
+
+.commentHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -3px;
+}
+
+.commentHeader strong {
+    font-weight: 600;
+}
+
+.nameAndDate {
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    font-size: 0.75rem;
+    color: #888;
+    margin-left: 5px;
+}
+
+.reportTrigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 18px;
+    transition: all 0.2s;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.reportTrigger:hover {
+    background-color: #f0f0f0;
+}
+
+.text {
+    margin: 5px 0 7px 46px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 46px;
+    font-size: 0.85rem;
+    color: #555;
+    flex-wrap: wrap;
+
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border-radius: 18px;
+    padding: 6px 8px;
+}
+
+.action:hover {
+    /* color: #0073e6; */
+    background-color: #f0f0f0;
+}
+
+.replyBox {
+    margin-left: 46px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.replyTextarea {
+    width: 100%;
+    min-height: 70px;
+    resize: vertical;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.replyTextarea:focus {
+    border-color: #0073e6;
+}
+
+.replyButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.cancelBtn,
+.submitBtn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.cancelBtn {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.cancelBtn:hover {
+    background: #e8e8e8;
+}
+
+.submitBtn {
+    background: #0073e6;
+    color: white;
+}
+
+.submitBtn:hover {
+    background: #005bb5;
+}
+
+.replyCount {
+    margin-left: 46px;
+    margin-top: 3px;
+    color: #0073e6;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-weight: 500;
+    background: none;
+    border-radius: 18px;
+    padding: 6px 10px;
+    width: fit-content;
+
+}
+
+.replyCount:hover {
+    background-color: #e9f3fd;
+    /* border: none; */
+
+}
+
+.repliesList {
+    margin-top: 7px;
+    margin-left: 50px;
+    border-left: 2px solid #f0f0f0;
+    border-top: none;
+    padding-left: 7px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.repliesList img {
+    width: 30px;
+    height: 30px;
+}
+
+.loadMoreBtn {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    margin: 10px auto;
+    display: block;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.loadMoreBtn:hover {
+    background-color: #e0e0e0;
+}
+
+.loadMoreReplyBtn{
+    text-align: left;
+    background-color: transparent;
+    color: #005bb5;
+    border: none;
+    padding: 0;
+}
+
+.loadMoreReplyBtn:hover {
+    /* background-color: #e0e0e0; */
+    text-decoration: underline;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .nameAndDate {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .date {
+        margin-left: 0;
+    }
+}
