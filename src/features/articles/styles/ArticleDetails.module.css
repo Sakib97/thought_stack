@@ -7,17 +7,13 @@
 .articleMenu {
     display: flex;
     justify-content: space-between;
-    /* align-items: center; */
     padding: 10px 20px;
-    /* background-color: #f8f9fa; */
-    /* border-bottom: 1px solid #dee2e6; */
 }
 
 .articleImage {
     margin-top: 20px;
     width: 100%;
     height: auto;
-    /* Ensure height is the same as width */
     object-fit: cover;
 }
 
@@ -37,44 +33,34 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    /* Optional: Keeps the image proportions and covers the circle */
     object-fit: cover;
 }
 
 .authorNameOfArticle {
-    /* top right bottom left */
     padding: 0 10px 0 10px;
 }
 
 .articleReactions {
     display: flex;
     justify-content: center;
-    /* top right bottom left */
-    padding: 5px 0 5px 0;
+    padding: 5px 0;
     background-color: #eff2ed;
     border: 1px solid #020202;
     border-radius: 20px;
 }
 
 .articleReactionsIcons {
-    /* margin: 20px; */
     margin-right: 20px;
     margin-left: 30px;
     font-size: 30px;
-
-    /* Smooth transition for size change */
     transition: transform 0.3s ease;
 }
 
 .articleReactionsIcons:hover {
     color: #007bff;
-
     transform: scale(1.5);
-    /* Increase the size on hover */
     position: relative;
-    /* Position relative to allow z-index */
     z-index: 1000;
-    /* High z-index to stay on top */
 }
 
 .articleReactionsCount {
@@ -95,160 +81,159 @@
     color: rgb(0, 0, 0);
     border: none;
     border-radius: 20px;
-    /* padding: 5px 10px; */
     margin: 5px;
     cursor: pointer;
     font-size: 13px;
 }
 
-.articleComments {
-    margin-top: 20px;
-    background-color: #d4ddea;
+.commentsSection {
+    margin: 50px 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
     border-radius: 10px;
-    padding: 10px;
-    border: 1px solid #0a0a0a;
-}
-
-.totalComments {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
 }
 
 .commentForm {
     display: flex;
-    /* align-items: center; */
-    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 12px;
 }
 
-.commentFormInput {
-    width: 100%;
-    max-width: 500px;
-    height: 50px;
-    padding: 5px;
-    margin: 4px 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-}
-
-.commentSubmitButton {
-    background-color: rgb(208, 216, 196);
-    color:#000000;
-    border-radius: 10px;
-    margin: 4px;
-    padding: 5px;
-}
-.commentSubmitButton:hover {
-    background-color: #0b7d20;
-    color: white;
-    cursor: pointer;
-}
-
-.commentSortDropdown{
-    background-color: #e7eaee;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    margin: 20px 0 5px 20px;
-    cursor: pointer;
-    border: 1px solid #141415;
-}
-
-.comments{
-    margin: 20px 0 5px 20px;
-}
-.commentHead{
-    display: flex;
-    /* margin: 20px 0 5px 20px; */
-}
-.commenterPic{
-    width: 30px;
-    height: 30px;
+.commentFormAvatar img {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    /* Keeps the image proportions and covers the circle */
-    object-fit: cover; 
+    object-fit: cover;
 }
-.commenterInfo{
+
+.commentInputContainer {
+    flex: 1;
+}
+
+.commentInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+.commentInput:focus {
+    border-color: #065fd4;
+}
+
+.commentFormActive {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.commentTextarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    height: 50px;
+    font-family: inherit;
+    background-color: white;
+    color: black;
+    line-height: 1.4;
+}
+
+.commentTextarea:focus {
+    border-color: #065fd4;
+    background-color: white;
+}
+
+.commentTextarea::placeholder {
+    color: #606060;
+}
+
+.commentFormButtons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.commentCancelBtn,
+.commentSubmitBtn {
     display: flex;
     align-items: center;
-    /* margin: 10px 0; */
-}
-.commenterName{
-    margin: 0 0 0 10px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.commentDate{
-    margin: 0 0 0 5px;
-    font-size: 13px;
-}
-
-.commentBody{
-    margin: 0px 0 0px 35px;
-}
-
-.commentReactions{
-    margin: 5px 0 0px 35px;
-}
-
-
-.commentReplyBtn{
-    background-color: #d4ddea;
-    color: #061361;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
-    /* padding: 5px 10px; */
-    margin: 0 0 0 20px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    /* border: 1px solid #141415; */
-}
-.commentReplyBtn:hover{
-    background-color: #c4c4dff2;
-    /* color: white; */
-    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.commentReplyForm{
-    display: flex;
-    /* justify-content: center; */
-    margin: 5px 0 0 30px;
-    /* background-color: white; */
+.commentCancelBtn {
+    background: none;
+    color: #065fd4;
+    border: 1px solid #065fd4;
 }
-.commentReplyFormInput{
-    width: 100%;
-    max-width: 500px;
-    height: 50px;
-    padding: 5px;
-    margin: 4px 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+
+.commentCancelBtn:hover {
+    background-color: #def1ff;
 }
-.commentReplySubmitButton{
-    background-color: rgb(208, 216, 196);
-    color:#000000;
-    border-radius: 10px;
-    margin: 4px;
-    padding: 5px;
-}
-.commentReplySubmitButton:hover {
-    background-color: #0b7d20;
+
+.commentSubmitBtn {
+    background-color: #065fd4;
     color: white;
+}
+
+.commentSubmitBtn:hover:not(:disabled) {
+    background-color: #0544b4;
+}
+
+.commentSubmitBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.commentsList {
+    margin-top: 20px;
+}
+/* Comments Pagination Styles */
+.loadMoreContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.loadMoreBtn {
+    background: none;
+    border: 1px solid #065fd4;
+    color: #065fd4;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
 }
 
-/* .commentReplies{
-    background-color: #d4ddea;
-    border-radius: 10px;
-    border: 1px solid #0a0a0a;
-} */
-
-.commentReply{
-    margin: 10px 0 0px 30px;
+.loadMoreBtn:hover {
+    background-color: #def1ff;
+    transform: translateY(-1px);
 }
 
+.loadMoreBtn:active {
+    transform: translateY(0);
+}
 
+/* For tablets and large mobiles */
 @media (max-width: 991px) {
     .articleReactionsIcons {
         margin-left: 15px;
@@ -258,71 +243,155 @@
         z-index: 800;
     }
 
-    /* .articleReactionsName{
-        z-index: 700;
-    } */
-
-    .commentForm , .commentReplyForm{
-        display: flex;          
-        /* Stack items vertically */
-        flex-direction: column;  
-        /* Align items to the right */
-        align-items: flex-end;   
-    }
-    .commentFormInput {
-        /* Added bottom margin for spacing */
-        margin: 0 10px 10px 10px; 
-        width: 95%;
-    }
-    .commentSubmitButton {
-        /* Right margin instead of left */
-        margin-right: 10px;      
+    /* Keep avatar on left and input on right */
+    .commentForm {
+        flex-direction: row;
+        align-items: flex-start;
     }
 
+    .commentFormAvatar {
+        flex-shrink: 0;
+    }
 
-
+    .commentInputContainer {
+        width: 100%;
+    }
 }
 
+/* For smaller devices (phones) */
+@media (max-width: 768px) {
+    .articleBodyText p,
+    .articleBodyText {
+        font-size: 17px !important;
+        line-height: 1.6 !important;
+        padding: 0 1px !important;
+        text-align: justify !important;
+        box-sizing: border-box;
+        word-break: break-word;
+        hyphens: auto;
+    }
 
+    .articleHead h1 {
+        font-size: 24px !important;
+    }
 
+    .articleHead span {
+        font-size: 15px !important;
+    }
 
+    .commentsSection {
+        padding: 15px;
+    }
 
+    .commentForm {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+    }
 
+    .commentFormAvatar img {
+        width: 36px;
+        height: 36px;
+    }
 
+    .commentInputContainer {
+        flex: 1;
+    }
 
+    .commentTextarea {
+        font-size: 13px;
+        height: 40px;
+    }
 
+    .commentFormButtons {
+        justify-content: flex-end;
+    }
 
-
-
-
-/* From features/search-bar branch*/
-
-.articleBodyText p, 
-.articleBodyText{
-  font-size: 17px;
-  line-height: 1.6;
-  text-align: justify;
-  padding: 0 2px;
-  max-width: 1100;
-  margin: 0 auto;
-  box-sizing: border-box;
+    .commentsSection h3 {
+        margin-bottom: 16px;
+        font-size: 1.2rem;
+    }
+    .loadMoreBtn {
+        padding: 12px 24px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .loadMoreContainer {
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
 }
 
+/* For very small phones */
+@media (max-width: 480px) {
+    .commentsSection {
+        padding: 10px;
+    }
 
+    .commentForm {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .commentFormAvatar img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .commentTextarea {
+        font-size: 13px;
+    }
+
+    .commentFormButtons {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .commentsSection h3 {
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+    }
+    .loadMoreBtn {
+        padding: 10px 20px;
+        font-size: 14px;
+        max-width: 250px;
+    }
+}
+
+/* Ensure the container doesn't overflow on mobile */
+.container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
 
 @media (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
 
-  .articleBodyText p,
-  .articleBodyText {
-    font-size: 18px !important;
-    line-height: 1.6 !important;
-    padding: 0 1px !important;
-    text-align: justify !important;
+@media (max-width: 480px) {
+    .container {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+/* Article Body */
+.articleBodyText p,
+.articleBodyText {
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: justify;
+    padding: 0 2px;
+    max-width: 1100px;
+    margin: 0 auto;
     box-sizing: border-box;
-    word-break: break-word;
-    hyphens: auto;
-  }
-
-  .articleHead h1 { font-size: 24px !important; }
-  .articleHead span { font-size: 15px !important; }
 }
