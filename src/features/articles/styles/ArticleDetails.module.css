@@ -3,6 +3,9 @@
     padding-top: 20px;
     padding-bottom: 20px;
 }
+.articleContainer{
+    margin: 10px 90px;
+}
 
 .articleMenu {
     display: flex;
@@ -40,54 +43,11 @@
     padding: 0 10px 0 10px;
 }
 
-.articleReactions {
-    display: flex;
-    justify-content: center;
-    padding: 5px 0;
-    background-color: #eff2ed;
-    border: 1px solid #020202;
-    border-radius: 20px;
-}
-
-.articleReactionsIcons {
-    margin-right: 20px;
-    margin-left: 30px;
-    font-size: 30px;
-    transition: transform 0.3s ease;
-}
-
-.articleReactionsIcons:hover {
-    color: #007bff;
-    transform: scale(1.5);
-    position: relative;
-    z-index: 1000;
-}
-
-.articleReactionsCount {
-    font-size: 15px;
-    color: #6c757d;
-    margin-left: 2px;
-    display: flex;
-    justify-content: center;
-}
-
-
-
-
-/* For tablets and large mobiles */
-@media (max-width: 991px) {
-    .articleReactionsIcons {
-        margin-left: 15px;
-    }
-
-    .articleReactionsIcons:hover {
-        z-index: 800;
-    }
-
-}
-
 /* For smaller devices (phones) */
 @media (max-width: 768px) {
+    .articleContainer{
+        margin: 10px;
+    }
     .articleBodyText p,
     .articleBodyText {
         font-size: 17px !important;
@@ -129,7 +89,7 @@
     line-height: 1.6;
     text-align: justify;
     padding: 0 2px;
-    max-width: 1100px;
+    /* max-width: 1100px; */
     margin: 0 auto;
     box-sizing: border-box;
 }

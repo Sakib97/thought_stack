@@ -3,7 +3,7 @@
     border-radius: 8px;
     padding: 20px;
     border: 1px solid #eee;
-    margin: 20px;
+    /* margin: 20px; */
 }
 
 .header {
@@ -63,6 +63,7 @@
     align-items: center;
     gap: 10px;
     margin-bottom: -3px;
+    font-size: 19px;
 }
 
 .commentHeader strong {
@@ -97,7 +98,7 @@
 
 .text {
     margin: 5px 0 7px 46px;
-    font-size: 0.95rem;
+    font-size: 18px;
     color: #333;
 }
 
@@ -135,6 +136,7 @@
     flex-direction: column;
     gap: 8px;
 }
+
 
 .replyTextarea {
     width: 100%;
@@ -251,6 +253,21 @@
     /* background-color: #e0e0e0; */
     text-decoration: underline;
     border: none;
+}
+
+button:disabled,
+button[disabled]{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.noReply{
+    margin-left: 50px;
+    color: #fa0505;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-top: 5px;
 }
 
 @media (max-width: 768px) {
