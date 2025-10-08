@@ -40,7 +40,7 @@ const CommentReactions = ({ articleId, commentId }) => {
             .from('comment_reactions')
             .select('reaction_type')
             .eq('comment_id', commentId)
-            .eq('user_id', userMeta.uid)
+            .eq('user_id', userMeta?.uid)
             .single();
 
         if (error && error.code !== 'PGRST116') {
@@ -55,16 +55,16 @@ const CommentReactions = ({ articleId, commentId }) => {
     useEffect(() => {
         if (!commentId) return;
         fetchReactionCounts();
-        if (userMeta.uid) fetchUserReaction();
-    }, [commentId, userMeta.uid]);
+        if (userMeta?.uid) fetchUserReaction();
+    }, [commentId, userMeta?.uid]);
 
     const toggleReaction = async (newReaction) => {
-        if (!userMeta.uid) {
+        if (!userMeta?.uid) {
             toast.error('Please login to react');
             return;
         }
 
-        if (!userMeta.is_active) {
+        if (!userMeta?.is_active) {
             toast.error("Your account is deactivated. You can't react.");
             return;
         }
@@ -76,7 +76,7 @@ const CommentReactions = ({ articleId, commentId }) => {
                 .from('comment_reactions')
                 .select('reaction_type')
                 .eq('comment_id', commentId)
-                .eq('user_id', userMeta.uid)
+                .eq('user_id', userMeta?.uid)
                 .maybeSingle();
 
             if (fetchError) throw fetchError;
@@ -87,7 +87,7 @@ const CommentReactions = ({ articleId, commentId }) => {
                     .from('comment_reactions')
                     .delete()
                     .eq('comment_id', commentId)
-                    .eq('user_id', userMeta.uid);
+                    .eq('user_id', userMeta?.uid);
                 if (deleteError) throw deleteError;
 
                 setUserReaction(null);
@@ -97,7 +97,7 @@ const CommentReactions = ({ articleId, commentId }) => {
                 const { error: upsertError } = await supabase
                     .from('comment_reactions')
                     .upsert(
-                        [{ comment_id: commentId, user_id: userMeta.uid, reaction_type: newReaction }],
+                        [{ comment_id: commentId, user_id: userMeta?.uid, reaction_type: newReaction }],
                         { onConflict: ['comment_id', 'user_id'] }
                     );
                 if (upsertError) throw upsertError;
