@@ -130,7 +130,7 @@ export default function HomePage() {
                 </div>
                 {loadingMain ? (
                     <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
-                        
+
                         <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
 
                     </div>
@@ -149,13 +149,8 @@ export default function HomePage() {
 
                             <div className={styles.inner_text_area}>
                                 <div className={styles.textSection}>
-                                    <Link
-                                        className={styles.linkStyle}
-                                        to={`/article/${encodeId(mainArticle.id)}/${mainArticle.article_slug}`}>
-                                        <h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
-                                        <p style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
-                                    </Link>
-
+                                    <h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
+                                    <p style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
 
                                     <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
                                         <i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
@@ -200,7 +195,6 @@ export default function HomePage() {
                             renderItem={(item) => (
                                 <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} style={{ textDecoration: 'none' }}>
                                     <List.Item
-                                        to={`/article/${encodeId(item.id)}/${item.article_slug}`}
                                         className={styles.articleItem}
                                         key={item.article_id}
                                         extra={
@@ -209,7 +203,7 @@ export default function HomePage() {
                                                 draggable={false}
                                                 width={300}
                                                 height={"auto"}
-                                                alt="cover"
+                                                alt={`${item.title_en} cover image`}
                                                 src={item.cover_img_link}
                                             />
                                         }
@@ -217,11 +211,9 @@ export default function HomePage() {
                                         <List.Item.Meta
                                             avatar={<Avatar src={item.author_img_link} />}
                                             title={
-                                                <Link to={`/article/${encodeId(item.id)}/${item.article_slug}`} className={styles.header_text}>
                                                     <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily }} >
                                                         {language === "en" ? item.title_en : item.title_bn}
                                                     </span>
-                                                </Link>
                                             }
                                             //   description={item.subtitle_en}
                                             description={
