@@ -1,0 +1,25 @@
+.reactionsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    font-size: 1.05rem;
+    color: #555;
+    flex-wrap: wrap;
+
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border-radius: 18px;
+    padding: 6px 8px;
+}
+
+.action:hover {
+    /* color: #0073e6; */
+    background-color: #f0f0f0;
+}

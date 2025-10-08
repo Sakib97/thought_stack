@@ -84,6 +84,7 @@ const ArticleComment = ({ articleId, userMeta }) => {
     useEffect(() => {
         if (articleId) {
             setPage(1);
+            setComments([]); // clear old comments
             fetchComments(1, sortOrder);
         }
     }, [articleId, sortOrder, refreshTrigger]); // refetch when sort changes
@@ -102,7 +103,9 @@ const ArticleComment = ({ articleId, userMeta }) => {
     };
 
     const handleMenuClick = ({ key }) => {
+        setComments([]); // clear comments to avoid duplicates
         setSortOrder(key === "1" ? "desc" : "asc"); // toggle based on key
+        setPage(1);
     };
 
     const handleCommentAdded = (newComment) => {
