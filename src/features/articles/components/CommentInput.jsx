@@ -79,8 +79,9 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
     if (!userMeta.is_active) {
         return (
             <div className={styles.notLoggedIn}>
-                <i className="fa-solid fa-circle-exclamation"></i> &nbsp;
-                You can't comment! <br /> Your account is not active!
+                <i className="fa-solid fa-triangle-exclamation"></i> &nbsp;
+                You can't comment! <br />
+                <div >Your account is not active!</div>
             </div>
         );
     }
