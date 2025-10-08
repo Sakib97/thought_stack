@@ -83,7 +83,12 @@ const CommentItem = ({
 
             if (error) throw error;
 
-            const formatted = data.map((r) => ({
+            // Filter out Replies already in state
+            const existingIds = new Set(replies.map(r => r.id));
+            const filtered = data.filter(r => !existingIds.has(r.id));
+
+
+            const formatted = filtered.map((r) => ({
                 id: r.id,
                 name: r.users_meta?.name || "Anonymous",
                 avatar: r.users_meta?.avatar_url || "https://i.pravatar.cc/40",
@@ -323,7 +328,7 @@ const CommentItem = ({
                                 </Spinner>
                             </div>}
 
-                            {hasMore && (
+                            {hasMore && replies.length < totalRepliesCount && (
                                 <button
                                     className={styles.loadMoreReplyBtn}
                                     onClick={() => handleLoadMore(comment.id)}
