@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import CommentItem from "./CommentItem";
 import { supabase } from "../../../config/supabaseClient";
 import Spinner from 'react-bootstrap/Spinner';
+import CommentInput from "./CommentInput";
+
 
 const COMMENTS_PER_PAGE = 2;
 
@@ -39,13 +41,20 @@ const ArticleComment = ({ articleId, userMeta }) => {
                     { count: "exact" } // get total count
                 )
                 .eq("article_id", articleId)
+                // not hidden
                 .is("parent_id", null)
+                .is("is_hidden", false)
+                .eq("replies.is_hidden", false) // filter only visible replies
                 .order("created_at", { ascending: true })
                 .range(from, to);
 
             if (error) throw error;
 
-            const formatted = data.map((c) => ({
+            // Filter out comments already in state
+            const existingIds = new Set(comments.map(c => c.id));
+            const filtered = data.filter(c => !existingIds.has(c.id));
+
+            const formatted = filtered.map((c) => ({
                 id: c.id,
                 name: c.users_meta?.name || "Anonymous",
                 avatar: c.users_meta?.avatar_url || "https://i.pravatar.cc/40",
@@ -85,37 +94,54 @@ const ArticleComment = ({ articleId, userMeta }) => {
         fetchComments(nextPage);
     };
 
+    const handleCommentAdded = (newComment) => {
+        setComments(prev => [newComment, ...prev]); // prepend new comment at top
+        setTotalCount(prev => prev + 1); // increment total comment count
+    };
+
+    const handleReplyAdded = (newReply) => {
+        setComments(prev => {
+            const updated = prev.map(c => {
+                if (c.id === newReply.parent_id) {
+                    return { ...c, repliesCount: c.repliesCount + 1, replies: [newReply, ...c.replies] };
+                }
+                return c;
+            });
+            return updated;
+        });
+    };
+
     return (
         <div className={styles.commentSection}>
             <div className={styles.header}>
                 <i className={`fa-regular fa-comment ${styles.icon}`}></i>
                 <h2>Comments ({totalCount})</h2>
             </div>
-
-            <div className={styles.commentInput}>
-                <img
-                    src={userMeta?.avatar_url || "https://i.pravatar.cc/40"}
-                    alt="avatar"
-                    className={styles.avatar}
-                />
-                <input type="text" placeholder="Add a comment..." className={styles.input} />
-            </div>
+            <CommentInput
+                articleId={articleId}
+                // userMeta={userMeta}
+                // onCommentAdded={() => fetchComments(1)} // refresh after new comment
+                onCommentAdded={handleCommentAdded}
+            />
 
             <div className={styles.commentsList}>
                 {comments.map((c) => (
                     <CommentItem
                         key={c.id}
                         comment={c}
+                        mainParentId={c.id}
                         openReplyId={openReplyId}
                         setOpenReplyId={setOpenReplyId}
                         openReplies={openReplies}
                         setOpenReplies={setOpenReplies}
+                        onReplyAdded={handleReplyAdded}
                         articleId={articleId}
+                        isReply={false}
                     />
                 ))}
             </div>
 
-            {loading && <div style={{textAlign:'center'}}>
+            {loading && <div style={{ textAlign: 'center' }}>
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>
                 </Spinner>

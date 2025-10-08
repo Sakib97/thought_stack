@@ -96,7 +96,7 @@ const ArticleDetails = () => {
                 rel="stylesheet"
             />
             <div className={`${styles.article}`}>
-                <div className={`container`}>
+                <div className={`containers ${styles.articleContainer}`}>
                     <div className={`${styles.articleHead}`}>
                         <h1 style={{ fontFamily: fontFamily }}>
                             {language === "en"
@@ -220,9 +220,11 @@ const ArticleDetails = () => {
                         userId={user?.id}
                         isActive={userMeta?.is_active}
                     />
+                    <hr />
+                    <ArticleComment articleId={articleId} userMeta={userMeta} />
+
                 </div>
 
-                <ArticleComment articleId={articleId} userMeta={userMeta} />
             </div>
         </div>
     );
