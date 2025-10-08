@@ -7,6 +7,7 @@ import { useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import { useAuth } from "../../../context/AuthProvider";
 import toast from "react-hot-toast";
+import CommentReactions from "./CommentReactions";
 
 const REPLIES_PER_PAGE = 2;
 
@@ -83,7 +84,12 @@ const CommentItem = ({
 
             if (error) throw error;
 
-            const formatted = data.map((r) => ({
+            // Filter out Replies already in state
+            const existingIds = new Set(replies.map(r => r.id));
+            const filtered = data.filter(r => !existingIds.has(r.id));
+
+
+            const formatted = filtered.map((r) => ({
                 id: r.id,
                 name: r.users_meta?.name || "Anonymous",
                 avatar: r.users_meta?.avatar_url || "https://i.pravatar.cc/40",
@@ -190,31 +196,6 @@ const CommentItem = ({
         }
     };
 
-    // if (!userMeta) {
-    //     return (
-    //         <div className={styles.notLoggedIn}>
-    //             <i className="fa-regular fa-circle-xmark"></i> You must be logged in to comment.
-    //         </div>
-    //     );
-    // }
-
-    // if (!userMeta.is_active) {
-    //     return (
-    //         <div className={styles.notLoggedIn}>
-    //             <i className="fa-regular fa-circle-xmark"></i> Your account is not active.
-    //         </div>
-    //     );
-    // }
-
-    // if (!allowedRoles.includes(userMeta.role)) {
-    //     return (
-    //         <div className={styles.notLoggedIn}>
-    //             <i className="fa-regular fa-circle-xmark"></i> You don’t have permission to comment.
-    //         </div>
-    //     );
-    // }
-
-
     const popover = (
         <Popover id="popover-basic">
             <Popover.Body>
@@ -245,45 +226,49 @@ const CommentItem = ({
             </div>
 
             {/* Body */}
-            <p className={styles.text}>{comment.text}</p>
+            <div className={styles.commentBody}>
+                <p className={styles.text}>{comment.text}</p>
+            </div>
+
 
             {/* Actions */}
             <div className={styles.actions}>
-                <span className={styles.action}>
+                {/* <span className={styles.action}>
                     <i className="fa-regular fa-thumbs-up"></i> {comment.likes}
                 </span>
                 <span className={styles.action}>
                     <i className="fa-regular fa-thumbs-down"></i>
-                </span>
+                </span> */}
+                <CommentReactions articleId={articleId} commentId={comment.id} />
                 {!isReply && <button className={styles.action} onClick={() => handleReplyClick(comment.id)}>
                     <i className="fa-solid fa-reply"></i> Reply
                 </button>}
             </div>
 
             {/* Reply box */}
-            
-            { openReplyId === comment.id && (
+
+            {openReplyId === comment.id && (
                 canReply ? (
-                <div className={styles.replyBox}>
-                    <textarea
-                        className={styles.replyTextarea}
-                        placeholder={`Reply to ${comment.name}...`}
-                        value={replyContent}
-                        onChange={(e) => setReplyContent(e.target.value)}
-                        rows={2}
-                        disabled={loading}
-                    ></textarea>
-                    <div className={styles.replyButtons}>
-                        <button disabled={loading} className={styles.cancelBtn}
-                            onClick={() => setOpenReplyId(null)}>
-                            Cancel
-                        </button>
-                        <button disabled={loading} className={styles.submitBtn}
-                            onClick={handleReplySubmit} >
-                            Post Reply
-                        </button>
-                    </div>
-                </div>) : (
+                    <div className={styles.replyBox}>
+                        <textarea
+                            className={styles.replyTextarea}
+                            placeholder={`Reply to ${comment.name}...`}
+                            value={replyContent}
+                            onChange={(e) => setReplyContent(e.target.value)}
+                            rows={2}
+                            disabled={loading}
+                        ></textarea>
+                        <div className={styles.replyButtons}>
+                            <button disabled={loading} className={styles.cancelBtn}
+                                onClick={() => setOpenReplyId(null)}>
+                                Cancel
+                            </button>
+                            <button disabled={loading} className={styles.submitBtn}
+                                onClick={handleReplySubmit} >
+                                Post Reply
+                            </button>
+                        </div>
+                    </div>) : (
                     <div className={styles.noReply}>
                         You can't reply. {userMeta ? (userMeta.is_active ? "You don’t have permission to reply." : "Your account is not active.") : "You must be logged in to reply."}
                     </div>
@@ -323,7 +308,7 @@ const CommentItem = ({
                                 </Spinner>
                             </div>}
 
-                            {hasMore && (
+                            {hasMore && replies.length < totalRepliesCount && (
                                 <button
                                     className={styles.loadMoreReplyBtn}
                                     onClick={() => handleLoadMore(comment.id)}

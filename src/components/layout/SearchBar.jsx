@@ -113,8 +113,10 @@ export default function SearchBar({ maxResults = 8, className = "" }) {
                 onSearch={handleSearch}
                 options={options}
                 onSelect={handleSelect}
-                dropdownMatchSelectWidth
-                dropdownClassName={styles.dropdown}
+                // dropdownMatchSelectWidth
+                popupMatchSelectWidth
+                classNames={{ popup: { root: styles.dropdown } }}
+                // dropdownClassName={styles.dropdown}
             >
                 <Input
                     size="large"

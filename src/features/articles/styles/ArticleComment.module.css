@@ -96,6 +96,11 @@
     background-color: #f0f0f0;
 }
 
+.commentBody {
+    overflow-wrap: break-word;
+    /* word-break: break-all; */
+}
+
 .text {
     margin: 5px 0 7px 46px;
     font-size: 18px;

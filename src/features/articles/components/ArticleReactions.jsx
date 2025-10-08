@@ -140,7 +140,8 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
                             trigger="hover"
                         >
                             <i
-                                className={`fa-${userReaction === type ? 'solid' : 'regular'} ${getIconClass(type)}`}
+                                className={`fa-${userReaction === type ? 'solid' : 'regular'} 
+                                ${getIconClass(type)}`}
                                 style={{
                                     color: getColor(type),
                                     cursor: loading ? 'not-allowed' : 'pointer',
