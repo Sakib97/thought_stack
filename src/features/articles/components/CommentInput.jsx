@@ -74,8 +74,8 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
     if (!userMeta || userMeta === undefined) {
         return (
             <div className={styles.notLoggedIn}>
-                <i style={{ fontSize: '25px' }} className="fa-regular fa-circle-xmark"></i> 
-                You must be logged in to comment. 
+                {/* <i style={{ fontSize: '25px' }} className="fa-regular fa-circle-xmark"></i>  */}
+                Please login to comment ! 
             </div>
         );
     }
@@ -83,9 +83,9 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
     if (!userMeta.is_active) {
         return (
             <div className={styles.notLoggedIn}>
-                <i style={{ fontSize: '25px' }} className="fa-solid fa-triangle-exclamation"></i> &nbsp;
-                You can't comment! <br />
-                <div >Your account is not active!</div>
+                {/* <i style={{ fontSize: '25px' }} className="fa-solid fa-triangle-exclamation"></i> &nbsp; */}
+                Account is not active! You can't comment! 
+                <div></div>
             </div>
         );
     }
