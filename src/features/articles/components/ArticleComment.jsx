@@ -6,13 +6,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import CommentInput from "./CommentInput";
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
-
+ 
 const COMMENTS_PER_PAGE = 2;
-
-const COMMENT_FILTERS = [
-    { key: '1', label: <span>Newest First</span> },
-    { key: '2', label: <span>Oldest First</span> },
-];
 
 const ArticleComment = ({ articleId, userMeta }) => {
     const [comments, setComments] = useState([]);
@@ -22,10 +17,23 @@ const ArticleComment = ({ articleId, userMeta }) => {
     const [totalCount, setTotalCount] = useState(0);
     const [openReplyId, setOpenReplyId] = useState(null);
     const [openReplies, setOpenReplies] = useState({});
-    
+
     const [sortOrder, setSortOrder] = useState("desc"); // default newest first
     const [refreshTrigger, setRefreshTrigger] = useState(0);
-    
+
+    const getCommentFilters = (sortOrder) => [
+        {
+            key: '1',
+            label: <span>Newest First</span>,
+            disabled: sortOrder === 'desc', // Disable if already selected
+        },
+        {
+            key: '2',
+            label: <span>Oldest First</span>,
+            disabled: sortOrder === 'asc', // Disable if already selected
+        },
+    ];
+
     const fetchComments = async (pageNum = 1, order = sortOrder) => {
         setLoading(true);
         try {
@@ -84,7 +92,7 @@ const ArticleComment = ({ articleId, userMeta }) => {
     useEffect(() => {
         if (articleId) {
             setPage(1);
-            setComments([]); // clear old comments
+            //setComments([]); // clear old comments
             fetchComments(1, sortOrder);
         }
     }, [articleId, sortOrder, refreshTrigger]); // refetch when sort changes
@@ -149,12 +157,12 @@ const ArticleComment = ({ articleId, userMeta }) => {
                 <h2>Comments ({totalCount})</h2>
             </div>
 
-            <CommentInput articleId={articleId} onCommentAdded={handleCommentAdded} />
+            <CommentInput userMeta={userMeta} articleId={articleId} onCommentAdded={handleCommentAdded} />
 
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                 <div style={{ cursor: 'pointer', marginRight: '15px' }}>
                     <Dropdown
-                        menu={{ items: COMMENT_FILTERS, onClick: handleMenuClick }}
+                        menu={{ items: getCommentFilters(sortOrder), onClick: handleMenuClick }}
                         trigger={['click']}
                     >
                         <a

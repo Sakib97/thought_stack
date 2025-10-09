@@ -2,13 +2,18 @@ import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
+import { useAuth } from "../../../context/AuthProvider";
 
 const LogoutButton = () => {
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
+    const {setUser, setUserMeta, setLoading} = useAuth();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
+        setUser(null);
+        setUserMeta(null);
+        setLoading(false);
         navigate("/auth/signin");
     };
 

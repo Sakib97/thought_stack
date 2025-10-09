@@ -1,13 +1,12 @@
 import styles from "../styles/ArticleComment.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import { supabase } from "../../../config/supabaseClient";
 import { useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import { useAuth } from "../../../context/AuthProvider";
 import toast from "react-hot-toast";
 import CommentReactions from "./CommentReactions";
+import CommentReport from "./CommentReport";
 
 const REPLIES_PER_PAGE = 2;
 
@@ -196,14 +195,6 @@ const CommentItem = ({
         }
     };
 
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Body>
-                <i className="fa-solid fa-flag"></i> Report
-            </Popover.Body>
-        </Popover>
-    );
-
     return (
         <div
             className={`${styles.comment} ${isReply ? styles.replyComment : ""}`}
@@ -216,13 +207,7 @@ const CommentItem = ({
                     <strong>{comment.name}</strong>
                     <div className={styles.date}>{getFormattedTime(comment.date)}</div>
                 </div>
-                <div style={{ marginLeft: "auto" }}>
-                    <OverlayTrigger trigger={["click", "focus"]} placement="top" overlay={popover}>
-                        <div className={styles.reportTrigger}>
-                            <i className="fa-solid fa-ellipsis-vertical"></i>
-                        </div>
-                    </OverlayTrigger>
-                </div>
+                <CommentReport commentId={comment.id} articleId={articleId} />
             </div>
 
             {/* Body */}
@@ -233,12 +218,6 @@ const CommentItem = ({
 
             {/* Actions */}
             <div className={styles.actions}>
-                {/* <span className={styles.action}>
-                    <i className="fa-regular fa-thumbs-up"></i> {comment.likes}
-                </span>
-                <span className={styles.action}>
-                    <i className="fa-regular fa-thumbs-down"></i>
-                </span> */}
                 <CommentReactions articleId={articleId} commentId={comment.id} />
                 {!isReply && <button className={styles.action} onClick={() => handleReplyClick(comment.id)}>
                     <i className="fa-solid fa-reply"></i> Reply

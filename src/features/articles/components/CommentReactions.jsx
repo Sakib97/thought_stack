@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../../config/supabaseClient';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
-
+import { showToast } from '../../../components/layout/CustomToast';
 
 const CommentReactions = ({ articleId, commentId }) => {
     const { userMeta } = useAuth();
@@ -24,7 +24,7 @@ const CommentReactions = ({ articleId, commentId }) => {
 
         if (error) {
             console.error(error);
-            toast.error('Failed to load reactions');
+            showToast('Failed to load reactions', 'error');
             return;
         }
 
@@ -60,12 +60,12 @@ const CommentReactions = ({ articleId, commentId }) => {
 
     const toggleReaction = async (newReaction) => {
         if (!userMeta?.uid) {
-            toast.error('Please login to react');
+            showToast('Please login to react', 'error');
             return;
         }
 
         if (!userMeta?.is_active) {
-            toast.error("Your account is deactivated. You can't react.");
+            showToast("Your account is deactivated. You can't react.", 'error');
             return;
         }
 
@@ -91,7 +91,7 @@ const CommentReactions = ({ articleId, commentId }) => {
                 if (deleteError) throw deleteError;
 
                 setUserReaction(null);
-                toast.success('Reaction removed');
+                showToast('Reaction removed', 'success');
             } else {
                 // Add or change reaction safely via upsert
                 const { error: upsertError } = await supabase
@@ -103,13 +103,13 @@ const CommentReactions = ({ articleId, commentId }) => {
                 if (upsertError) throw upsertError;
 
                 setUserReaction(newReaction);
-                toast.success(`You reacted with ${newReaction}`);
+                showToast(`You reacted with ${newReaction}`, 'success');
             }
 
             await fetchReactionCounts();
         } catch (err) {
             console.error(err);
-            toast.error('Something went wrong');
+            showToast('Something went wrong', 'error');
         } finally {
             setLoading(false);
         }

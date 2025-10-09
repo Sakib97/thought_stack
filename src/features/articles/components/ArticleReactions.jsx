@@ -4,6 +4,7 @@ import { Popover } from 'antd';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import { supabase } from '../../../config/supabaseClient';
+import { showToast } from '../../../components/layout/CustomToast';
 
 const ArticleReactions = ({ articleId, userId, isActive }) => {
     const [reactionCounts, setReactionCounts] = useState({
@@ -24,7 +25,7 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
 
         if (error) {
             console.error(error);
-            toast.error('Failed to load reactions');
+            showToast('Failed to load reactions', 'error');
             return;
         }
 
@@ -61,12 +62,12 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
     // Toggle user reaction
     const toggleReaction = async (newReaction) => {
         if (!userId) {
-            toast.error('Please login to react');
+            showToast('Please login to react', 'error');
             return;
         }
 
         if (!isActive) {
-            toast.error('Your account is deactivated. You can\'t react.');
+            showToast('Your account is deactivated. You can\'t react.', 'error');
             return;
         }
 
@@ -91,7 +92,7 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
                 if (insertError) throw insertError;
 
                 setUserReaction(newReaction);
-                toast.success(`You reacted with ${newReaction}`);
+                showToast(`You reacted with ${newReaction}`, 'success');
             } else if (existing.reaction_type === newReaction) {
                 // Step 2b — same reaction clicked → delete
                 const { error: deleteError } = await supabase
@@ -102,7 +103,7 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
                 if (deleteError) throw deleteError;
 
                 setUserReaction(null);
-                toast.success('Reaction removed');
+                showToast('Reaction removed', 'success');
             } else {
                 // Step 2c — different reaction → update (or upsert)
                 const { error: updateError } = await supabase
@@ -114,7 +115,7 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
                 if (updateError) throw updateError;
 
                 setUserReaction(newReaction);
-                toast.success(`Changed reaction to ${newReaction}`);
+                showToast(`Changed reaction to ${newReaction}`, 'success');
             }
 
             // Refresh counts
@@ -122,7 +123,7 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
 
         } catch (err) {
             console.error(err);
-            toast.error('Something went wrong');
+            showToast('Something went wrong', 'error');
         } finally {
             setLoading(false);
         }

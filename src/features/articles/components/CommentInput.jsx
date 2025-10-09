@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { supabase } from "../../../config/supabaseClient";
-import toast from "react-hot-toast";
 import styles from "../styles/CommentInput.module.css"; // create simple styling if needed
-import { useAuth } from "../../../context/AuthProvider";
+// import { useAuth } from "../../../context/AuthProvider";
+import { showToast } from "../../../components/layout/CustomToast";
 
-const CommentInput = ({ articleId, onCommentAdded }) => {
-    const { userMeta } = useAuth();
+const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
+    // const { userMeta, loading: authLoading } = useAuth();
+    
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -17,11 +18,11 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!content.trim()) return toast.error("Comment cannot be empty.");
 
         if (!isContentValid) {
-            return toast.error("Comment cannot be empty or whitespace.");
+            return showToast("Comment cannot be empty.", "error");
         }
+
         setLoading(true);
         try {
             const { data, error } = await supabase.from("comments").insert([
@@ -45,7 +46,8 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
 
             if (error) throw error;
 
-            toast.success("Comment added!");
+            // toast.success("Comment added!");
+            showToast("Comment added!", "success");
             setContent("");
             // onCommentAdded?.(); // refetch comments in parent if provided
 
@@ -62,16 +64,18 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
 
         } catch (err) {
             console.error(err);
-            toast.error("Failed to add comment.");
+            // toast.error("Failed to add comment.");
+            showToast("Failed to add comment.", "error");
         } finally {
             setLoading(false);
         }
     };
 
-    if (!userMeta) {
+    if (!userMeta || userMeta === undefined) {
         return (
             <div className={styles.notLoggedIn}>
-                <i className="fa-regular fa-circle-xmark"></i> You must be logged in to comment.
+                <i style={{ fontSize: '25px' }} className="fa-regular fa-circle-xmark"></i> 
+                You must be logged in to comment. 
             </div>
         );
     }
@@ -79,7 +83,7 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
     if (!userMeta.is_active) {
         return (
             <div className={styles.notLoggedIn}>
-                <i className="fa-solid fa-triangle-exclamation"></i> &nbsp;
+                <i style={{ fontSize: '25px' }} className="fa-solid fa-triangle-exclamation"></i> &nbsp;
                 You can't comment! <br />
                 <div >Your account is not active!</div>
             </div>
@@ -117,8 +121,8 @@ const CommentInput = ({ articleId, onCommentAdded }) => {
                 disabled={loading}
             />
             <button type="submit" disabled={loading} className={styles.submitBtn}>
-                {loading ? "Posting..." : <i style={{fontSize: '25px'}} className="fi fi-br-paper-plane-top"
-></i>}
+                {loading ? "Posting..." : <i style={{ fontSize: '25px' }} className="fi fi-br-paper-plane-top"
+                ></i>}
             </button>
         </form>
     );
