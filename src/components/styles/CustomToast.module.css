@@ -1,0 +1,18 @@
+.customToastContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    /* min-width: 250px; */
+    max-width: 400px;
+    /* font-family: Arial, sans-serif; */
+    gap: 5px;
+    text-align: center;
+}
+.crossBtn{
+    /* color: red; */
+    margin-left: 10px;
+    opacity: 0.5;
+    font-size: 20px;
+    cursor: pointer;
+}

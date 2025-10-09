@@ -1,14 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../config/supabaseClient";
+import { set } from "date-fns";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [userMeta, setUserMeta] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userMeta, setUserMeta] = useState(null);
 
-    useEffect(() => {
+  useEffect(() => {
     // Check active session on load
     const getSession = async () => {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
 
-    
+
 
     getSession();
 
@@ -58,8 +59,15 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-   return (
-    <AuthContext.Provider value={{ user, userMeta, loading }}>
+  return (
+    <AuthContext.Provider value={{
+      user,
+      setUser,
+      setUserMeta,
+      setLoading,
+      userMeta,
+      loading
+    }}>
       {children}
     </AuthContext.Provider>
   );
