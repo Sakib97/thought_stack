@@ -204,6 +204,7 @@ const ArticleComment = ({ articleId, userMeta }) => {
                         onReplyAdded={handleReplyAdded}
                         articleId={articleId}
                         isReply={false}
+                        sortOrder={sortOrder}
                     />
                 ))}
             </div>
