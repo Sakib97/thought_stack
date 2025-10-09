@@ -1,7 +1,7 @@
 import styles from "../styles/ArticleComment.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
 import { supabase } from "../../../config/supabaseClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import { useAuth } from "../../../context/AuthProvider";
 import toast from "react-hot-toast";
@@ -21,7 +21,9 @@ const CommentItem = ({
     onReplyAdded,
     // isReply = false,
     isReply,
+    sortOrder
 }) => {
+    
     const { userMeta } = useAuth();
     const [replies, setReplies] = useState([]);
     const [loadingReplies, setLoadingReplies] = useState(false);
@@ -37,6 +39,17 @@ const CommentItem = ({
     const allowedRoles = ["user", "editor", "admin"];
     const canReply = userMeta && allowedRoles.includes(userMeta.role) && userMeta.is_active;
 
+    // if sortOrder changes, reset replies state to refetch in new order
+    useEffect(() => {
+
+        setReplies([]);
+        setHasMore(true);
+        setLoadedOnce(false);
+        if (openReplies[comment.id]) {
+            fetchReplies(comment.id, 1);
+            setLoadedOnce(true);
+        }
+    }, [sortOrder]); 
 
     const handleReplyClick = (id) => {
         setOpenReplyId((prev) => (prev === id ? null : id));
