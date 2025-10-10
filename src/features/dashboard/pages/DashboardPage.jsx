@@ -82,14 +82,14 @@ const DashboardPage = () => {
                             label: <Link style={{ textDecoration: 'none' }} to="/dashboard/profile">Profile</Link>
                         },
                         ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.is_active)
-                        // ...(((userMeta.role === "editor" || userMeta.role === "admin"))
                             ? [{
                                 key: "2", icon: <i className="fi fi-br-scroll-document-story" style={{ fontSize: 15 }}></i>,
                                 label: <Link style={{ textDecoration: 'none' }} to="/dashboard/write-article">Write Article</Link>
                             }]
                             : []),
                         ...(userMeta.role === "admin" && userMeta.is_active
-                            ? [{ key: "3", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 15 }}></i>, label: "Manage Users" }]
+                            ? [{ key: "3", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 15 }}></i>,
+                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/manage-users">Manage Users</Link> }]
                             : []),
                     ]}
                     style={{ background: "#e0e0e0" }}

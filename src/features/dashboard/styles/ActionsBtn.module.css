@@ -1,0 +1,23 @@
+.actionIcon{
+    color: #555;
+    cursor: pointer;
+    font-size: 25px;
+    /* margin-left: 10px; */
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(228, 227, 227);
+}
+.actionIcon:hover{
+    color: #000;
+    background-color: #ebe8e8;
+}
+
+
+@media screen and (max-width: 768px) {
+  .actionIcon{
+        font-size: 20px;
+        margin-left: 5px;
+        padding: 3px;
+    }
+     
+}
