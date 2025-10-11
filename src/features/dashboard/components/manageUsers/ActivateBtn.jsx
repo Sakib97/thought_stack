@@ -4,14 +4,18 @@ import styles from '../../styles/ActionsBtn.module.css';
 import { Popover } from 'antd';
 import { Modal, Button } from 'react-bootstrap';
 import { showToast } from '../../../../components/layout/CustomToast';
+import { useAuth } from '../../../../context/AuthProvider';
+
 
 const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
+    const { userMeta } = useAuth();
+
     // console.log(userId, userStatus);
     const [show, setShow] = useState(false);
     const [updating, setUpdating] = useState(false);
 
     const content = (
-        <div>
+        <div style={{fontWeight: '700'}}>
             Change User Status
         </div>
     );
@@ -34,7 +38,7 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
                 })
                 .eq('uid', userId);
             if (error) throw error;
-            showToast('User status updated successfully', 'success');
+            showToast(`User successfully ${newStatus === 'Active' ? 'Activated' : 'Deactivated'}`, 'success');
 
             // callback to parent to refresh table
             if (onStatusChange) onStatusChange(userId, newStatus === 'Active');
@@ -42,6 +46,7 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
             handleClose();
         } catch (err) {
             console.error('Error updating user status:', err.message || err);
+            showToast(err.message || 'Error updating user status', 'error');
         } finally {
             setUpdating(false);
         }
@@ -58,16 +63,27 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Status Change</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    Are you sure you want to <b>{userStatus === 'Active' ? 'deactivate' : 'activate'}</b> this user?
+                <Modal.Body style={{textAlign: 'center', fontSize: '18px'}}>
+                    {userMeta.uid === userId ? (
+                        <span style={{ color: 'red', fontWeight: '700' }}>
+                            You cannot change your own status !
+                        </span>
+                    ) : (
+                        <span>
+                            Are you sure you want to <b>{userStatus === 'Active' ? 'deactivate' : 'activate'}</b> this user?
+                        </span>
+                    )}
+                    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose} disabled={updating}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleConfirm} disabled={updating}>
-                        {updating ? 'Updating...' : 'Confirm'}
-                    </Button>
+                    {userMeta.uid !== userId && (
+                        <Button variant="danger" onClick={handleConfirm} disabled={updating}>
+                            {updating ? 'Updating...' : 'Confirm'}
+                        </Button>
+                    )}
                 </Modal.Footer>
             </Modal>
         </div>

@@ -41,7 +41,7 @@
 @media screen and (max-width: 768px) {
   .customTable :global(.ant-table-thead > tr > th),
   .customTable :global(.ant-table-tbody > tr > td) {
-    font-size: 14px; 
+    font-size: 15px; 
   }
     .actionColumn{
         gap: 2px;

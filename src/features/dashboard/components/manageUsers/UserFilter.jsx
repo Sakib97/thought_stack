@@ -11,7 +11,7 @@ const UserFilter = () => {
         },
         {
             key: '2',
-            label: <span>Forced Deactive Users</span>,
+            label: <span>Deactivated by Admin</span>,
             // disabled: sortOrder === 'asc', 
         },
         {
@@ -19,6 +19,17 @@ const UserFilter = () => {
             label: <span>Active Users</span>,
             // disabled: sortOrder === 'asc', 
         },
+        {
+            key: '4',
+            label: <span>Editors</span>,
+            // disabled: sortOrder === 'asc', 
+        },
+        {
+            key: '5',
+            label: <span>Admins</span>,
+            // disabled: sortOrder === 'asc', 
+        },
+
     ];
     return (
         <div>

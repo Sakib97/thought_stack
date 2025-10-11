@@ -5,9 +5,9 @@ import styles from '../../styles/UserList.module.css'
 import { supabase } from '../../../../config/supabaseClient';
 import Badge from 'react-bootstrap/Badge';
 import ActivateBtn from './ActivateBtn';
-
 import { Grid } from 'antd';
 import RoleChangeBtn from './RoleChangeBtn';
+import { getFormattedTime } from '../../../../utils/dateUtil';
 const { useBreakpoint } = Grid;
 
 const PAGE_SIZE = 3;
@@ -37,8 +37,8 @@ const UserList = () => {
             // base query
             let query = supabase
                 .from('users_meta')
-                .select('uid, email, role, name, is_active, avatar_url, status_reason', { count: 'exact' })
-                .order('name', { ascending: true });
+                .select('uid, created_at, email, role, name, is_active, avatar_url, status_reason', { count: 'exact' })
+                .order('created_at', { ascending: false }); // newest first
 
             // optional search
             if (field && value) {
@@ -56,6 +56,7 @@ const UserList = () => {
                     // key: idx + from + 1,
                     key: user.uid,
                     uid: user.uid,
+                    createdAt: user.created_at,
                     profilePicture: user.avatar_url,
                     name: user.name,
                     email: user.email,
@@ -87,6 +88,8 @@ const UserList = () => {
     };
 
     const handleReset = (clearFilters, confirm) => {
+        console.log("data before reset:", data);
+        
         clearFilters();
         setSearchField(null);
         setSearchValue('');
@@ -107,6 +110,18 @@ const UserList = () => {
                         statusReason: newIsActive
                             ? 'activated_by_admin'
                             : 'deactivated_by_admin',
+                    }
+                    : user
+            )
+        );
+    };
+    const handleRoleChange = (userId, newRole) => {
+        setData(prevData =>
+            prevData.map(user =>
+                user.uid === userId
+                    ? {
+                        ...user,
+                        role: newRole,
                     }
                     : user
             )
@@ -157,7 +172,7 @@ const UserList = () => {
             title: 'Profile',
             dataIndex: 'profilePicture',
             key: 'profilePicture',
-            width: isMobile ? 40 : 90,
+            width: isMobile ? 45 : 90,
             fixed: 'left',
             align: 'center',
             className: styles.fixedColumn,
@@ -172,7 +187,7 @@ const UserList = () => {
             dataIndex: 'name',
             key: 'name',
             // align: 'center',
-            width: isMobile ? 130 : 150,
+            width: isMobile ? 60 : 150,
             ...getColumnSearchProps('name'),
         },
         {
@@ -182,6 +197,20 @@ const UserList = () => {
             //  align: 'center',
             width: isMobile ? 100 : 200,
             ...getColumnSearchProps('email'),
+        },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+             align: 'center',
+            width: isMobile ? 50 : 100,
+            render: (createdAt) => {
+                return (
+                    <div style={{ fontSize: '15px' }}>
+                        {getFormattedTime(createdAt)}
+                    </div>
+                );
+            },
         },
         {
             title: 'Active Status',
@@ -213,7 +242,7 @@ const UserList = () => {
                         textTransform: 'capitalize',
                     }}
                 >
-                    <Badge bg={role === 'admin' ? 'success' : role === 'editor' ? 'warning' : 'secondary'}>
+                    <Badge bg={role === 'admin' ? 'success' : role === 'editor' ? 'info' : 'secondary'}>
                         {role}
                     </Badge>
                 </span>
@@ -224,17 +253,21 @@ const UserList = () => {
             key: 'action',
             fixed: 'right',
             align: 'center',
-            width: isMobile ? 40 : 150,
+            width: isMobile ? 45 : 150,
             render: (record) => (
                 <div className={styles.actionColumn}>
                     <ActivateBtn userId={record.uid}
                         userStatus={record.activeStatus}
                         onStatusChange={handleStatusChange} />
                     &nbsp;&nbsp;
-                    <RoleChangeBtn />
+                    <RoleChangeBtn userId={record.uid}
+                        userRole={record.role}
+                        onRoleChange={handleRoleChange} />
 
                 </div>
             ),
+            // onHeaderCell: () => ({ style: { textAlign: isMobile ? 'center' : 'left' } }),
+
         },
     ];
 
@@ -246,7 +279,7 @@ const UserList = () => {
                 className={styles.customTable}
                 columns={columns}
                 dataSource={data}
-                // bordered
+                bordered
                 size="large"
                 loading={loading}
                 pagination={{
@@ -255,7 +288,7 @@ const UserList = () => {
                     total: totalCount,
                     onChange: (p) => setPage(p),
                 }}
-                // tableLayout='auto'
+                tableLayout='fixed'
                 scroll={{
                     x: 800, // horizontal scroll
                     y: 400,  // vertical scroll
