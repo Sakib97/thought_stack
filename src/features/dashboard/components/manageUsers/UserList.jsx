@@ -11,7 +11,9 @@ import { getFormattedTime } from '../../../../utils/dateUtil';
 const { useBreakpoint } = Grid;
 
 const PAGE_SIZE = 3;
-const UserList = () => {
+const UserList = ({ filter }) => {
+    // console.log('UserList filter prop:', filter);
+
     const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
     const isMobile = !screens.md; // true for <768px
 
@@ -28,7 +30,7 @@ const UserList = () => {
     const searchInput = useRef(null);
 
     // Fetch users (handles both search + pagination)
-    const fetchUsers = async (pageNumber = 1, field = null, value = '') => {
+    const fetchUsers = async (pageNumber = 1, field = null, value = '', filter) => {
         setLoading(true);
         try {
             const from = (pageNumber - 1) * PAGE_SIZE;
@@ -43,6 +45,24 @@ const UserList = () => {
             // optional search
             if (field && value) {
                 query = query.ilike(field, `%${value}%`);
+            }
+
+            // search by filter
+            if (filter === "new_deactive") {
+                query = query.eq('status_reason', 'new_user');
+                setPage(1);
+            } else if (filter === "deactivated_by_admin") {
+                query = query.eq('status_reason', 'deactivated_by_admin');
+                setPage(1);
+            } else if (filter === "active") {
+                query = query.eq('is_active', true);
+                setPage(1);
+            } else if (filter === "editor") {
+                query = query.eq('role', 'editor');
+                setPage(1);
+            } else if (filter === "admin") {
+                query = query.eq('role', 'admin');
+                setPage(1);
             }
 
             // add pagination
@@ -75,8 +95,8 @@ const UserList = () => {
 
     // fetch data when page/search changes
     useEffect(() => {
-        fetchUsers(page, searchField, searchValue);
-    }, [page, searchField, searchValue]);
+        fetchUsers(page, searchField, searchValue, filter);
+    }, [page, searchField, searchValue, filter]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -88,14 +108,14 @@ const UserList = () => {
     };
 
     const handleReset = (clearFilters, confirm) => {
-        console.log("data before reset:", data);
-        
+        // console.log("data before reset:", data);
+
         clearFilters();
         setSearchField(null);
         setSearchValue('');
         confirm({ closeDropdown: true }); // closes dropdown & resets AntD filter UI
         setPage(1); // reset to first page on reset
-        console.log(data);
+        // console.log(data);
 
     };
 
@@ -202,7 +222,7 @@ const UserList = () => {
             title: 'Created At',
             dataIndex: 'createdAt',
             key: 'createdAt',
-             align: 'center',
+            align: 'center',
             width: isMobile ? 50 : 100,
             render: (createdAt) => {
                 return (
@@ -275,6 +295,14 @@ const UserList = () => {
 
     return (
         <div className={styles.tableContainer}>
+            {totalCount > 0 && (
+                <div className={styles.userCountSectionContainer}>
+                    <div className={styles.userCountSection}>
+                        {totalCount} {totalCount === 1 ? 'User' : 'Users'}
+                    </div>
+                </div>
+
+            )}
             <Table
                 className={styles.customTable}
                 columns={columns}

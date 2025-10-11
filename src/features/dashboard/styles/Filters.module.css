@@ -1,6 +1,15 @@
 .filterDropdown{
-    font-size: 17px;
+    font-size: 22px;
     border: 1px solid #b8b3b3;
     border-radius: 5px;
     padding: 5px 20px;
+}
+
+.filterOption{
+    font-size: 17px;
+    /* border: 1px solid #b8b3b3; */
+    /* border-radius: 5px; */
+    /* padding: 5px 10px; */
+    /* margin: 10px; */
+    text-align: center;
 }

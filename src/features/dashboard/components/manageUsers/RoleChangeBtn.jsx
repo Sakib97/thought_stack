@@ -26,13 +26,24 @@ const RoleChangeBtn = ({ userId, userRole, onRoleChange }) => {
     const handleConfirm = async () => {
         setUpdating(true);
         try {
+            if (!newRole) {
+                showToast('Please select a role before confirming.', 'warning');
+                setUpdating(false);
+                return;
+            }
+            if (newRole === userRole) {
+                showToast('Selected role is the same as the current role.', 'info');
+                setUpdating(false);
+                return;
+            }
             const { error } = await supabase
                 .from('users_meta')
                 .update({ role: newRole })
                 .eq('uid', userId);
 
             if (error) {
-                showToast(error.message || 'Error updating user role', 'error');
+                // showToast(error.message || 'Error updating user role', 'error');
+                showToast('Error updating user role ! Please contact support.', 'error');
             } else {
                 showToast(`This profile is now ${newRole.toUpperCase()} !`, 'success');
                 onRoleChange(userId, newRole);
@@ -67,7 +78,7 @@ const RoleChangeBtn = ({ userId, userRole, onRoleChange }) => {
                             Select new role for this user:
                             <br />
                             <select className={styles.roleChangeDropdown} value={newRole} onChange={(e) => setNewRole(e.target.value)}>
-                                <option value="">Select a role</option>
+                                <option disabled value="">Select a role</option>
                                 <option value="user">General User</option>
                                 <option value="admin">Admin</option>
                                 <option value="editor">Editor</option>

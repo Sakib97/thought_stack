@@ -37,6 +37,24 @@
   gap: 4px; /* Space between icons */
 }
 
+.userCountSectionContainer{
+    display: flex;
+    justify-content: center;
+}
+.userCountSection{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 25px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    width: 40%;
+}
 
 @media screen and (max-width: 768px) {
   .customTable :global(.ant-table-thead > tr > th),
