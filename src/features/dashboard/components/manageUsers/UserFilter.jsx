@@ -1,6 +1,5 @@
 import styles from '../../styles/Filters.module.css'
 import { Dropdown, Space } from 'antd';
-import { useRef, useState } from 'react';
 
 const UserFilter = ({ filter, setFilter }) => {
 

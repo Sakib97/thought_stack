@@ -78,18 +78,32 @@ const DashboardPage = () => {
                     defaultSelectedKeys={[getSelectedKey()]}
                     items={[
                         {
-                            key: "1", icon: <i className="fi fi-br-user" style={{ fontSize: 15 }}></i>,
+                            key: "1", icon: <i className="fi fi-br-user" style={{ fontSize: 16 }}></i>,
                             label: <Link style={{ textDecoration: 'none' }} to="/dashboard/profile">Profile</Link>
                         },
                         ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.is_active)
                             ? [{
-                                key: "2", icon: <i className="fi fi-br-scroll-document-story" style={{ fontSize: 15 }}></i>,
+                                key: "2", icon: <i className="fi fi-br-scroll-document-story" style={{ fontSize: 16 }}></i>,
                                 label: <Link style={{ textDecoration: 'none' }} to="/dashboard/write-article">Write Article</Link>
                             }]
                             : []),
+                        ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.is_active)
+                            ? [{
+                                key: "3", icon: <i className="fi fi-br-document-gear" style={{ fontSize: 16 }}></i>,
+                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/manage-articles">Manage Articles</Link>
+                            }]
+                            : []),
+                        ...(((userMeta.role === "editor" || userMeta.role === "admin") && userMeta.is_active)
+                            ? [{
+                                key: "4", icon: <i className="fi fi-br-comment-question" style={{ fontSize: 16 }}></i>,
+                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/manage-comments">Manage Comments</Link>
+                            }]
+                            : []),
                         ...(userMeta.role === "admin" && userMeta.is_active
-                            ? [{ key: "3", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 15 }}></i>,
-                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/manage-users">Manage Users</Link> }]
+                            ? [{
+                                key: "5", icon: <i className="fi fi-bs-user-gear" style={{ fontSize: 16 }}></i>,
+                                label: <Link style={{ textDecoration: 'none' }} to="/dashboard/manage-users">Manage Users</Link>
+                            }]
                             : []),
                     ]}
                     style={{ background: "#e0e0e0" }}
@@ -151,7 +165,7 @@ const DashboardPage = () => {
                 }
                 
                 .ant-menu-item-selected .ant-menu-item-icon {
-                    font-size: 17px !important;  /* bigger when selected */
+                    font-size: 20px !important;  /* bigger when selected */
                     transform: scale(1.1);
                     transition: all 0.3s ease;   /* smooth animation */
                     }
