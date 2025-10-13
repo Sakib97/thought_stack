@@ -49,7 +49,7 @@ export const showToast = (message, type = "info") => {
                 border: `2px solid ${getBorderColor(type)}`,
                 fontSize: '18px',
             },
-            duration: type === 'error' ? 4000 : 2000,
+            duration: type === 'error' ? 4000 : 3000,
         }
     );
 }

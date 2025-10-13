@@ -30,7 +30,9 @@ const DashboardPage = () => {
     const getSelectedKey = () => {
         if (location.pathname.includes("/dashboard/profile")) return "1";
         if (location.pathname.includes("/dashboard/write-article")) return "2";
-        if (location.pathname.includes("/dashboard/manage-users")) return "3";
+        if (location.pathname.includes("/dashboard/manage-articles")) return "3";
+        if (location.pathname.includes("/dashboard/manage-comments")) return "4";
+        if (location.pathname.includes("/dashboard/manage-users")) return "5";
         return "1"; // fallback
     };
 

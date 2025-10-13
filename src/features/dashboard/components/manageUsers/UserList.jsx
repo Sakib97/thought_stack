@@ -330,9 +330,6 @@ const UserList = ({ filter }) => {
                     rowExpandable: (record) =>
                         record.statusReason === 'new_user' || record.statusReason === 'deactivated_by_admin',
                 }}
-            // expandable={{
-            //     expandedRowRender: record => <p style={{ margin: 0 }}>{record.statusReason}</p>,
-            // }}
             />
         </div>
     );

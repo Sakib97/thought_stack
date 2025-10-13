@@ -190,7 +190,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'comment_id',
             key: 'comment_id',
             fixed: 'left',
-            width: isMobile ? 45 : 90,
+            width: isMobile ? 70 : 100,
             ...getColumnSearchProps('comment_id'),
 
         },
@@ -198,7 +198,7 @@ const CommentsList = ({ filter }) => {
             title: 'Parent ID',
             dataIndex: 'parent_id',
             key: 'parent_id',
-            width: isMobile ? 45 : 90,
+            width: isMobile ? 60 : 90,
             render: (parent_id) => {
                 return <>
                     {parent_id ? <>
@@ -308,7 +308,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'action',
             key: 'action',
             align: 'center',
-            fixed: 'right',
+            // fixed: 'right',
             width: isMobile ? 45 : 90,
             render: (_, record) => (
                 <div className={styles.actionColumn}>

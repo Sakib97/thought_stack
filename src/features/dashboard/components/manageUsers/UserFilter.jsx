@@ -8,8 +8,6 @@ const UserFilter = ({ filter, setFilter }) => {
             key: '1',
             label: <span className={styles.filterOption}>All Users</span>,
             disabled: filter === 'all_users',
-            // selected: true
-
         },
         {
             key: '2',
