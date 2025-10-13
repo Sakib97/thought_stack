@@ -1,64 +1,53 @@
 import styles from '../../styles/Filters.module.css'
 import { Dropdown, Space } from 'antd';
 
-const UserFilter = ({ filter, setFilter }) => {
-
+const CommentFilter = ({filter, setFilter}) => {
     const getFilters = () => [
         {
             key: '1',
-            label: <span className={styles.filterOption}>All Users</span>,
-            disabled: filter === 'all_users',
-            // selected: true
+            label: <span className={styles.filterOption}>All Reports</span>,
+            disabled: filter === 'all_reports',
 
         },
         {
             key: '2',
-            label: <span className={styles.filterOption}>New Deactive Users</span>,
-            disabled: filter === 'new_deactive',
+            label: <span className={styles.filterOption}>Pending Reports</span>,
+            disabled: filter === 'pending_reports',
 
         },
         {
             key: '3',
-            label: <span className={styles.filterOption}>Deactivated by Admin</span>,
-            disabled: filter === 'deactivated_by_admin',
+            label: <span className={styles.filterOption}>Reviewed Reports</span>,
+            disabled: filter === 'reviewed_reports',
+            // selected: true
+
         },
         {
             key: '4',
-            label: <span className={styles.filterOption}>Active Users</span>,
-            disabled: filter === 'active',
+            label: <span className={styles.filterOption}>Hidden Comments</span>,
+            disabled: filter === 'hidden_comments',
+            // selected: true
         },
-        {
-            key: '5',
-            label: <span className={styles.filterOption}>Editors</span>,
-            disabled: filter === 'editor',
-        },
-        {
-            key: '6',
-            label: <span className={styles.filterOption}>Admins</span>,
-            disabled: filter === 'admin',
-        },
+        
 
     ];
 
     const handleMenuClick = ({ key }) => {
         if (key === '1') {
-            setFilter('all_users');
+            setFilter('all_reports');
         } else if (key === '2') {
-            setFilter('new_deactive');
+            setFilter('pending_reports');
         } else if (key === '3') {
-            setFilter('deactivated_by_admin');
+            setFilter('reviewed_reports');
         } else if (key === '4') {
-            setFilter('active');
-        } else if (key === '5') {
-            setFilter('editor');
-        } else if (key === '6') {
-            setFilter('admin');
+            setFilter('hidden_comments');
         }
-
     };
+
 
     return (
         <div>
+
             <Dropdown
                 menu={{
                     items: getFilters(),
@@ -70,12 +59,18 @@ const UserFilter = ({ filter, setFilter }) => {
             >
                 <a onClick={(e) => e.preventDefault()}>
                     <Space>
-                        {filter === 'new_deactive' ? 'New Deactive Users' :
+                        {/* {filter === 'new_deactive' ? 'New Deactive Users' :
                             filter === 'deactivated_by_admin' ? 'Deactivated by Admin' :
                                 filter === 'active' ? 'Active Users' :
                                     filter === 'editor' ? 'Editors' :
                                         filter === 'admin' ? 'Admins' :
                                             filter === 'all_users' ? 'All Users' :
+                                                'Filter By'} */}
+                                
+                                {filter === 'all_reports' ? 'All Reports' :
+                                    filter === 'pending_reports' ? 'Pending Reports' :
+                                        filter === 'reviewed_reports' ? 'Reviewed Reports' :
+                                            filter === 'hidden_comments' ? 'Hidden Comments' :
                                                 'Filter By'}
 
 
@@ -86,8 +81,8 @@ const UserFilter = ({ filter, setFilter }) => {
                     </Space>
                 </a>
             </Dropdown>
-        </div>
-    );
+
+        </div>);
 }
 
-export default UserFilter;
+export default CommentFilter;
