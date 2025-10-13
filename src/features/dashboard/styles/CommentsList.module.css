@@ -28,7 +28,7 @@
 .actionColumn {
   display: flex;
   justify-content: center;
-  gap: 4px; /* Space between icons */
+  gap: 9px; /* Space between icons */
 }
 
 .commentCountSectionContainer{

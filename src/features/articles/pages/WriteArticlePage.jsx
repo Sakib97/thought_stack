@@ -202,7 +202,7 @@ const WriteArticlePage = () => {
                             loading={loading}
                             iconPosition="end"
                         >
-                            <i style={{ fontSize: 24, transform: "translateY(8%)" }} className="fi fi-sr-progress-complete"></i>
+                            <i style={{ fontSize: 25, transform: "translateY(8%)" }} className="fi fi-rr-shield-trust"></i>
                             Publish Article
                         </Button>
                     </div>

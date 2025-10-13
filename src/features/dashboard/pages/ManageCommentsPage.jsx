@@ -5,7 +5,7 @@ import styles from "../styles/ManageCommentsPage.module.css";
 import CommentsList from "../components/manageComments/CommentsList";
 
 const ManageCommentsPage = () => {
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState('all_reports');
 
     return ( 
         <div>
@@ -16,7 +16,7 @@ const ManageCommentsPage = () => {
                 <CommentFilter filter={filter} setFilter={setFilter} />
             </div>
             <hr />
-            <CommentsList filter={filter} />
+            <CommentsList filter={filter}  />
         </div>
      );
 }

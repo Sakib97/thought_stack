@@ -11,6 +11,11 @@
     color: #000;
     background-color: #ebe8e8;
 }
+.actionIcon:disabled{
+    color: #000;
+    background-color: #ebe8e8;
+    cursor: not-allowed;
+}
 
 .roleChangeDropdown{
     font-size: 17px;
