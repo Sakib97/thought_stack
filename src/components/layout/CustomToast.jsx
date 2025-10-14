@@ -42,7 +42,10 @@ const getBorderColor = (type) => {
     }
 };
 
-export const showToast = (message, type = "info") => {
+export const showToast = (message, type = "info", id = null) => {
+    // dismiss existing toast with same ID before showing new one
+    if (id) toast.dismiss(id);
+
     toast((t) => (
         <div className={styles.customToastContainer}>
             <i className={`${getIcon(type)}`} style={{ fontSize: '20px', color: getBorderColor(type) }}></i>
@@ -54,6 +57,7 @@ export const showToast = (message, type = "info") => {
         </div>
     ),
         {
+            id,
             style: {
                 borderRadius: '10px',
                 background: '#fff',

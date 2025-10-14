@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import styles from "../styles/ArticleReactions.module.css";
 import { Popover } from 'antd';
-import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import { supabase } from '../../../config/supabaseClient';
 import { showToast } from '../../../components/layout/CustomToast';
+import { createRateLimitedAction, createBurstRateLimitedAction } from '../../../utils/rateLimit';
 
 const ArticleReactions = ({ articleId, userId, isActive }) => {
     const [reactionCounts, setReactionCounts] = useState({
@@ -129,11 +129,12 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
         }
     };
 
+    // const toggleReactionThrottled = createRateLimitedAction("reaction", 5000, toggleReaction);
+    // 3 api calls allowed in every 10 seconds, 18/min
+    const toggleReactionThrottled = createBurstRateLimitedAction("reaction", 10000, 3, toggleReaction);
 
     return (
         <div className={`${styles.articleReactions}`}>
-            <Toaster />
-
             {['like', 'love', 'sad', 'angry'].map((type) => (
                 <div key={type}>
                     <div className={styles.articleReactionsIcons}>
@@ -149,7 +150,8 @@ const ArticleReactions = ({ articleId, userId, isActive }) => {
                                     transform: userReaction === type ? 'scale(1.2)' : 'scale(1)',
                                     opacity: loading ? 0.5 : 1,
                                 }}
-                                onClick={() => !loading && toggleReaction(type)}
+                                // onClick={() => !loading && toggleReaction(type)}
+                                onClick={() => !loading && toggleReactionThrottled(type)}
                             ></i>
                         </Popover>
                     </div>

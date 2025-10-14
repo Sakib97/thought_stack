@@ -78,6 +78,7 @@ const CommentsList = ({ filter }) => {
                 article_title: item.article_title,
                 article_slug: item.article_slug,
                 comment_text: item.comment_text,
+                commenter_email: item.commenter_email,
                 report_count: item.report_count,
                 last_report_date: getFormattedTime(item.latest_report_date) || 'N/A',
                 // reporting_reasons: item.reporting_reasons?.join(', ') || '—',
@@ -238,7 +239,13 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'comment_text',
             key: 'comment_text',
             width: isMobile ? 100 : 190,
-
+        },
+        {
+            title: 'Commenter Email',
+            dataIndex: 'commenter_email',
+            key: 'commenter_email',
+            width: isMobile ? 70 : 100,
+            ...getColumnSearchProps('commenter_email' , 'Commenter Email'), // commenter_email
         },
         {
             title: 'Report Count',
@@ -265,9 +272,7 @@ const CommentsList = ({ filter }) => {
             title: 'Reporting Reasons',
             dataIndex: 'reporting_reasons',
             key: 'reporting_reasons',
-            width: isMobile ? 45 : 95,
-
-
+            width: isMobile ? 45 : 75,
         },
         {
             title: 'Visibility',
