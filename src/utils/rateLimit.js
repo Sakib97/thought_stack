@@ -81,7 +81,8 @@ export function createBurstRateLimitedAction(actionKey, windowMs = 10000, maxCal
                 // Compute how long until that earliest call falls outside the window
                 const waitMs = windowMs - (now - earliest);
                 const waitSec = Math.ceil(waitMs / 1000);
-                showToast(`Too many ${actionKey}s. Try again in ${waitSec}s.`, "error", "rate-limit-toast");
+                // showToast(`Too many ${actionKey}s. Try again in ${waitSec}s.`, "error", "rate-limit-toast");
+                showToast(`Too many requests. Try again in ${waitSec}s.`, "error", "rate-limit-toast");
                 return;
             }
 
