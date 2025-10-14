@@ -15,6 +15,7 @@ const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
     const { articleID, articleTitleSlug } = useParams();
     const articleId = decodeId(articleID);
+
     const { language } = useLanguage();
 
     const [article, setArticle] = useState(null);
@@ -45,7 +46,11 @@ const ArticleDetails = () => {
                     author_name,\
                     author_img_link,\
                     publish_author_email,\
-                    author_email"
+                    author_email, \
+                    article_slug , \
+                    event_title_en, \
+                    event_title_bn \
+                    "
             )
             .eq("id", articleId)
             .single();
@@ -74,7 +79,7 @@ const ArticleDetails = () => {
         );
     }
 
-    if (error || !article) {
+    if (error || !article || article.article_slug !== articleTitleSlug) {
         return (
             <div
                 className={styles.article}
@@ -98,12 +103,16 @@ const ArticleDetails = () => {
             <div className={`${styles.article}`}>
                 <div className={`containers ${styles.articleContainer}`}>
                     <div className={`${styles.articleHead}`}>
+                        <h6 style={{ color:'grey', fontFamily: fontFamily }}>
+                            {language === "en" ? article.event_title_en
+                                : article.event_title_bn} </h6>
+
                         <h1 style={{ fontFamily: fontFamily }}>
                             {language === "en"
                                 ? article.title_en
                                 : article.title_bn}
                         </h1>
-                        <span style={{ fontFamily: fontFamily }}>
+                        <span style={{ fontSize: '19px', fontFamily: fontFamily }}>
                             {language === "en"
                                 ? article.subtitle_en
                                 : article.subtitle_bn}

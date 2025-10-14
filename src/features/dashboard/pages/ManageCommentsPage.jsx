@@ -10,7 +10,7 @@ const ManageCommentsPage = () => {
     return ( 
         <div>
             <Toaster />
-            <h2>Comment Management</h2>
+            <h2>Reported Comment Management</h2>
             <hr />
             <div className={styles.filtersContainer}>
                 <CommentFilter filter={filter} setFilter={setFilter} />

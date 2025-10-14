@@ -55,7 +55,8 @@ const NavigationBar = () => {
                                 Menu
                             </Offcanvas.Title>
                         </Offcanvas.Header>
-                        <Offcanvas.Body  style={{ width:'75vw' }}>
+                        <Offcanvas.Body  >
+                        {/* <Offcanvas.Body  className={styles.offcanvasBody}> */}
                             <Nav style={{ fontSize: '1.1rem' }}
                                 className="
                                     ms-auto        /* push to right on large screens */

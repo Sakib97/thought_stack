@@ -10,6 +10,12 @@ const getIcon = (type) => {
             return "fa-solid fa-circle-info";
         case "warning":
             return "fa-solid fa-triangle-exclamation";
+        case "save":
+            return "fa-solid fa-floppy-disk";
+        case "delete":
+            return "fi fi-rr-trash";
+        case "exclamation":
+            return "fi fi-br-exclamation";
         default:
             return "fa-solid fa-circle-info";
     }
@@ -25,6 +31,12 @@ const getBorderColor = (type) => {
             return 'blue';
         case "warning":
             return 'orange';
+        case "save":
+            return 'green';
+        case "delete":
+            return 'red';
+        case "exclamation":
+            return 'red';
         default:
             return 'white';
     }

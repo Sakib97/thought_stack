@@ -4,14 +4,19 @@ import { Button, Input, Checkbox, Modal } from "antd";
 import styles from "../styles/ArticleInfo.module.css";
 import toast, { Toaster } from 'react-hot-toast';
 import { useState } from 'react';
+import { showToast } from '../../../components/layout/CustomToast';
+
 // import { Modal } from 'react-bootstrap';
 
-const ArticleInfo = () => {
+const ArticleInfo = ({ isEditMode }) => {
     // console.log("article", ArticleInfoSchema);
     const [showModal, setShowModal] = useState(false);
 
     // Load draft if available
-    const savedDraft = localStorage.getItem("articleInfo");
+    const savedDraft = isEditMode ?
+        localStorage.getItem("articleEditInfo") :
+        localStorage.getItem("articleInfo");
+    // const savedDraft = localStorage.getItem("articleInfo");
     const parsedDraft = savedDraft ? JSON.parse(savedDraft) : null;
 
     const defaultValues = {
@@ -34,54 +39,26 @@ const ArticleInfo = () => {
         enableReinitialize: true, // re-init if localSorage changes
         onSubmit: (values) => {
             // console.log("Form submitted:", values);
-            localStorage.setItem("articleInfo", JSON.stringify(values));
-            toast('Draft Info Saved !',
-                {
-                    icon: <i style={{ color: "green" }} className="fi fi-rr-check-circle"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid green',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                });
+
+            isEditMode ? localStorage.setItem("articleEditInfo", JSON.stringify(values))
+                : localStorage.setItem("articleInfo", JSON.stringify(values));
+
+            showToast(isEditMode ? "Edit Draft Info Saved !" : "Article Info Draft Saved !",
+                "success");
         },
     });
 
     const handleClearDraft = () => {
         setShowModal(false);
-        if (localStorage.getItem("articleInfo")) {
-            localStorage.removeItem("articleInfo");
+        const draftKey = isEditMode ? "articleEditInfo" : "articleInfo";
+        if (localStorage.getItem(draftKey)) {
+            localStorage.removeItem(draftKey);
             formik.resetForm({ values: defaultValues });
-            // toast.success("Draft cleared");
-            toast('Draft Info Cleared !',
-                {
-                    icon: <i style={{ color: "red" }} className="fi fi-rr-trash"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid red',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                })
+            showToast("Draft Info Cleared !", "delete");
         } else {
-            toast('Nothing to clear !',
-                {
-                    icon: <i style={{ color: "red" }} className="fi fi-br-exclamation"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid red',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                })
+            showToast("Nothing to clear !", "exclamation");
         }
+
     };
 
     return (
@@ -270,6 +247,36 @@ const ArticleInfo = () => {
                         {formik.touched.publish_author_email && formik.errors.publish_author_email && (
                             <div className={styles.errorMessage}>{formik.errors.publish_author_email}</div>
                         )}
+                    </div>
+
+                    <hr style={{ border: '2px solid black' }} />
+                    
+                    {/* Event Banner Title */}
+                    <div className={styles.inputDiv}>
+                        <label>Event Banner Title (EN)</label>
+                        <Input size='large'
+                            name="event_title_en"
+                            placeholder="e.g. Fahad's Column or History Series"
+                            value={formik.values.event_title_en}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            // className={formik.touched.author_email && formik.errors.author_email ? styles.inputError : ""}
+                        />
+                    </div>
+
+                    <div className={styles.inputDiv}>
+                        <label>Event Banner Title (বাংলা)</label>
+                        <Input size='large'
+                            name="event_title_bn"
+                            placeholder="e.g. ফাহাদ'স কলাম বা ইতিহাস সিরিজ"
+                            value={formik.values.event_title_bn}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            // className={formik.touched.author_email && formik.errors.author_email ? styles.inputError : ""}
+                        />
+                        {/* {formik.touched.author_email && formik.errors.author_email && (
+                            <div className={styles.errorMessage}>{formik.errors.author_email}</div>
+                        )} */}
                     </div>
 
                     {/* Buttons */}

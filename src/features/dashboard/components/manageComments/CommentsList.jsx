@@ -47,6 +47,7 @@ const CommentsList = ({ filter }) => {
             if (field && value) {
                 if (field === 'comment_id') {
                     query = query.eq('comment_id', parseInt(value));
+
                 } else {
                     query = query.ilike(field, `%${value}%`);
                 }
@@ -121,13 +122,13 @@ const CommentsList = ({ filter }) => {
     };
 
     // Generic search filter for any column
-    const getColumnSearchProps = (dataIndex) => ({
+    const getColumnSearchProps = (dataIndex, placeholder) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={searchInput}
                     // placeholder={`Search ${dataIndex}`}
-                    placeholder={`🔎 Comment with ID`}
+                    placeholder={`🔎 ${placeholder}`}
                     value={selectedKeys[0]}
                     onChange={(e) =>
                         setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -191,7 +192,7 @@ const CommentsList = ({ filter }) => {
             key: 'comment_id',
             fixed: 'left',
             width: isMobile ? 70 : 100,
-            ...getColumnSearchProps('comment_id'),
+            ...getColumnSearchProps('comment_id', 'Comment with ID'),
 
         },
         {
@@ -216,6 +217,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'article_title',
             key: 'article_title',
             width: isMobile ? 90 : 150,
+            ...getColumnSearchProps('article_title' , 'Article Title'),
             render: (_, record) => (
                 <div className={styles.articleTitle}>
                     <Link to={`/article/${encodeId(record.article_id)}/${record.article_slug}`}

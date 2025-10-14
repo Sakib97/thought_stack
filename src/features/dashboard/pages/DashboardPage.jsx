@@ -19,6 +19,8 @@ const DashboardPage = () => {
     const [collapsed, setCollapsed] = useState(true);
     const screens = useBreakpoint();
 
+    const location = useLocation();
+
     const {
         token: { borderRadiusLG },
     } = theme.useToken();
@@ -28,11 +30,12 @@ const DashboardPage = () => {
     }
 
     const getSelectedKey = () => {
-        if (location.pathname.includes("/dashboard/profile")) return "1";
-        if (location.pathname.includes("/dashboard/write-article")) return "2";
-        if (location.pathname.includes("/dashboard/manage-articles")) return "3";
-        if (location.pathname.includes("/dashboard/manage-comments")) return "4";
-        if (location.pathname.includes("/dashboard/manage-users")) return "5";
+        const path = location.pathname;
+        if (path.includes("/dashboard/profile")) return "1";
+        if (path.includes("/dashboard/write-article")) return "2";
+        if (path.includes("/dashboard/manage-articles")) return "3";
+        if (path.includes("/dashboard/manage-comments")) return "4";
+        if (path.includes("/dashboard/manage-users")) return "5";
         return "1"; // fallback
     };
 
@@ -77,7 +80,8 @@ const DashboardPage = () => {
                 <Menu
                     theme="light"
                     mode="inline"
-                    defaultSelectedKeys={[getSelectedKey()]}
+                    // defaultSelectedKeys={[getSelectedKey()]}
+                    selectedKeys={[getSelectedKey()]} // reactive, updates with location
                     items={[
                         {
                             key: "1", icon: <i className="fi fi-br-user" style={{ fontSize: 16 }}></i>,

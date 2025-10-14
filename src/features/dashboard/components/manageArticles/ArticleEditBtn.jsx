@@ -44,9 +44,10 @@ const ArticleEditBtn = ({ articleId }) => {
             </Modal.Header>
             <Modal.Body style={{ textAlign: 'center', fontSize: '18px' }}>
                 Are you sure you want to <b>Edit</b> this article?
-                <div style={{ fontSize: '14px', marginTop: '10px', color: 'orange', fontWeight: '700' }}>
+                <br /> You will be redirected to the <b>edit page</b>.
+                {/* <div style={{ fontSize: '14px', marginTop: '10px', color: 'orange', fontWeight: '700' }}>
                     Warning: If you go to edit page, all previously saved draft will be deleted (if any) !
-                </div>
+                </div> */}
 
             </Modal.Body>
             <Modal.Footer>

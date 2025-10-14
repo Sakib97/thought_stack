@@ -4,13 +4,14 @@ import styles from "../styles/ArticleInfo.module.css";
 import { Button, Modal } from "antd";
 import toast, { Toaster } from "react-hot-toast";
 
-const RTE = ({ contentLanguage, content, setContent  }) => {
+const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
     const [showModal, setShowModal] = useState(false);
     const editor = useRef(null);
     // const [content, setContent] = useState('');
 
     // storage key based on language
-    const storageKey = `articleContent_${contentLanguage}`;
+    const storageKey = isEditMode ? `articleEditContent_${contentLanguage}` : `articleContent_${contentLanguage}`;
+    // const storageKey = `articleContent_${contentLanguage}`; 
 
     // load content on mount
     useEffect(() => {
@@ -134,6 +135,7 @@ const RTE = ({ contentLanguage, content, setContent  }) => {
     // clear draft
     const handleClearDraft = () => {
         setShowModal(false);
+        
         if (localStorage.getItem(storageKey)) {
             localStorage.removeItem(storageKey);
             setContent("");
