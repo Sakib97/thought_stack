@@ -60,6 +60,8 @@ const ArticleComment = ({ articleId, userMeta }) => {
 
             if (error) throw error;
 
+            // if i make a new comment, i want to add it to the comments array on top
+            // the following s lines of code ensures that I don't see this comment at the bottom also
             const existingIds = new Set(comments.map(c => c.id));
             const filtered = data.filter(c => !existingIds.has(c.id));
 

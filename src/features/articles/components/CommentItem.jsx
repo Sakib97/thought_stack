@@ -4,9 +4,10 @@ import { supabase } from "../../../config/supabaseClient";
 import { useState, useEffect } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import { useAuth } from "../../../context/AuthProvider";
-import toast from "react-hot-toast";
 import CommentReactions from "./CommentReactions";
 import CommentReport from "./CommentReport";
+import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
+import { showToast } from "../../../components/layout/CustomToast";
 
 const REPLIES_PER_PAGE = 2;
 
@@ -23,7 +24,7 @@ const CommentItem = ({
     isReply,
     sortOrder
 }) => {
-    
+
     const { userMeta } = useAuth();
     const [replies, setReplies] = useState([]);
     const [loadingReplies, setLoadingReplies] = useState(false);
@@ -49,7 +50,7 @@ const CommentItem = ({
             fetchReplies(comment.id, 1);
             setLoadedOnce(true);
         }
-    }, [sortOrder]); 
+    }, [sortOrder]);
 
     const handleReplyClick = (id) => {
         setOpenReplyId((prev) => (prev === id ? null : id));
@@ -133,18 +134,16 @@ const CommentItem = ({
 
     const handleReplySubmit = async (e) => {
         e.preventDefault();
-        if (!userMeta) {
-            return toast.error("You must be logged in to reply.");
-        }
-        if (!userMeta) return toast.error("You must be logged in to reply");
+
+        if (!userMeta) return showToast("You must be logged in to reply", "error");
         if (!userMeta.is_active) {
-            return toast.error("Your account is not active. You can't reply.");
+            return showToast("Your account is not active. You can't reply.", "error");
         }
         if (!allowedRoles.includes(userMeta.role)) {
-            return toast.error("You don’t have permission to reply.");
+            return showToast("You don’t have permission to reply.", "error");
         }
         if (!isReplyContentValid) {
-            return toast.error("Reply cannot be empty or whitespace.");
+            return showToast("Reply cannot be empty or whitespace.", "error");
         }
 
         setLoading(true);
@@ -152,15 +151,17 @@ const CommentItem = ({
         try {
             const parentIdToUse = isReply ? mainParentId : comment.id;
             // const parentIdToUse = mainParentId ? mainParentId : comment.id;
-            const { data, error } = await supabase.from("comments").insert([
-                {
-                    article_id: articleId,
-                    user_id: userMeta.uid,
-                    content: replyContent,
-                    parent_id: parentIdToUse,
-                    is_hidden: false,
-                },
-            ])
+            const { data, error } = await supabase
+                .from("comments")
+                .insert([
+                    {
+                        article_id: articleId,
+                        user_id: userMeta.uid,
+                        content: replyContent,
+                        parent_id: parentIdToUse,
+                        is_hidden: false,
+                    },
+                ])
                 .select(`
                         id,
                         created_at,
@@ -172,7 +173,7 @@ const CommentItem = ({
             ;
 
             if (error) throw error;
-            toast.success("Reply added!");
+
             const newReply = {
                 id: data.id,
                 name: data.users_meta?.name || "Anonymous",
@@ -191,6 +192,7 @@ const CommentItem = ({
 
             // Clear input
             setReplyContent("");
+            showToast("Reply added!", "success");
 
             // Ensure replies section is open
             if (!openReplies[parentIdToUse]) {
@@ -202,11 +204,15 @@ const CommentItem = ({
 
         } catch (err) {
             console.error("Error adding reply:", err);
-            toast.error("Failed to add reply.");
+            showToast("Failed to add reply.", "error");
         } finally {
             setLoading(false);
         }
     };
+
+    // const handleReplySubmitThrottled = createRateLimitedAction("comment", 5000, handleReplySubmit);
+    // 3 api calls allowed in every 10 seconds, 18/min  
+    const handleReplySubmitThrottled = createBurstRateLimitedAction("replie", 10000, 3, handleReplySubmit);
 
     return (
         <div
@@ -256,7 +262,8 @@ const CommentItem = ({
                                 Cancel
                             </button>
                             <button disabled={loading} className={styles.submitBtn}
-                                onClick={handleReplySubmit} >
+                                // onClick={handleReplySubmit} > 
+                                onClick={handleReplySubmitThrottled} >
                                 Post Reply
                             </button>
                         </div>

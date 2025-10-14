@@ -2,9 +2,10 @@ import styles from '../styles/CommentReactions.module.css';
 import { useAuth } from '../../../context/AuthProvider';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../config/supabaseClient';
-import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '../../../components/layout/CustomToast';
+import { createBurstRateLimitedAction } from '../../../utils/rateLimit';
+
 
 const CommentReactions = ({ articleId, commentId }) => {
     const { userMeta } = useAuth();
@@ -115,16 +116,18 @@ const CommentReactions = ({ articleId, commentId }) => {
         }
     };
 
+    // const toggleReactionThrottled = createRateLimitedAction("reaction", 5000, toggleReaction);
+    // 3 api calls allowed in every 10 seconds
+    const toggleReactionThrottled = createBurstRateLimitedAction("reaction", 10000, 3, toggleReaction);
 
     return (
         <div className={styles.reactionsContainer}>
-            <Toaster />
-
             {['like', 'dislike'].map(type => (
                 <div key={type} >
                     <span
                         className={styles.action}
-                        onClick={() => !loading && toggleReaction(type)}
+                        // onClick={() => !loading && toggleReaction(type)}
+                        onClick={() => !loading && toggleReactionThrottled(type)}
                     >
                         <i
                             className={`fa-${userReaction === type ? 'solid' : 'regular'} 

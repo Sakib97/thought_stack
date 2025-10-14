@@ -39,7 +39,7 @@ const ProfilePage = () => {
                                             : "secondary"
                                 }
                             >
-                                {userMeta?.role?.toUpperCase() || "N/A"}
+                                <span style={{fontSize:'13px'}}>{userMeta?.role?.toUpperCase() || "N/A"}</span>
                             </Badge>
                         </>
                     ) : (

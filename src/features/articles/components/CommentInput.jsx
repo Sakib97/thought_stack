@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { supabase } from "../../../config/supabaseClient";
 import styles from "../styles/CommentInput.module.css"; // create simple styling if needed
-// import { useAuth } from "../../../context/AuthProvider";
 import { showToast } from "../../../components/layout/CustomToast";
+import { createRateLimitedAction, createBurstRateLimitedAction } from "../../../utils/rateLimit";
+import { Toaster } from "react-hot-toast";
 
 const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
     // const { userMeta, loading: authLoading } = useAuth();
-    
+
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -25,15 +26,17 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
 
         setLoading(true);
         try {
-            const { data, error } = await supabase.from("comments").insert([
-                {
-                    article_id: articleId,
-                    user_id: userMeta.uid,
-                    content,
-                    parent_id: null,
-                    is_hidden: false,
-                },
-            ])
+            const { data, error } = await supabase
+                .from("comments")
+                .insert([
+                    {
+                        article_id: articleId,
+                        user_id: userMeta.uid,
+                        content,
+                        parent_id: null,
+                        is_hidden: false,
+                    },
+                ])
                 .select(`
                         id,
                         created_at,
@@ -75,7 +78,7 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
         return (
             <div className={styles.notLoggedIn}>
                 {/* <i style={{ fontSize: '25px' }} className="fa-regular fa-circle-xmark"></i>  */}
-                Please login to comment ! 
+                Please login to comment !
             </div>
         );
     }
@@ -84,7 +87,7 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
         return (
             <div className={styles.notLoggedIn}>
                 {/* <i style={{ fontSize: '25px' }} className="fa-solid fa-triangle-exclamation"></i> &nbsp; */}
-                Account is not active! You can't comment! 
+                Account is not active! You can't comment!
                 <div></div>
             </div>
         );
@@ -98,33 +101,40 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
         );
     }
 
+    // const handleSubmitThrottled = createRateLimitedAction("comment", 5000, handleSubmit);
+    // 3 api calls allowed in every 10 seconds, 18/min
+    const handleSubmitThrottled = createBurstRateLimitedAction("comment", 10000, 3, handleSubmit);
+
     return (
+        <div  >
+            <form onSubmit={handleSubmitThrottled} className={styles.commentInput}>
+                {/* //  <form onSubmit={(e) => { e.preventDefault(); handleSubmitThrottled(); }} className={styles.commentInput}>  */}
+                
+                <img
+                    src={userMeta.avatar_url || "https://i.pravatar.cc/40"}
+                    alt="avatar"
+                    className={styles.avatar}
+                />
+                <textarea
+                    placeholder="Add a comment..."
+                    className={styles.textarea}
+                    value={content}
+                    onChange={(e) => {
+                        setContent(e.target.value);
+                        e.target.style.height = "auto"; // reset height
+                        e.target.style.height = e.target.scrollHeight + "px"; // grow with content
+                    }}
+                    rows={1}
+                    disabled={loading}
+                />
+                <button type="submit" disabled={loading} className={styles.submitBtn}>
+                    {loading ? "Posting..." : <i style={{ fontSize: '25px' }} className="fi fi-br-paper-plane-top"
+                    ></i>}
+                </button>
+            </form>
+        </div>
+        // <form onSubmit={handleSubmit} className={styles.commentInput}>
 
-
-        <form onSubmit={handleSubmit} className={styles.commentInput}>
-
-            <img
-                src={userMeta.avatar_url || "https://i.pravatar.cc/40"}
-                alt="avatar"
-                className={styles.avatar}
-            />
-            <textarea
-                placeholder="Add a comment..."
-                className={styles.textarea}
-                value={content}
-                onChange={(e) => {
-                    setContent(e.target.value);
-                    e.target.style.height = "auto"; // reset height
-                    e.target.style.height = e.target.scrollHeight + "px"; // grow with content
-                }}
-                rows={1}
-                disabled={loading}
-            />
-            <button type="submit" disabled={loading} className={styles.submitBtn}>
-                {loading ? "Posting..." : <i style={{ fontSize: '25px' }} className="fi fi-br-paper-plane-top"
-                ></i>}
-            </button>
-        </form>
     );
 };
 

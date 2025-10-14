@@ -1,7 +1,7 @@
- /* Increase table font sizes */
+/* Increase table font sizes */
 .customTable :global(.ant-table-thead > tr > th),
 .customTable :global(.ant-table-tbody > tr > td) {
-  font-size: 16px; 
+  font-size: 18px; 
   line-height: 1.6;
 }
 
@@ -25,17 +25,23 @@
   background: #f9f9f9;
 }
 
+/* Default styles */
+.fixedColumn {
+  background-color: red;
+  box-shadow: -2px 0 5px -2px rgba(0, 0, 0, 0.1);
+  padding: 0 8px; /* Add consistent padding */
+}
 .actionColumn {
   display: flex;
   justify-content: center;
-  gap: 9px; /* Space between icons */
+  gap: 4px; /* Space between icons */
 }
 
-.commentCountSectionContainer{
+.articleCountSectionContainer{
     display: flex;
     justify-content: center;
 }
-.commentCountSection{
+.articleCountSection{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,14 +60,14 @@
 @media screen and (max-width: 768px) {
   .customTable :global(.ant-table-thead > tr > th),
   .customTable :global(.ant-table-tbody > tr > td) {
-    font-size: 13px; 
+    font-size: 15px; 
   }
     .actionColumn{
         gap: 2px;
     }   
     
-    .commentCountSection{
+    .articleCountSection{
         overflow-wrap: break-word;
-        width: 110%;
+        width: 90%;
     }
 }

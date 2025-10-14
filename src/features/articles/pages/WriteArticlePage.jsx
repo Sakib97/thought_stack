@@ -1,70 +1,127 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import RTE from "../components/RTE";
 import ArticleInfo from "../components/ArticleInfo";
 import { Button, Modal } from "antd";
 import styles from "../styles/WriteArticlePage.module.css";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { supabase } from "../../../config/supabaseClient";
-import { deSlugify, slugify } from "../../../utils/slugAndStringUtil";
+import { slugify } from "../../../utils/slugAndStringUtil";
 import { useAuth } from "../../../context/AuthProvider";
-import { encodeId } from "../../../utils/hashUtil";
-import GoToTopButton from "../../../components/layout/GoToTopButton";
+import { encodeId, decodeId } from "../../../utils/hashUtil";
+import { showToast } from "../../../components/layout/CustomToast";
+import Spinner from 'react-bootstrap/Spinner';
 
 const WriteArticlePage = () => {
     const [showModal, setShowModal] = useState(false);
-    const { user, userMeta } = useAuth();
+    const { userMeta } = useAuth();
     const [loading, setLoading] = useState(false);
     const [uploadedArticleLink, setUploadedArticleLink] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [articleId, setArticleId] = useState(null);
 
-    // Lifting RTE state to parent (WriteArticlePage)
+    const [editInfoLoading, setEditInfoLoading] = useState(false);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [contentEn, setContentEn] = useState(localStorage.getItem("articleContent_en") || "");
     const [contentBn, setContentBn] = useState(localStorage.getItem("articleContent_bn") || "");
 
+    // Prevent fetching article data on mount
+    const hasFetched = useRef(false);
 
-    const handlePublish = async () => {
-        setLoading(true);
+    // Detect edit mode and decode ID
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const editParam = params.get("edit");
+        const encodedId = params.get("articleId");
 
+        if (editParam === "true" && encodedId && !hasFetched.current) {
+            hasFetched.current = true; // Prevent duplicate fetch
+            const decodedId = decodeId(encodedId);
+            setIsEditMode(true);
+            setArticleId(decodedId);
+            fetchArticleData(decodedId);
+        } else if (!editParam) {
+            // Only clear edit data, not normal drafts
+            setIsEditMode(false);
+            setArticleId(null);
+            localStorage.removeItem("articleEditInfo");
+            localStorage.removeItem("articleEditContent_en");
+            localStorage.removeItem("articleEditContent_bn");
+            setContentEn(localStorage.getItem("articleContent_en") || "");
+            setContentBn(localStorage.getItem("articleContent_bn") || "");
+        }
+    }, [location.search]);
+
+    // Fetch article and apply role restrictions
+    const fetchArticleData = async (id) => {
+        setEditInfoLoading(true);
         try {
-            if (!userMeta?.is_active || !["admin", "editor"].includes(userMeta?.role)) {
-                // toast.error("You are not allowed to publish articles.");
-                toast('You are not allowed to publish articles !',
-                    {
-                        icon: <i style={{ color: "red", fontSize: '23px' }} className="fi fi-br-cross-circle"></i>,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#fff',
-                            color: 'black',
-                            border: '2px solid red',
-                            fontSize: '18px',
-                        },
-                        duration: 2000
-                    })
-                setLoading(false);
-                setShowModal(false);
+            const { data, error } = await supabase
+                .from("articles")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+            if (error || !data) {
+                showToast("Article not found!", "error");
+                // navigate("/dashboard/manage-articles");
+                localStorage.removeItem("articleEditInfo");
+                localStorage.removeItem("articleEditContent_en");
+                localStorage.removeItem("articleEditContent_bn");
                 return;
             }
-            // Get local storage values
-            const articleInfo = JSON.parse(localStorage.getItem("articleInfo"));
-            const articleContentEn = localStorage.getItem("articleContent_en");
-            const articleContentBn = localStorage.getItem("articleContent_bn");
 
-            // Check if data exists
+            // Role-based restriction
+            if (userMeta?.role === "editor" && data.editor_email !== userMeta?.email) {
+                showToast("You are not allowed to edit this article.", "error");
+                // navigate("/dashboard/manage-articles");
+                localStorage.removeItem("articleEditInfo");
+                localStorage.removeItem("articleEditContent_en");
+                localStorage.removeItem("articleEditContent_bn");
+                return;
+            }
+
+            //  Preload info under EDIT keys
+            localStorage.setItem("articleEditInfo", JSON.stringify(data));
+            localStorage.setItem("articleEditContent_en", data.content_en || "");
+            localStorage.setItem("articleEditContent_bn", data.content_bn || "");
+
+            setContentEn(data.content_en || "");
+            setContentBn(data.content_bn || "");
+
+            // toast.success("Article loaded for editing!");
+            showToast("Article loaded for editing!", "success");
+        } catch (err) {
+            console.error(err);
+            showToast("Failed to load article data.", "error");
+            // navigate("/dashboard/manage-articles");
+        } finally {
+            setEditInfoLoading(false);
+        }
+    };
+
+    // Handle Publish/Edit
+    const handlePublish = async () => {
+        setLoading(true);
+        try {
+            // const articleInfo = JSON.parse(localStorage.getItem("articleInfo"));
+            // const articleContentEn = localStorage.getItem("articleContent_en");
+            // const articleContentBn = localStorage.getItem("articleContent_bn");
+
+            const infoKey = isEditMode ? "articleEditInfo" : "articleInfo";
+            const enKey = isEditMode ? "articleEditContent_en" : "articleContent_en";
+            const bnKey = isEditMode ? "articleEditContent_bn" : "articleContent_bn";
+
+            const articleInfo = JSON.parse(localStorage.getItem(infoKey));
+            const articleContentEn = localStorage.getItem(enKey);
+            const articleContentBn = localStorage.getItem(bnKey);
+
             if (!articleInfo || !articleContentEn || !articleContentBn) {
-                // toast.error("Missing draft data. Save all drafts before publishing.");
-                toast('Missing draft data. Save all drafts before publishing.',
-                    {
-                        icon: <i style={{ color: "red", fontSize: '23px' }} className="fi fi-br-cross-circle"></i>,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#fff',
-                            color: 'black',
-                            border: '2px solid red',
-                            fontSize: '18px',
-                        },
-                        duration: 3000
-                    })
+                showToast("Missing article data.", "error");
                 setLoading(false);
-                setShowModal(false);
                 return;
             }
 
@@ -88,78 +145,74 @@ const WriteArticlePage = () => {
 
             if (missingFields.length > 0) {
                 // toast.error("Please fill in all required fields before publishing.");
-                toast('Please fill in all required article info before publishing.',
-                    {
-                        icon: <i style={{ color: "red", fontSize: '23px' }} className="fi fi-br-cross-circle"></i>,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#fff',
-                            color: 'black',
-                            border: '2px solid red',
-                            fontSize: '18px',
-                        },
-                        duration: 3000
-                    })
+                showToast("Please fill in all required article info before publishing.", "error");
                 setLoading(false);
                 return;
             }
 
-            // Insert into Supabase
-            const { data, error } = await supabase.from("articles").insert([
-                {
-                    ...articleInfo,
-                    content_en: articleContentEn,
-                    content_bn: articleContentBn,
-                    created_at: new Date(),
-                    article_status: "accepted",
-                    article_slug: slugify(articleInfo.title_en),
-                    editor_name: userMeta?.name,
-                    editor_email: userMeta?.email
-                },
-            ])
-                .select();
-            console.log("data", data);
+            if (isEditMode) {
+                // UPDATE article
+                const { data: editedData, error } = await supabase
+                    .from("articles")
+                    .update({
+                        ...articleInfo,
+                        content_en: articleContentEn,
+                        content_bn: articleContentBn,
+                        article_slug: slugify(articleInfo.title_en),
+                        updated_at: new Date().toISOString(),
+                        updated_by: userMeta?.email,
+                    })
+                    .eq("id", articleId)
+                    .select(); // this ensures data is returned;
 
-            if (error) {
-                console.error(error);
-                // toast.error("Failed to publish article. Please try again.");
-                toast('Failed to publish article. Please try again.',
-                    {
-                        icon: <i style={{ color: "red", fontSize: '23px' }} className="fi fi-br-cross-circle"></i>,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#fff',
-                            color: 'black',
-                            border: '2px solid red',
-                            fontSize: '18px',
-                        },
-                        duration: 3000
-                    });
-            } else if (data) {
-                console.log("data", data);
+                if (error) throw error;
+                showToast("Article updated successfully!", "success");
+                // Clear only edit keys after successful update
+                localStorage.removeItem("articleEditInfo");
+                localStorage.removeItem("articleEditContent_en");
+                localStorage.removeItem("articleEditContent_bn");
 
-                const insertedArticle = data[0];
-                const articleId = encodeId(insertedArticle.id);
-                const articleSlug = slugify(articleInfo.title_en);
-                const articleUrl = `${window.location.origin}/article/${articleId}/${articleSlug}`;
+                // Clear RTE editors
+                setContentEn("");
+                setContentBn("");
 
+                const inserted = editedData[0];
+                const articleUrl = `${window.location.origin}/article/${encodeId(inserted.id)}/${slugify(articleInfo.title_en)}`;
                 setUploadedArticleLink(articleUrl);
 
-                // toast.success("Article published successfully!");
-                toast('Article published successfully!',
-                    {
-                        icon: <i style={{ color: "green", fontSize: '23px' }} className="fi fi-rr-check-circle"></i>,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#fff',
-                            color: 'black',
-                            border: '2px solid green',
-                            fontSize: '18px',
-                        },
-                        duration: 3000
-                    });
+            } else {
+                // INSERT new article
+                if (!userMeta?.is_active && !["admin", "editor"].includes(userMeta?.role)) {
+                    showToast("You are not allowed to publish articles!", "error");
+                    setLoading(false);
+                    setShowModal(false);
+                    return;
+                }
 
-                // Optionally clear localStorage after publishing
+                const { data, error } = await supabase
+                    .from("articles")
+                    .insert([
+                        {
+                            ...articleInfo,
+                            content_en: articleContentEn,
+                            content_bn: articleContentBn,
+                            created_at: new Date(),
+                            article_status: "accepted",
+                            article_slug: slugify(articleInfo.title_en),
+                            editor_name: userMeta?.name,
+                            editor_email: userMeta?.email,
+                        },
+                    ])
+                    .select();
+
+                if (error) throw error;
+
+                const inserted = data[0];
+                const articleUrl = `${window.location.origin}/article/${encodeId(inserted.id)}/${slugify(articleInfo.title_en)}`;
+                setUploadedArticleLink(articleUrl);
+
+                showToast("Article published successfully!", "success");
+                // Clear normal local storage after successful action
                 localStorage.removeItem("articleInfo");
                 localStorage.removeItem("articleContent_en");
                 localStorage.removeItem("articleContent_bn");
@@ -168,81 +221,81 @@ const WriteArticlePage = () => {
                 setContentEn("");
                 setContentBn("");
             }
+
+            setShowModal(false);
         } catch (err) {
             console.error(err);
-            toast.error("Unexpected error occurred.");
+            showToast("Error while saving article !", "error");
         }
-
         setLoading(false);
-        setShowModal(false);
     };
 
     return (
         <div>
             <Toaster />
-            <ArticleInfo />
-
-            <RTE contentLanguage="en" content={contentEn} setContent={setContentEn} />
+            {editInfoLoading &&
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </div>
+            }
+            <ArticleInfo isEditMode={isEditMode} />
+            <RTE contentLanguage="en" content={contentEn}
+                setContent={setContentEn} isEditMode={isEditMode} />
             <hr />
-            <RTE contentLanguage="bn" content={contentBn} setContent={setContentBn} />
-
+            <RTE contentLanguage="bn" content={contentBn}
+                setContent={setContentBn} isEditMode={isEditMode} />
             <hr />
 
-            {userMeta?.is_active && ["admin", "editor"].includes(userMeta?.role)
-                && !uploadedArticleLink &&
-                (
-                    <div className={styles.buttonContainer}>
-                        <div className={styles.warningMessage}>
-                            Please save all your drafts before publishing !
-                        </div>
-                        <Button className={styles.publishButton}
-                            type="primary"
-                            // onClick={handlePublish}
-                            onClick={() => setShowModal(true)}
-                            loading={loading}
-                            iconPosition="end"
-                        >
-                            <i style={{ fontSize: 25, transform: "translateY(8%)" }} className="fi fi-rr-shield-trust"></i>
-                            Publish Article
-                        </Button>
-                    </div>
-                )}
+            <div className={styles.buttonContainer}>
+                <div className={styles.warningMessage}>
+                    Please save all your drafts before {isEditMode ? "editing" : "publishing"}!
+                </div>
+                <Button
+                    className={styles.publishButton}
+                    type="primary"
+                    onClick={() => setShowModal(true)}
+                    loading={loading}
+                >
+                    <i
+                        style={{ fontSize: 25, transform: "translateY(8%)" }}
+                        className={`fi fi-rr-${isEditMode ? "edit" : "shield-trust"}`}
+                    ></i>
+                    {isEditMode ? "Edit Article" : "Publish Article"}
+                </Button>
+            </div>
 
-            < Modal
-                title={<span style={{ fontSize: "20px", fontWeight: "bold" }}>Publish Article ?</span>}
+            <Modal
+                title={
+                    <span style={{ fontSize: "20px", fontWeight: "bold" }}>
+                        {isEditMode ? "Confirm Edit" : "Publish Article?"}
+                    </span>
+                }
                 centered
                 open={showModal}
                 onOk={handlePublish}
                 onCancel={() => setShowModal(false)}
                 okText="Confirm"
                 confirmLoading={loading}
-                okButtonProps={{
-                    style: {
-                        backgroundColor: "green",
-                        borderColor: "green",
-                        fontSize: "16px",   // increase font size
-                    },
-                }}
-                cancelText="Cancel"
-                cancelButtonProps={{
-                    style: {
-                        fontSize: "16px",   // match cancel button size if you want
-                    },
-                }}
             >
                 <div style={{ fontSize: "18px", marginBottom: "15px" }}>
-                    Please save all the drafts before publishing.
+                    {isEditMode
+                        ? "Do you want to save changes to this article?"
+                        : "Please save all drafts before publishing."}
                 </div>
-
             </Modal>
 
             {uploadedArticleLink && (
-                <div className={styles.articleLinkContainer}
+                <div
+                    className={styles.articleLinkContainer}
                     style={{
-                        marginTop: "20px", fontSize: "20px",
-                        textAlign: "center"
-                    }}>
-                    <span>View your published article: </span>
+                        marginTop: "20px",
+                        fontSize: "20px",
+                        textAlign: "center",
+                    }}
+                >
+                    <span>View your {isEditMode ? "edited" : "published"} article: </span>
                     <a
                         href={uploadedArticleLink}
                         target="_blank"
@@ -252,11 +305,9 @@ const WriteArticlePage = () => {
                         {uploadedArticleLink}
                     </a>
                 </div>
-
             )}
-
-        </div >
+        </div>
     );
-}
+};
 
 export default WriteArticlePage;

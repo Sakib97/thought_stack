@@ -52,8 +52,8 @@ const ReviewCommentBtn = ({ commentId, reviewStatus, onReviewComplete }) => {
                 placement="top"
                 content={
                     isAlreadyReviewed
-                        ? <span style={{ fontWeight: 600 }}>Already reviewed</span>
-                        : <span style={{ fontWeight: 600 }}>Mark as Reviewed</span>
+                        ? <span style={{ fontWeight: 700 }}>Already reviewed</span>
+                        : <span style={{ fontWeight: 700 }}>Mark as Reviewed</span>
                 }
             >
                 <span>

@@ -47,6 +47,7 @@ const CommentsList = ({ filter }) => {
             if (field && value) {
                 if (field === 'comment_id') {
                     query = query.eq('comment_id', parseInt(value));
+
                 } else {
                     query = query.ilike(field, `%${value}%`);
                 }
@@ -77,6 +78,7 @@ const CommentsList = ({ filter }) => {
                 article_title: item.article_title,
                 article_slug: item.article_slug,
                 comment_text: item.comment_text,
+                commenter_email: item.commenter_email,
                 report_count: item.report_count,
                 last_report_date: getFormattedTime(item.latest_report_date) || 'N/A',
                 // reporting_reasons: item.reporting_reasons?.join(', ') || '—',
@@ -121,13 +123,13 @@ const CommentsList = ({ filter }) => {
     };
 
     // Generic search filter for any column
-    const getColumnSearchProps = (dataIndex) => ({
+    const getColumnSearchProps = (dataIndex, placeholder) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
                 <Input
                     ref={searchInput}
                     // placeholder={`Search ${dataIndex}`}
-                    placeholder={`🔎 Comment with ID`}
+                    placeholder={`🔎 ${placeholder}`}
                     value={selectedKeys[0]}
                     onChange={(e) =>
                         setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -190,15 +192,15 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'comment_id',
             key: 'comment_id',
             fixed: 'left',
-            width: isMobile ? 45 : 90,
-            ...getColumnSearchProps('comment_id'),
+            width: isMobile ? 70 : 100,
+            ...getColumnSearchProps('comment_id', 'Comment with ID'),
 
         },
         {
             title: 'Parent ID',
             dataIndex: 'parent_id',
             key: 'parent_id',
-            width: isMobile ? 45 : 90,
+            width: isMobile ? 60 : 90,
             render: (parent_id) => {
                 return <>
                     {parent_id ? <>
@@ -216,6 +218,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'article_title',
             key: 'article_title',
             width: isMobile ? 90 : 150,
+            ...getColumnSearchProps('article_title' , 'Article Title'),
             render: (_, record) => (
                 <div className={styles.articleTitle}>
                     <Link to={`/article/${encodeId(record.article_id)}/${record.article_slug}`}
@@ -236,7 +239,13 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'comment_text',
             key: 'comment_text',
             width: isMobile ? 100 : 190,
-
+        },
+        {
+            title: 'Commenter Email',
+            dataIndex: 'commenter_email',
+            key: 'commenter_email',
+            width: isMobile ? 70 : 100,
+            ...getColumnSearchProps('commenter_email' , 'Commenter Email'), // commenter_email
         },
         {
             title: 'Report Count',
@@ -263,9 +272,7 @@ const CommentsList = ({ filter }) => {
             title: 'Reporting Reasons',
             dataIndex: 'reporting_reasons',
             key: 'reporting_reasons',
-            width: isMobile ? 45 : 95,
-
-
+            width: isMobile ? 45 : 75,
         },
         {
             title: 'Visibility',
@@ -308,7 +315,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'action',
             key: 'action',
             align: 'center',
-            fixed: 'right',
+            // fixed: 'right',
             width: isMobile ? 45 : 90,
             render: (_, record) => (
                 <div className={styles.actionColumn}>

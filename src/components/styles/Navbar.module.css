@@ -14,7 +14,28 @@
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
   margin-left:0vw;
+}
 
 
+.offcanvasBody {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;  */
+  align-items: center; /* horizontal centering */
+  text-align: center;
+  padding: 2rem 0; /* balanced spacing top/bottom */
+}
 
+.offcanvasBody .nav-link {
+  font-size: 1.2rem;
+  margin: 8px 0; /* evenly spaced menu items */
+}
+
+@media (min-width: 992px) {
+  .offcanvasBody {
+    justify-content: flex-end;
+    align-items: flex-end;
+    text-align: right;
+    padding: 0;
+  }
 }

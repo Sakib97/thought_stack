@@ -10,6 +10,12 @@ const getIcon = (type) => {
             return "fa-solid fa-circle-info";
         case "warning":
             return "fa-solid fa-triangle-exclamation";
+        case "save":
+            return "fa-solid fa-floppy-disk";
+        case "delete":
+            return "fi fi-rr-trash";
+        case "exclamation":
+            return "fi fi-br-exclamation";
         default:
             return "fa-solid fa-circle-info";
     }
@@ -25,12 +31,21 @@ const getBorderColor = (type) => {
             return 'blue';
         case "warning":
             return 'orange';
+        case "save":
+            return 'green';
+        case "delete":
+            return 'red';
+        case "exclamation":
+            return 'red';
         default:
             return 'white';
     }
 };
 
-export const showToast = (message, type = "info") => {
+export const showToast = (message, type = "info", id = null) => {
+    // dismiss existing toast with same ID before showing new one
+    if (id) toast.dismiss(id);
+
     toast((t) => (
         <div className={styles.customToastContainer}>
             <i className={`${getIcon(type)}`} style={{ fontSize: '20px', color: getBorderColor(type) }}></i>
@@ -42,6 +57,7 @@ export const showToast = (message, type = "info") => {
         </div>
     ),
         {
+            id,
             style: {
                 borderRadius: '10px',
                 background: '#fff',
@@ -49,7 +65,7 @@ export const showToast = (message, type = "info") => {
                 border: `2px solid ${getBorderColor(type)}`,
                 fontSize: '18px',
             },
-            duration: type === 'error' ? 4000 : 2000,
+            duration: type === 'error' ? 4000 : 3000,
         }
     );
 }
