@@ -188,11 +188,11 @@ const CommentsList = ({ filter }) => {
 
     const columns = [
         {
-            title: 'Comment ID',
+            title: 'Cmnt. ID',
             dataIndex: 'comment_id',
             key: 'comment_id',
             fixed: 'left',
-            width: isMobile ? 70 : 100,
+            width: isMobile ? 100 : 110,
             ...getColumnSearchProps('comment_id', 'Comment with ID'),
 
         },
@@ -200,7 +200,7 @@ const CommentsList = ({ filter }) => {
             title: 'Parent ID',
             dataIndex: 'parent_id',
             key: 'parent_id',
-            width: isMobile ? 60 : 90,
+            width: isMobile ? 100 : 100,
             render: (parent_id) => {
                 return <>
                     {parent_id ? <>
@@ -217,7 +217,7 @@ const CommentsList = ({ filter }) => {
             title: 'Article Title',
             dataIndex: 'article_title',
             key: 'article_title',
-            width: isMobile ? 90 : 150,
+            width: isMobile ? 100 : 150,
             ...getColumnSearchProps('article_title' , 'Article Title'),
             render: (_, record) => (
                 <div className={styles.articleTitle}>
@@ -238,13 +238,13 @@ const CommentsList = ({ filter }) => {
             title: 'Comment Text',
             dataIndex: 'comment_text',
             key: 'comment_text',
-            width: isMobile ? 100 : 190,
+            width: isMobile ? 210 : 390,
         },
         {
             title: 'Commenter Email',
             dataIndex: 'commenter_email',
             key: 'commenter_email',
-            width: isMobile ? 70 : 100,
+            width: isMobile ? 130 : 150,
             ...getColumnSearchProps('commenter_email' , 'Commenter Email'), // commenter_email
         },
         {
@@ -252,7 +252,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'report_count',
             key: 'report_count', //
             align: 'center',
-            width: isMobile ? 40 : 85,
+            width: isMobile ? 85 : 85,
             render: (report_count) =>
                 <Tag color={report_count > 4 ? 'rgb(255, 40, 2)' : 'rgb(213, 144, 7) '}>
                     <span style={{ fontSize: '20px', fontWeight: 'bold' }}>
@@ -265,21 +265,21 @@ const CommentsList = ({ filter }) => {
             title: 'Last Report',
             dataIndex: 'last_report_date',
             key: 'last_report_date',
-            width: isMobile ? 40 : 85,
+            width: isMobile ?85 : 85,
 
         },
         {
             title: 'Reporting Reasons',
             dataIndex: 'reporting_reasons',
             key: 'reporting_reasons',
-            width: isMobile ? 45 : 75,
+            width: isMobile ? 100 : 75,
         },
         {
             title: 'Visibility',
             dataIndex: 'visibility',
             key: 'visibility',
             align: 'center',
-            width: isMobile ? 45 : 90,
+            width: isMobile ? 100 : 110,
             render: (visibility) => (
                 <Badge style={{ fontSize: '12px' }} bg={visibility === 'Hidden' ?
                     'danger' : 'success'}>
@@ -297,7 +297,7 @@ const CommentsList = ({ filter }) => {
             dataIndex: 'review_status',
             key: 'review_status',
             align: 'center',
-            width: isMobile ? 45 : 95,
+            width: isMobile ? 100 : 110,
             render: (review_status) => (
                 <Badge style={{ fontSize: '12px' }} bg={review_status === 'pending' ?
                     'danger' : 'success'}>
@@ -316,7 +316,7 @@ const CommentsList = ({ filter }) => {
             key: 'action',
             align: 'center',
             // fixed: 'right',
-            width: isMobile ? 45 : 90,
+            width: isMobile ? 100 : 110,
             render: (_, record) => (
                 <div className={styles.actionColumn}>
                     {/* {console.log(record)} */}
