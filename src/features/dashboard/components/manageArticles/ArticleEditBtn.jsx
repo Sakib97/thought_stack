@@ -11,7 +11,7 @@ import { encodeId } from '../../../../utils/hashUtil';
 
 
 const ArticleEditBtn = ({ articleId }) => {
-    // const { userMeta } = useAuth();
+    const { userMeta } = useAuth();
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
 
@@ -22,7 +22,19 @@ const ArticleEditBtn = ({ articleId }) => {
     );
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        const allowedRoles = ['admin', 'editor'];
+        // Prevent unauthorized or inactive users from opening the modal
+        if (!allowedRoles.includes(userMeta?.role)) {
+            showToast('Only admin or editor can edit!', 'error');
+            return;
+        }
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot edit.', 'error');
+            return;
+        }
+        setShow(true);
+    };
 
     const handleGo = () => {
         handleClose();

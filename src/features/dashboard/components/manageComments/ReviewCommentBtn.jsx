@@ -6,15 +6,26 @@ import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { showToast } from '../../../../components/layout/CustomToast';
 import { useAuth } from '../../../../context/AuthProvider';
 
+
 const ReviewCommentBtn = ({ commentId, reviewStatus, onReviewComplete }) => {
     const [show, setShow] = useState(false);
     const [updating, setUpdating] = useState(false);
-    const { user } = useAuth();
+    const { user, userMeta } = useAuth();
 
     const isAlreadyReviewed = reviewStatus === 'reviewed';
 
     const handleClose = () => setShow(false);
     const handleShow = () => {
+        const allowedRoles = ['admin', 'editor'];
+        // Prevent unauthorized or inactive users from opening the modal
+        if (!allowedRoles.includes(userMeta?.role)) {
+            showToast('Only admin or editor can review!', 'error');
+            return;
+        }
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot review.', 'error');
+            return;
+        }
         if (!isAlreadyReviewed) setShow(true);
     };
 

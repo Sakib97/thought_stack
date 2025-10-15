@@ -15,13 +15,26 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
     const [updating, setUpdating] = useState(false);
 
     const content = (
-        <div style={{fontWeight: '700'}}>
+        <div style={{ fontWeight: '700' }}>
             Change User Status
         </div>
     );
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        // Prevent unauthorized or inactive users from opening the modal
+        if (userMeta?.role !== 'admin') {
+            showToast('Only admin can change user status!', 'error');
+            return;
+        }
+
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot change status.', 'error');
+            return;
+        }
+
+        setShow(true);
+    };
 
     const handleConfirm = async () => {
         setUpdating(true);
@@ -63,7 +76,7 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Status Change</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{textAlign: 'center', fontSize: '18px'}}>
+                <Modal.Body style={{ textAlign: 'center', fontSize: '18px' }}>
                     {userMeta.uid === userId ? (
                         <span style={{ color: 'red', fontWeight: '700' }}>
                             You cannot change your own status !
@@ -73,7 +86,7 @@ const ActivateBtn = ({ userId, userStatus, onStatusChange }) => {
                             Are you sure you want to <b>{userStatus === 'Active' ? 'deactivate' : 'activate'}</b> this user?
                         </span>
                     )}
-                    
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose} disabled={updating}>
