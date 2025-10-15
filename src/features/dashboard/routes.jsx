@@ -5,8 +5,10 @@ import WriteArticlePage from "../articles/pages/WriteArticlePage";
 import ManageUsersPage from "../dashboard/pages/ManageUsersPage";
 import ManageArticlesPage from "../dashboard/pages/ManageArticlesPage";
 import ManageCommentsPage from "../dashboard/pages/ManageCommentsPage";
-
 import { Navigate } from "react-router-dom";
+import AdminOnlyRoute from "../../components/common/AdminOnlyRoute";
+import AdminAndEditorOnlyRoute from "../../components/common/AdminAndEditorOnlyRoute";
+
 const dashboardRoutes = [
   {
     path: "/dashboard",
@@ -26,19 +28,38 @@ const dashboardRoutes = [
       },
       {
         path: "write-article",
-        element: <WriteArticlePage />
+        element: 
+        (
+          <AdminAndEditorOnlyRoute>
+            <WriteArticlePage />
+          </AdminAndEditorOnlyRoute>
+        ),
+        
       },
       {
         path: "manage-articles",
-        element: <ManageArticlesPage />
+        element: (
+          <AdminAndEditorOnlyRoute>
+            <ManageArticlesPage />
+          </AdminAndEditorOnlyRoute>
+        ),
       },
       {
         path: "manage-comments",
-        element: <ManageCommentsPage />
+        element:
+          (
+            <AdminAndEditorOnlyRoute>
+              <ManageCommentsPage />
+            </AdminAndEditorOnlyRoute>
+          ),
       },
       {
         path: "manage-users",
-        element: <ManageUsersPage />
+        element: (
+          <AdminOnlyRoute>
+            <ManageUsersPage />
+          </AdminOnlyRoute>
+        ),
       },
     ]
   },

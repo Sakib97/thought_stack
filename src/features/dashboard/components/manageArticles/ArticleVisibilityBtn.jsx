@@ -18,7 +18,19 @@ const ArticleVisibilityBtn = ({ articleId, articleStatus, onStatusChange }) => {
     );
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        const allowedRoles = ['admin', 'editor'];
+        // Prevent unauthorized or inactive users from opening the modal
+        if (!allowedRoles.includes(userMeta?.role)) {
+            showToast('Only admin or editor can change visibility!', 'error');
+            return;
+        }
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot change visibility.', 'error');
+            return;
+        }
+        setShow(true);
+    };
 
     const handleConfirm = async () => {
         setUpdating(true);

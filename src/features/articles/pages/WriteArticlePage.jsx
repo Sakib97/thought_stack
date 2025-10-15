@@ -230,6 +230,25 @@ const WriteArticlePage = () => {
         setLoading(false);
     };
 
+    // for modal open and close
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => {
+        const allowedRoles = ['admin', 'editor'];
+
+        // Prevent unauthorized or inactive users
+        if (!allowedRoles.includes(userMeta?.role)) {
+            showToast('Only admin or editor can submit article!', 'error');
+            return;
+        }
+
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot submit article.', 'error');
+            return;
+        }
+
+        setShowModal(true);
+    };
+
     return (
         <div>
             <Toaster />
@@ -255,7 +274,8 @@ const WriteArticlePage = () => {
                 <Button
                     className={styles.publishButton}
                     type="primary"
-                    onClick={() => setShowModal(true)}
+                    // onClick={() => setShowModal(true)}
+                    onClick={handleShow}
                     loading={loading}
                 >
                     <i
@@ -275,7 +295,8 @@ const WriteArticlePage = () => {
                 centered
                 open={showModal}
                 onOk={handlePublish}
-                onCancel={() => setShowModal(false)}
+                // onCancel={() => setShowModal(false)}
+                onCancel={handleClose}
                 okText="Confirm"
                 confirmLoading={loading}
             >

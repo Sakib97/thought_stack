@@ -21,7 +21,20 @@ const RoleChangeBtn = ({ userId, userRole, onRoleChange }) => {
     );
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        // Prevent unauthorized or inactive users from opening the modal
+        if (userMeta?.role !== 'admin') {
+            showToast('Only admin can change user role!', 'error');
+            return;
+        }
+
+        if (userMeta?.is_active === false) {
+            showToast('Inactive users cannot change role.', 'error');
+            return;
+        }
+
+        setShow(true);
+    };
 
     const handleConfirm = async () => {
         setUpdating(true);
