@@ -24,12 +24,11 @@ const NavigationBar = () => {
 
     return (
         <div >
-
-            {/* <Navbar expand="lg" className="bg-body-tertiary"> */}
+            {/* <Navbar bg="light" expand="lg" className="bg-body-tertiary" */}
             <Navbar bg="light" expand="lg"
                 // className="shadow-sm mb-3"
                 className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
-                <Container style={{ padding:'0px 12px', margin: '0 0 0 5vw' }}>
+                <Container style={{ padding:'0px 12px', margin: '0 0 0 9vw' }}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""
@@ -64,7 +63,7 @@ const NavigationBar = () => {
                                     flex-column    /* vertical on small screens */
                                     align-items-lg-end  /* right align on large */
                                     align-items-center  /* center align on small */
-                                    gap-1
+                                    gap-2
                                 "
                             >
                                 <Nav.Link onClick={handleClose} as={Link} to="/">Home</Nav.Link>
