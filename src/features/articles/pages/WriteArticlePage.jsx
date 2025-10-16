@@ -11,6 +11,7 @@ import { useAuth } from "../../../context/AuthProvider";
 import { encodeId, decodeId } from "../../../utils/hashUtil";
 import { showToast } from "../../../components/layout/CustomToast";
 import Spinner from 'react-bootstrap/Spinner';
+import { set } from "lodash";
 
 const WriteArticlePage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -21,6 +22,7 @@ const WriteArticlePage = () => {
     const [articleId, setArticleId] = useState(null);
 
     const [editInfoLoading, setEditInfoLoading] = useState(false);
+    const [articleStatus, setArticleStatus] = useState("");
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -47,6 +49,7 @@ const WriteArticlePage = () => {
             // Only clear edit data, not normal drafts
             setIsEditMode(false);
             setArticleId(null);
+            setArticleStatus("");
             localStorage.removeItem("articleEditInfo");
             localStorage.removeItem("articleEditContent_en");
             localStorage.removeItem("articleEditContent_bn");
@@ -83,6 +86,7 @@ const WriteArticlePage = () => {
                 localStorage.removeItem("articleEditContent_bn");
                 return;
             }
+            setArticleStatus(data.article_status);
 
             //  Preload info under EDIT keys
             localStorage.setItem("articleEditInfo", JSON.stringify(data));
@@ -259,6 +263,12 @@ const WriteArticlePage = () => {
                     </Spinner>
                 </div>
             }
+            {articleStatus === "restricted" &&
+                <div style={{ textAlign: 'center' }}>
+                    <span style={{ color: '#e05307', fontWeight: '700', fontSize: '15px' }}>
+                        Warning: This article is currently restricted to users !
+                    </span>
+                </div>}
             <ArticleInfo isEditMode={isEditMode} />
             <RTE contentLanguage="en" content={contentEn}
                 setContent={setContentEn} isEditMode={isEditMode} />
@@ -316,15 +326,29 @@ const WriteArticlePage = () => {
                         textAlign: "center",
                     }}
                 >
-                    <span>View your {isEditMode ? "edited" : "published"} article: </span>
-                    <a
-                        href={uploadedArticleLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: "green", fontWeight: "bold" }}
-                    >
-                        {uploadedArticleLink}
-                    </a>
+                    {articleStatus !== "restricted" ? <>
+                        <span>View your {isEditMode ? "edited" : "published"} article: </span>
+                        <a
+                            href={uploadedArticleLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: "green", fontWeight: "bold" }}
+                        >
+                            {uploadedArticleLink}
+                        </a>
+                    </>
+                        :
+                        <>
+                            <span style={{ fontSize: '18px', color: '#e05307', fontWeight: '700' }}>
+                                The article is currently restricted to users ! </span>
+                            <br />
+                            Article will available in the following link if restriction is lifted: <br />
+                            <span style={{ fontSize: '18px', color:'#046b36', fontWeight: '700' }}>
+                                {uploadedArticleLink}
+                            </span>
+
+                        </>
+                    }
                 </div>
             )}
         </div>
