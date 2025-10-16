@@ -8,8 +8,10 @@
 
 @media (max-width: 600px) {
     .filtersContainer {
-        flex-direction: column;
+        /* flex-direction: column; */
+        flex-direction: row;
         gap: 15px;
+        flex-wrap: wrap;
     }
     
 }
