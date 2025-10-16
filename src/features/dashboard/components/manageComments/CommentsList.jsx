@@ -14,7 +14,7 @@ import ReviewCommentBtn from './ReviewCommentBtn';
 
 
 const PAGE_SIZE = 3;
-const CommentsList = ({ filter }) => {
+const CommentsList = ({ filter, refreshTrigger }) => {
     const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
     const isMobile = !screens.md; // true for <768px
     const [dataSource, setDataSource] = useState([]);
@@ -101,6 +101,11 @@ const CommentsList = ({ filter }) => {
     useEffect(() => {
         fetchReports(page, filter, searchField, searchValue);
     }, [page, filter, searchField, searchValue]);
+
+    useEffect(() => {
+        setPage(1);
+        fetchReports(page, filter, searchField, searchValue);
+    }, [refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();

@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import { supabase } from '../../../../config/supabaseClient';
 import styles from '../../styles/ActionsBtn.module.css';
 import { Popover } from 'antd';
 import { Modal, Button } from 'react-bootstrap';
 import { showToast } from '../../../../components/layout/CustomToast';
 import { useAuth } from '../../../../context/AuthProvider';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { encodeId } from '../../../../utils/hashUtil';
-
+import { Grid } from 'antd';
+const { useBreakpoint } = Grid;
 
 const ArticleEditBtn = ({ articleId }) => {
     const { userMeta } = useAuth();
     const [show, setShow] = useState(false);
     const navigate = useNavigate();
+
+    const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
+    const isMobile = !screens.md; // true for <768px
 
     const content = (
         <div style={{ fontWeight: '700' }}>
@@ -44,7 +46,7 @@ const ArticleEditBtn = ({ articleId }) => {
     return (<div>
         <Popover content={content} >
 
-            <i style={{ fontSize: '25px', color: '#994a06' }}
+            <i style={{ fontSize: isMobile ? '21px' : '25px', color: '#994a06' }}
                 onClick={handleShow}
                 className={`${styles.actionIcon} fi fi-rr-edit
                 `}></i>

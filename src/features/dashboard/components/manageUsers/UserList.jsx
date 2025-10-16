@@ -8,10 +8,12 @@ import ActivateBtn from './ActivateBtn';
 import { Grid } from 'antd';
 import RoleChangeBtn from './RoleChangeBtn';
 import { getFormattedTime } from '../../../../utils/dateUtil';
+import RefreshBtn from '../RefreshBtn';
+
 const { useBreakpoint } = Grid;
 
 const PAGE_SIZE = 3;
-const UserList = ({ filter }) => {
+const UserList = ({ filter, refreshTrigger }) => {
     // console.log('UserList filter prop:', filter);
 
     const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
@@ -97,6 +99,11 @@ const UserList = ({ filter }) => {
     useEffect(() => {
         fetchUsers(page, searchField, searchValue, filter);
     }, [page, searchField, searchValue, filter]);
+
+    useEffect(() => {
+        setPage(1);
+        fetchUsers(page, searchField, searchValue, filter);
+    }, [refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -295,14 +302,15 @@ const UserList = ({ filter }) => {
 
     return (
         <div className={styles.tableContainer}>
-            {totalCount > 0 && (
-                <div className={styles.userCountSectionContainer}>
+            <div className={styles.userCountSectionContainer}>
+                {totalCount > 0 && (
+
                     <div className={styles.userCountSection}>
                         {totalCount} {totalCount === 1 ? 'User' : 'Users'}
                     </div>
-                </div>
-
-            )}
+                )}
+                
+            </div>
             <Table
                 className={styles.customTable}
                 columns={columns}

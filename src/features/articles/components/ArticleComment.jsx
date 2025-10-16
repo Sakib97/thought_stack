@@ -6,7 +6,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import CommentInput from "./CommentInput";
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
- 
+import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
+
 const COMMENTS_PER_PAGE = 2;
 
 const ArticleComment = ({ articleId, userMeta }) => {
@@ -112,6 +113,8 @@ const ArticleComment = ({ articleId, userMeta }) => {
         setRefreshTrigger(prev => prev + 1); // trigger re-fetch safely
     };
 
+    const toggleRefreshThrottled = createBurstRateLimitedAction("refresh", 10000, 2, handleRefresh);
+
     const handleMenuClick = ({ key }) => {
         setComments([]); // clear comments to avoid duplicates
         setSortOrder(key === "1" ? "desc" : "asc"); // toggle based on key
@@ -186,7 +189,8 @@ const ArticleComment = ({ articleId, userMeta }) => {
 
                 <div
                     style={{ cursor: 'pointer', fontSize: '20px', color: '#555' }}
-                    onClick={handleRefresh}
+                    // onClick={handleRefresh}
+                    onClick={toggleRefreshThrottled}
                     title="Refresh Comments"
                 >
                     <i className="fa-solid fa-rotate"></i>

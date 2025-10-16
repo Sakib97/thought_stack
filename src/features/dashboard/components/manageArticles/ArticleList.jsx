@@ -17,7 +17,7 @@ import ArticleEditBtn from './ArticleEditBtn';
 
 const PAGE_SIZE = 3;
 
-const ArticleList = ({ filter }) => {
+const ArticleList = ({ filter, refreshTrigger }) => {
     const { userMeta } = useAuth();
     const screens = useBreakpoint();
     const isMobile = !screens.md;
@@ -101,6 +101,11 @@ const ArticleList = ({ filter }) => {
     useEffect(() => {
         if (userMeta) fetchArticles(page, filter, searchField, searchValue,);
     }, [page, filter, userMeta, searchField, searchValue]);
+
+    useEffect(() => {
+        setPage(1);
+        fetchArticles(page, filter, searchField, searchValue,);
+    }, [refreshTrigger]);
 
     // --- AntD Column Search Helpers ---
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
