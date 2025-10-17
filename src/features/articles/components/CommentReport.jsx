@@ -66,11 +66,12 @@ const CommentReport = ({ commentId, articleId }) => {
                         reason_text: selectedReason,
                     },
                 ]);
-
             if (error) {
                 if (error.code === "23505") {
                     showToast("You have already reported this comment.", "error");
-                } else throw error;
+                } else {
+                    throw error;
+                }
             } else {
                 showToast("Report submitted successfully", "success");
             }

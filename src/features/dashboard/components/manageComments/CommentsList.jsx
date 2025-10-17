@@ -273,7 +273,6 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             title: 'Last Report',
             dataIndex: 'last_report_date',
             key: 'last_report_date',
-    
             width: isMobile ? 90 : 105,
 
         },
@@ -283,25 +282,48 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             key: 'reporting_reasons',
             align: 'left',
             width: isMobile ? 130 : 150,
-            render: (reasons) => (
-                // humanize the reasons string for better readability
-                <span>
-                    {reasons.split(', ').map((reason, index) => (
-                        <Badge
-                            key={index}
-                            bg="warning"
-                            text="dark"
-                            style={{ 
-                                marginRight: '4px',
-                                marginBottom: '4px', 
-                                fontWeight: '800',
-                                fontSize: '13px' }}
-                        >
-                            {humanizeString(reason)}
-                        </Badge>
-                    ))}
-                </span>
-            ),
+            render: (reasons) => {
+                // Count occurrences of each reason
+                const reasonArr = reasons.split(', ').filter(r => r && r !== '—');
+                const reasonCount = {};
+                reasonArr.forEach(r => {
+                    reasonCount[r] = (reasonCount[r] || 0) + 1;
+                });
+                const uniqueReasons = Object.keys(reasonCount);
+                return (
+                    <span>
+                        {uniqueReasons.length === 0 ? (
+                            <Badge bg="secondary" style={{ fontWeight: '800', fontSize: '13px' }}>—</Badge>
+                        ) : uniqueReasons.map((reason, index) => (
+                            <Badge
+                                key={index}
+                                bg="warning"
+                                text="dark"
+                                style={{ padding: '6px 6px', marginRight: '4px', marginBottom: '4px', fontWeight: '800', fontSize: '13px', position: 'relative' }}
+                            >
+                                {humanizeString(reason)}
+                                {reasonCount[reason] > 1 && (
+                                    <span
+                                        style={{
+                                            background: '#222',
+                                            color: '#fff',
+                                            borderRadius: '50%',
+                                            padding: '1px 6px',
+                                            fontSize: '11px',
+                                            fontWeight: 'bold',
+                                            marginLeft: '6px',
+                                            position: 'relative',
+                                            top: '-2px',
+                                        }}
+                                    >
+                                        {reasonCount[reason]}
+                                    </span>
+                                )}
+                            </Badge>
+                        ))}
+                    </span>
+                );
+            },
         },
         {
             title: 'Visibility',
