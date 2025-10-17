@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import JoditEditor from 'jodit-react';
 import styles from "../styles/ArticleInfo.module.css";
 import { Button, Modal } from "antd";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import { showToast } from "../../../components/layout/CustomToast";
 
 const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
     const [showModal, setShowModal] = useState(false);
@@ -74,7 +75,6 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
     // save draft
     const handleSaveDraft = () => {
         if (content.trim()) {
-            // localStorage.setItem(storageKey, content);
             // Prevent horizontal scrolling in the editor by indenting the first line of paragraphs
             // Create a temporary div to manipulate the HTML
             const tempDiv = document.createElement("div");
@@ -97,37 +97,18 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
             const updatedContent = tempDiv.innerHTML;
             localStorage.setItem(storageKey, updatedContent);
 
-            toast(
+            showToast(
                 contentLanguage === "en"
                     ? "Draft saved successfully"
                     : "ড্রাফট সেভ হয়েছে",
-                {
-                    icon: <i style={{ color: "green" }} className="fi fi-rr-check-circle"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid green',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                });
+                "save"
+            );
         } else {
-            toast(
+            showToast(
                 contentLanguage === "en"
                     ? "Nothing to save"
                     : "সেভ করার মত কিছু নেই",
-                {
-                    icon: <i style={{ color: "red" }} className="fi fi-br-exclamation"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid red',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                }
+                "exclamation"
             );
         }
     };
@@ -139,36 +120,16 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
         if (localStorage.getItem(storageKey)) {
             localStorage.removeItem(storageKey);
             setContent("");
-            toast(
+            showToast(
                 contentLanguage === "en"
                     ? "Draft cleared"
                     : "ড্রাফট মুছে ফেলা হয়েছে",
-                {
-                    icon: <i style={{ color: "red" }} className="fi fi-rr-trash"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid red',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                }
+                "delete"
             );
         } else {
-            toast(
+            showToast(
                 contentLanguage === "en" ? "Nothing to clear" : "মোছার কিছু নেই",
-                {
-                    icon: <i style={{ color: "red" }} className="fi fi-br-exclamation"></i>,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#fff',
-                        color: 'black',
-                        border: '2px solid red',
-                        fontSize: '18px',
-                    },
-                    duration: 2000
-                }
+                "exclamation"
             );
         }
     };
@@ -236,4 +197,4 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
     </div>);
 }
 
-export default RTE; 
+export default RTE;
