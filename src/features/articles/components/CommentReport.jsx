@@ -6,6 +6,7 @@ import { supabase } from "../../../config/supabaseClient";
 import { showToast } from "../../../components/layout/CustomToast";
 import styles from "../styles/CommentReport.module.css";
 import { Modal, Button } from "react-bootstrap";
+import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
 
 const CommentReport = ({ commentId, articleId }) => {
     const { userMeta } = useAuth();
@@ -14,6 +15,10 @@ const CommentReport = ({ commentId, articleId }) => {
     const [showPopover, setShowPopover] = useState(false);
 
     const triggerRef = useRef(null);
+
+    const [selectedReason, setSelectedReason] = useState("");
+    // console.log(selectedReason);
+    
 
     // Close popover when clicking outside
     useEffect(() => {
@@ -46,6 +51,11 @@ const CommentReport = ({ commentId, articleId }) => {
     const handleConfirmReport = async () => {
         setLoading(true);
         try {
+            if (!selectedReason) {
+                showToast("Please select a reason for reporting.", "error");
+                setLoading(false);
+                return;
+            }
             const { error } = await supabase
                 .from("comment_reports")
                 .insert([
@@ -53,6 +63,7 @@ const CommentReport = ({ commentId, articleId }) => {
                         reporter_id: userMeta?.uid,
                         comment_id: commentId,
                         article_id: articleId,
+                        reason_text: selectedReason,
                     },
                 ]);
 
@@ -71,12 +82,14 @@ const CommentReport = ({ commentId, articleId }) => {
         }
     };
 
+    const toggleReportThrottled = createBurstRateLimitedAction("report", 10000, 3, handleReportClick);
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Body className={styles.reportOption}>
                 <div
                     className={styles.reportText}
-                    onClick={handleReportClick}
+                    onClick={toggleReportThrottled}
                     style={{ cursor: "pointer", color: "#7c1010" }}
                 >
                     <i className="fa-solid fa-flag"></i> Report
@@ -108,15 +121,29 @@ const CommentReport = ({ commentId, articleId }) => {
                     <Modal.Title>Confirm Report</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{ fontSize: '17px', textAlign: 'center' }}>
-                    Are you sure you want to report this comment? This action cannot be undone.
+                    {/* Are you sure you want to report this comment? This action cannot be undone. */}
+
+                    Select a reason for reporting this comment:
+                    {/* use select component */}
+                    <select className={styles.reportReasonSelector}
+                        value={selectedReason}
+                        onChange={(e) => setSelectedReason(e.target.value)}>
+                        <option value="" disabled>Select reason</option>
+                        <option value="spam">Spam or misleading</option>
+                        <option value="hate_speech">Hate speech or abusive content</option>
+                        <option value="harassment">Harassment or bullying</option>
+                        <option value="violent_content">Violent or dangerous content</option>
+                        <option value="sexual_content">Sexual content</option>
+                        <option value="other">Other inappropriate content</option>
+                    </select>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)} disabled={loading}>
                         Cancel
                     </Button>
                     <Button variant="danger" onClick={handleConfirmReport}
-                        disabled={loading}
-                        style={{ cursor: loading ? "not-allowed" : "pointer" }}
+                        disabled={loading || !selectedReason}
+                        style={{ cursor: loading || !selectedReason ? "not-allowed" : "pointer" }}
                     >
                         {loading ? "Reporting..." : "Confirm"}
                     </Button>

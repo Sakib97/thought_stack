@@ -1,4 +1,3 @@
-import { useState, useCallback } from 'react';
 import { Popover } from 'antd';
 import styles from '../styles/ActionsBtn.module.css';
 import { showToast } from '../../../components/layout/CustomToast';
@@ -26,7 +25,7 @@ const RefreshBtn = ({ refreshTrigger, setRefreshTrigger }) => {
                 <i style={{ fontSize: '22px', color: '#994a06' }}
                     // onClick={handleRefresh}
                     onClick={toggleRefreshThrottled}
-                    className={`${styles.actionIcon} fi fi-br-refresh
+                    className={`${styles.refreshBtn} fi fi-br-refresh
                 `}></i>
             </Popover>
         </div>
