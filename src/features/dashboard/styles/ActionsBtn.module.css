@@ -26,6 +26,26 @@
     text-align: center;
 }
 
+.refreshBtn{
+    background-color: #d3dae2;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 10px;
+    padding: 6px 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+.refreshBtn:hover {
+    background-color: #cdc9c9;
+    /* color: #fff; */
+}
+.refreshBtn:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
 
 @media screen and (max-width: 768px) {
   .actionIcon{

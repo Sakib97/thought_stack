@@ -5,12 +5,13 @@ const { useBreakpoint } = Grid;
 import styles from '../../styles/CommentsList.module.css'
 import { supabase } from '../../../../config/supabaseClient';
 import { useState, useEffect, useRef } from 'react';
-import { getFormattedTime } from '../../../../utils/dateUtil';
+import { getFormattedTime, getShortFormattedTime } from '../../../../utils/dateUtil';
 import { Link } from 'react-router-dom';
 import { encodeId } from '../../../../utils/hashUtil';
 import Badge from 'react-bootstrap/Badge';
 import HideCommentBtn from './HideCommentBtn';
 import ReviewCommentBtn from './ReviewCommentBtn';
+import { humanizeString } from '../../../../utils/slugAndStringUtil';
 
 
 const PAGE_SIZE = 3;
@@ -80,9 +81,11 @@ const CommentsList = ({ filter, refreshTrigger }) => {
                 comment_text: item.comment_text,
                 commenter_email: item.commenter_email,
                 report_count: item.report_count,
-                last_report_date: getFormattedTime(item.latest_report_date) || 'N/A',
-                // reporting_reasons: item.reporting_reasons?.join(', ') || '—',
-                reporting_reasons: item.reporting_reasons || '—',
+                last_report_date: getShortFormattedTime(item.latest_report_date) || 'N/A',
+                reporting_reasons: Array.isArray(item.reporting_reasons)
+                    ? (item.reporting_reasons.filter(r => r != null && r !== '')
+                        .join(', ') || '—')
+                    : '—',
                 visibility: item.is_hidden ? 'Hidden' : 'Visible',
                 review_status: item.review_status,
             }));
@@ -205,7 +208,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             title: 'Parent ID',
             dataIndex: 'parent_id',
             key: 'parent_id',
-            width: isMobile ? 100 : 100,
+            width: isMobile ? 100 : 110,
             render: (parent_id) => {
                 return <>
                     {parent_id ? <>
@@ -223,7 +226,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             dataIndex: 'article_title',
             key: 'article_title',
             width: isMobile ? 100 : 150,
-            ...getColumnSearchProps('article_title' , 'Article Title'),
+            ...getColumnSearchProps('article_title', 'Article Title'),
             render: (_, record) => (
                 <div className={styles.articleTitle}>
                     <Link to={`/article/${encodeId(record.article_id)}/${record.article_slug}`}
@@ -250,7 +253,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             dataIndex: 'commenter_email',
             key: 'commenter_email',
             width: isMobile ? 130 : 150,
-            ...getColumnSearchProps('commenter_email' , 'Commenter Email'), // commenter_email
+            ...getColumnSearchProps('commenter_email', 'Commenter Email'), // commenter_email
         },
         {
             title: 'Report Count',
@@ -270,14 +273,35 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             title: 'Last Report',
             dataIndex: 'last_report_date',
             key: 'last_report_date',
-            width: isMobile ?85 : 85,
+    
+            width: isMobile ? 90 : 105,
 
         },
         {
             title: 'Reporting Reasons',
             dataIndex: 'reporting_reasons',
             key: 'reporting_reasons',
-            width: isMobile ? 100 : 75,
+            align: 'left',
+            width: isMobile ? 130 : 150,
+            render: (reasons) => (
+                // humanize the reasons string for better readability
+                <span>
+                    {reasons.split(', ').map((reason, index) => (
+                        <Badge
+                            key={index}
+                            bg="warning"
+                            text="dark"
+                            style={{ 
+                                marginRight: '4px',
+                                marginBottom: '4px', 
+                                fontWeight: '800',
+                                fontSize: '13px' }}
+                        >
+                            {humanizeString(reason)}
+                        </Badge>
+                    ))}
+                </span>
+            ),
         },
         {
             title: 'Visibility',

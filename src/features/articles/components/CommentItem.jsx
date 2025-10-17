@@ -223,7 +223,7 @@ const CommentItem = ({
             <div className={styles.commentHeader}>
                 <img src={comment.avatar} alt={comment.name} className={styles.avatar} />
                 <div className={styles.nameAndDate}>
-                    <strong>{comment.name}</strong>
+                    <strong style={{ fontSize: isReply ? "16px" : "18px" }}>{comment.name}</strong>
                     <div className={styles.date}>{getFormattedTime(comment.date)}</div>
                 </div>
                 <CommentReport commentId={comment.id} articleId={articleId} />

@@ -52,3 +52,18 @@ export const timeAgo = (isoStr) => {
 
     return 'just now';
 };
+
+export const getShortFormattedTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const formattedDate = date.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short', // short month name
+        year: 'numeric'
+    });
+    const formattedTime = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    });
+    return `${formattedDate}, ${formattedTime}`;
+};

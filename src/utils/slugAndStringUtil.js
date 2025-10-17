@@ -22,3 +22,12 @@ export const slugify = (str) => {
 
   return cleanedString;
 }
+
+export const humanizeString = (str) => {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+

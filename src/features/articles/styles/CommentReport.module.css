@@ -28,3 +28,20 @@
     color: #a10808;
     font-weight: 650;
 }
+
+.reportReasonSelector {
+    width: 60%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 17px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+    .reportReasonSelector {
+        width: 100%;
+    }
+    
+}
