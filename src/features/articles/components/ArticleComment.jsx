@@ -7,6 +7,7 @@ import CommentInput from "./CommentInput";
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
+import { Toaster } from "react-hot-toast";
 
 const COMMENTS_PER_PAGE = 2;
 
@@ -157,6 +158,7 @@ const ArticleComment = ({ articleId, userMeta }) => {
 
     return (
         <div className={styles.commentSection}>
+            <Toaster />
             <div className={styles.header}>
                 <i className={`fa-regular fa-comment ${styles.icon}`}></i>
                 <h2>Comments ({totalCount})</h2>

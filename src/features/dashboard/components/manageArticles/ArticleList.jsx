@@ -55,17 +55,13 @@ const ArticleList = ({ filter, refreshTrigger }) => {
                 query = query.ilike(field, `%${value}%`);
             }
 
-
             // Filter by article status
             if (filterValue === 'pending_articles') {
                 query = query.eq('article_status', 'pending');
-                setPage(1);
             } else if (filterValue === 'active_articles') {
                 query = query.eq('article_status', 'accepted');
-                setPage(1);
             } else if (filterValue === 'restricted_articles') {
                 query = query.eq('article_status', 'restricted');
-                setPage(1);
             }
 
             query = query.range(from, to);
@@ -98,14 +94,15 @@ const ArticleList = ({ filter, refreshTrigger }) => {
         }
     };
 
-    useEffect(() => {
-        if (userMeta) fetchArticles(page, filter, searchField, searchValue,);
-    }, [page, filter, userMeta, searchField, searchValue]);
-
+    // When filter changes, always reset page to 1
     useEffect(() => {
         setPage(1);
-        fetchArticles(page, filter, searchField, searchValue,);
-    }, [refreshTrigger]);
+    }, [filter, refreshTrigger]);
+
+    // Fetch articles when page, filter, userMeta, searchField, or searchValue changes
+    useEffect(() => {
+        if (userMeta) fetchArticles(page, filter, searchField, searchValue);
+    }, [page, filter, userMeta, searchField, searchValue]);
 
     // --- AntD Column Search Helpers ---
     const handleSearch = (selectedKeys, confirm, dataIndex) => {

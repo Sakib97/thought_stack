@@ -7,6 +7,7 @@ import { showToast } from "../../../components/layout/CustomToast";
 import styles from "../styles/CommentReport.module.css";
 import { Modal, Button } from "react-bootstrap";
 import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
+import { Toaster } from "react-hot-toast";
 
 const CommentReport = ({ commentId, articleId }) => {
     const { userMeta } = useAuth();
@@ -83,14 +84,15 @@ const CommentReport = ({ commentId, articleId }) => {
         }
     };
 
-    const toggleReportThrottled = createBurstRateLimitedAction("report", 10000, 3, handleReportClick);
+    // const toggleReportThrottled = createBurstRateLimitedAction("report", 10000, 3, handleConfirmReport);
 
     const popover = (
         <Popover id="popover-basic">
             <Popover.Body className={styles.reportOption}>
                 <div
                     className={styles.reportText}
-                    onClick={toggleReportThrottled}
+                    // onClick={toggleReportThrottled}
+                    onClick={handleReportClick}
                     style={{ cursor: "pointer", color: "#7c1010" }}
                 >
                     <i className="fa-solid fa-flag"></i> Report
@@ -101,6 +103,7 @@ const CommentReport = ({ commentId, articleId }) => {
 
     return (
         <>
+            {/* <Toaster /> */}
             <div ref={triggerRef} style={{ marginLeft: "auto" }}>
                 <OverlayTrigger
                     trigger="click"

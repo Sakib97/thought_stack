@@ -16,6 +16,10 @@ import { humanizeString } from '../../../../utils/slugAndStringUtil';
 
 const PAGE_SIZE = 3;
 const CommentsList = ({ filter, refreshTrigger }) => {
+    console.log('CommentsList render - refreshTrigger:', refreshTrigger);
+    console.log('CommentsList render - filter:', filter);
+    
+    
     const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
     const isMobile = !screens.md; // true for <768px
     const [dataSource, setDataSource] = useState([]);
@@ -48,7 +52,6 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             if (field && value) {
                 if (field === 'comment_id') {
                     query = query.eq('comment_id', parseInt(value));
-
                 } else {
                     query = query.ilike(field, `%${value}%`);
                 }
@@ -57,13 +60,10 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             // Apply filter conditions
             if (filterValue === 'pending_reports') {
                 query = query.eq('review_status', 'pending');
-                setPage(1); // reset to first page on new search
             } else if (filterValue === 'reviewed_reports') {
                 query = query.eq('review_status', 'reviewed');
-                setPage(1); // reset to first page on new search
             } else if (filterValue === 'hidden_comments') {
                 query = query.eq('is_hidden', true);
-                setPage(1); // reset to first page on new search
             }
             // 'all_reports' => no filter (default)
 
@@ -101,14 +101,15 @@ const CommentsList = ({ filter, refreshTrigger }) => {
         }
     };
 
+    // When filter changes, always reset page to 1
+    useEffect(() => {
+        setPage(1);
+    }, [filter, refreshTrigger]);
+
+    // Fetch reports when page, filter, searchField, or searchValue changes
     useEffect(() => {
         fetchReports(page, filter, searchField, searchValue);
     }, [page, filter, searchField, searchValue]);
-
-    useEffect(() => {
-        setPage(1);
-        fetchReports(page, filter, searchField, searchValue);
-    }, [refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -225,7 +226,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
             title: 'Article Title',
             dataIndex: 'article_title',
             key: 'article_title',
-            width: isMobile ? 100 : 150,
+            width: isMobile ? 150 : 250,
             ...getColumnSearchProps('article_title', 'Article Title'),
             render: (_, record) => (
                 <div className={styles.articleTitle}>
