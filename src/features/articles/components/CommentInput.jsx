@@ -128,7 +128,7 @@ const CommentInput = ({ userMeta, articleId, onCommentAdded }) => {
                     disabled={loading}
                 />
                 <button type="submit" disabled={loading} className={styles.submitBtn}>
-                    {loading ? "Posting..." : <i style={{ fontSize: '25px' }} className="fi fi-br-paper-plane-top"
+                    {loading ? "Posting..." : <i style={{ fontSize: '23px' }} className="fi fi-br-paper-plane-top"
                     ></i>}
                 </button>
             </form>

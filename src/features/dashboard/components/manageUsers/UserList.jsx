@@ -52,19 +52,14 @@ const UserList = ({ filter, refreshTrigger }) => {
             // search by filter
             if (filter === "new_deactive") {
                 query = query.eq('status_reason', 'new_user');
-                setPage(1);
             } else if (filter === "deactivated_by_admin") {
                 query = query.eq('status_reason', 'deactivated_by_admin');
-                setPage(1);
             } else if (filter === "active") {
                 query = query.eq('is_active', true);
-                setPage(1);
             } else if (filter === "editor") {
                 query = query.eq('role', 'editor');
-                setPage(1);
             } else if (filter === "admin") {
                 query = query.eq('role', 'admin');
-                setPage(1);
             }
 
             // add pagination
@@ -95,15 +90,15 @@ const UserList = ({ filter, refreshTrigger }) => {
         }
     };
 
-    // fetch data when page/search changes
+    // When filter changes, always reset page to 1
+    useEffect(() => {
+        setPage(1);
+    }, [filter, refreshTrigger]);
+
+    // fetch data when page/search/filter changes
     useEffect(() => {
         fetchUsers(page, searchField, searchValue, filter);
     }, [page, searchField, searchValue, filter]);
-
-    useEffect(() => {
-        setPage(1);
-        fetchUsers(page, searchField, searchValue, filter);
-    }, [refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
