@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
+import Spinner from 'react-bootstrap/Spinner';
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -72,9 +73,12 @@ const ArticleDetails = () => {
         return (
             <div
                 className={styles.article}
-                style={{ textAlign: "center", padding: "2rem" }}
+                style={{ textAlign: "center", padding: "2rem", height: "60vh" }}
             >
-                <Spin indicator={<LoadingOutlined spin />} size="large" />
+                {/* <Spin indicator={<LoadingOutlined spin />} size="large" /> */}
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
             </div>
         );
     }
@@ -103,7 +107,7 @@ const ArticleDetails = () => {
             <div className={`${styles.article}`}>
                 <div className={`containers ${styles.articleContainer}`}>
                     <div className={`${styles.articleHead}`}>
-                        <h6 style={{ color:'grey', fontFamily: fontFamily }}>
+                        <h6 style={{ color: 'grey', fontFamily: fontFamily }}>
                             {language === "en" ? article.event_title_en
                                 : article.event_title_bn} </h6>
 
@@ -206,7 +210,7 @@ const ArticleDetails = () => {
                                 }}
                             >
                                 {language === "en"
-                                    ? "* The views and opinions expressed in this article are author's own and does not necessarily reflect the publisher's point of view."
+                                    ? "* The views and opinions expressed in this article are author's own and do not necessarily reflect the publisher's point of view."
                                     : "* লেখকের নিজস্ব মতামত "}
                             </div>
                             <div

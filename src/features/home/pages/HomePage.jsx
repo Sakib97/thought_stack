@@ -9,7 +9,7 @@ import { encodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 import SearchBar from "../../../components/layout/SearchBar";
 import { PAGE_SIZE } from "../../../config/appConfig";
-
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function HomePage() {
     const { language } = useLanguage();
@@ -130,7 +130,10 @@ export default function HomePage() {
                 {loadingMain ? (
                     <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
 
-                        <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" />
+                        {/* <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" /> */}
+                        <Spinner  className={styles.loader} animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
 
                     </div>
                 ) : (
@@ -175,7 +178,10 @@ export default function HomePage() {
                 <div className={styles.articlesSection}>
                     {loadingOthers ? (
                         <div className={styles.listLoader}>
-                            <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" />
+                            {/* <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" /> */}
+                            <Spinner className={styles.content_loader} animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
                         </div>
                     ) : (
                         <List
@@ -210,9 +216,9 @@ export default function HomePage() {
                                         <List.Item.Meta
                                             avatar={<Avatar src={item.author_img_link} />}
                                             title={
-                                                    <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily }} >
-                                                        {language === "en" ? item.title_en : item.title_bn}
-                                                    </span>
+                                                <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily }} >
+                                                    {language === "en" ? item.title_en : item.title_bn}
+                                                </span>
                                             }
                                             //   description={item.subtitle_en}
                                             description={

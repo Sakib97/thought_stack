@@ -22,7 +22,7 @@ const RefreshBtn = ({ refreshTrigger, setRefreshTrigger }) => {
         <div className={`${styles.refreshBtn}`}>
             <Popover content={content} >
                 <div style={{ transform: 'translateY(2px)' }}>
-                    <i style={{ fontSize: '22px', color: '#994a06', }}
+                    <i style={{ fontSize: '20px', color: '#994a06', }}
                         // onClick={handleRefresh}
                         onClick={toggleRefreshThrottled}
                         className="fi fi-br-refresh"></i>
