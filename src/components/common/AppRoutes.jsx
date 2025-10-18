@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import HomePage from "../../features/home/pages/HomePage";
 import NotFound from "./NotFound";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Dynamically load all routes.js files under /features
 const routeModules = import.meta.glob("../../features/**/routes.jsx", { eager: true });
+
 // console.log(routeModules);
 
 const allRoutes = Object.values(routeModules).flatMap(mod => mod.default || mod.routes || []);
@@ -25,12 +27,23 @@ function renderRoutes(routes) {
 
 export default function AppRoutes() {
     return (
-        // <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="*" element={<NotFound />} />
-            {renderRoutes(allRoutes)}
-        </Routes>
-        // </BrowserRouter>
+        // <Routes>
+        //     <Route path="/" element={<HomePage />} />
+        //     <Route path="*" element={<NotFound />} />
+        //     {renderRoutes(allRoutes)}
+        // </Routes>
+
+        // use suspense to lazy load routes
+        <Suspense fallback={
+            <div style={{ minHeight: "100vh", textAlign: "center", fontWeight: "bold", fontSize: "24px" }}>
+                Loading...
+            </div>
+        }>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="*" element={<NotFound />} />
+                {renderRoutes(allRoutes)}
+            </Routes>
+        </Suspense>
     );
 }

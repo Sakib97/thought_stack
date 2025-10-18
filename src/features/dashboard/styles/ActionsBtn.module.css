@@ -38,7 +38,6 @@
 }
 .refreshBtn:hover {
     background-color: #cdc9c9;
-    /* color: #fff; */
 }
 .refreshBtn:disabled {
     background-color: #f0f0f0;

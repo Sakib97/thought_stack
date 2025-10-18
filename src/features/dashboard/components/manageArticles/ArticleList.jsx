@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import { supabase } from '../../../../config/supabaseClient';
+import { PAGE_SIZE } from '../../../../config/appConfig';
 import Badge from 'react-bootstrap/Badge';
 import { Grid } from 'antd';
 const { useBreakpoint } = Grid;
@@ -14,8 +15,6 @@ import ArticleVisibilityBtn from './ArticleVisibilityBtn';
 import ArticleEditBtn from './ArticleEditBtn';
 
 
-
-const PAGE_SIZE = 3;
 
 const ArticleList = ({ filter, refreshTrigger }) => {
     const { userMeta } = useAuth();
@@ -102,7 +101,7 @@ const ArticleList = ({ filter, refreshTrigger }) => {
     // Fetch articles when page, filter, userMeta, searchField, or searchValue changes
     useEffect(() => {
         if (userMeta) fetchArticles(page, filter, searchField, searchValue);
-    }, [page, filter, userMeta, searchField, searchValue]);
+    }, [page, filter, userMeta, searchField, searchValue, refreshTrigger]);
 
     // --- AntD Column Search Helpers ---
     const handleSearch = (selectedKeys, confirm, dataIndex) => {

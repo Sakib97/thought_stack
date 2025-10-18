@@ -1,18 +1,17 @@
 import { useRef, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Avatar, Input, Space, Table } from 'antd';
-import styles from '../../styles/UserList.module.css'
+import styles from '../../styles/UserList.module.css';
 import { supabase } from '../../../../config/supabaseClient';
+import { PAGE_SIZE } from '../../../../config/appConfig';
 import Badge from 'react-bootstrap/Badge';
 import ActivateBtn from './ActivateBtn';
 import { Grid } from 'antd';
 import RoleChangeBtn from './RoleChangeBtn';
 import { getFormattedTime } from '../../../../utils/dateUtil';
-import RefreshBtn from '../RefreshBtn';
 
 const { useBreakpoint } = Grid;
 
-const PAGE_SIZE = 3;
 const UserList = ({ filter, refreshTrigger }) => {
     // console.log('UserList filter prop:', filter);
 
@@ -95,10 +94,10 @@ const UserList = ({ filter, refreshTrigger }) => {
         setPage(1);
     }, [filter, refreshTrigger]);
 
-    // fetch data when page/search/filter changes
+    // fetch data when page/search/filter/refresh changes
     useEffect(() => {
         fetchUsers(page, searchField, searchValue, filter);
-    }, [page, searchField, searchValue, filter]);
+    }, [page, searchField, searchValue, filter, refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();

@@ -2,8 +2,9 @@ import { Table, Tag, Input, Space, Button, } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Grid } from 'antd';
 const { useBreakpoint } = Grid;
-import styles from '../../styles/CommentsList.module.css'
+import styles from '../../styles/CommentsList.module.css';
 import { supabase } from '../../../../config/supabaseClient';
+import { PAGE_SIZE } from '../../../../config/appConfig';
 import { useState, useEffect, useRef } from 'react';
 import { getFormattedTime, getShortFormattedTime } from '../../../../utils/dateUtil';
 import { Link } from 'react-router-dom';
@@ -14,10 +15,9 @@ import ReviewCommentBtn from './ReviewCommentBtn';
 import { humanizeString } from '../../../../utils/slugAndStringUtil';
 
 
-const PAGE_SIZE = 3;
 const CommentsList = ({ filter, refreshTrigger }) => {
-    console.log('CommentsList render - refreshTrigger:', refreshTrigger);
-    console.log('CommentsList render - filter:', filter);
+    // console.log('CommentsList render - refreshTrigger:', refreshTrigger);
+    // console.log('CommentsList render - filter:', filter);
     
     
     const screens = useBreakpoint(); // gives: { xs, sm, md, lg, xl, xxl }
@@ -109,7 +109,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
     // Fetch reports when page, filter, searchField, or searchValue changes
     useEffect(() => {
         fetchReports(page, filter, searchField, searchValue);
-    }, [page, filter, searchField, searchValue]);
+    }, [page, filter, searchField, searchValue, refreshTrigger]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
