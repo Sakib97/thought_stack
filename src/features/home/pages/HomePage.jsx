@@ -131,7 +131,7 @@ export default function HomePage() {
                     <div style={{ justifyContent: 'center' }} className={styles.mainSection}>
 
                         {/* <Spin className={styles.loader} indicator={<LoadingOutlined spin />} size="large" /> */}
-                        <Spinner  className={styles.loader} animation="border" role="status">
+                        <Spinner className={styles.loader} animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
 
@@ -154,21 +154,22 @@ export default function HomePage() {
                                     <h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
                                     <p style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
 
-                                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
-                                        <i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
+                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
+                                        <i className="fi fi-br-user-pen" style={{ fontSize: 16 }}></i>
                                         &nbsp;&nbsp;
                                         {mainArticle.author_name}
                                     </div>
                                     <div className={styles.date}>
-                                        <i className="fi fi-br-clock" style={{ fontSize: 15 }}></i>
+                                        <div style={{ display: 'inline-block', transform: 'translateY(2px)' }}>
+                                            <i className="fi fi-br-clock" style={{ fontSize: 14 }}></i>
+                                        </div>
+                                        
                                         &nbsp;&nbsp;
                                         {getFormattedTime(mainArticle.created_at)}
                                     </div>
                                 </div>
 
                             </div>
-
-
                         </Link>
                     )
                 )
@@ -216,7 +217,7 @@ export default function HomePage() {
                                         <List.Item.Meta
                                             avatar={<Avatar src={item.author_img_link} />}
                                             title={
-                                                <span style={{ fontSize: '20px', fontWeight: 'bold', fontFamily: fontFamily }} >
+                                                <span style={{ fontSize: '21px', fontWeight: 'bold', fontFamily: fontFamily }} >
                                                     {language === "en" ? item.title_en : item.title_bn}
                                                 </span>
                                             }
@@ -231,16 +232,18 @@ export default function HomePage() {
                                         />
                                         <div>
                                             {/* {item.content_en?.substring(0, 200)}... */}
-                                            <div style={{ fontSize: '16px', fontWeight: '500', fontFamily: fontFamily }}>
+                                            <div style={{ fontSize: '18px', fontWeight: '500', fontFamily: fontFamily }}>
                                                 {language === "en" ? item.subtitle_en : item.subtitle_bn}
                                             </div>
 
                                             <br />
-                                            <span className={styles.date} style={{ fontSize: 17, color: 'grey' }}>
-                                                <i className="fi fi-br-clock" style={{ fontSize: 17, color: 'grey' }}></i>
+                                            <div className={styles.date} style={{ fontSize: 14, color: 'grey' }}>
+                                                <div style={{ display: 'inline-block', transform: 'translateY(2px)' }}>
+                                                    <i className="fi fi-br-clock" style={{ fontSize: 14, color: 'grey' }}></i>
+                                                </div>
                                                 &nbsp;&nbsp;
                                                 {getFormattedTime(item.created_at)}
-                                            </span>
+                                            </div>
                                         </div>
                                     </List.Item>
                                 </Link>
