@@ -16,11 +16,11 @@ const CommentReactions = ({ articleId, commentId }) => {
     const [userReaction, setUserReaction] = useState(null); // 'like' / 'love' / 'sad' / 'angry' / null
     const [loading, setLoading] = useState(false);
 
-    // Fetch total reaction counts per reaction type
-    const fetchReactionCounts = async () => {
+    // Single-call fetch for reactions and user reaction
+    const fetchReactions = async () => {
         const { data, error } = await supabase
             .from('comment_reactions')
-            .select('reaction_type')
+            .select('reaction_type, user_id')
             .eq('comment_id', commentId);
 
         if (error) {
@@ -29,34 +29,20 @@ const CommentReactions = ({ articleId, commentId }) => {
             return;
         }
 
-        // Aggregate counts manually
+        // Aggregate counts and find user reaction
         const counts = { like: 0, dislike: 0 };
-        data.forEach(r => counts[r.reaction_type]++);
+        let userReact = null;
+        data.forEach(r => {
+            counts[r.reaction_type]++;
+            if (r.user_id === userMeta?.uid) userReact = r.reaction_type;
+        });
         setReactionCounts(counts);
+        setUserReaction(userReact);
     };
 
-    // Fetch current user's reaction (if logged in)
-    const fetchUserReaction = async () => {
-        const { data, error } = await supabase
-            .from('comment_reactions')
-            .select('reaction_type')
-            .eq('comment_id', commentId)
-            .eq('user_id', userMeta?.uid)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            console.error(error);
-            return;
-        }
-
-        setUserReaction(data?.reaction_type || null);
-    };
-
-    // Fetch reaction counts + current user's reaction
     useEffect(() => {
         if (!commentId) return;
-        fetchReactionCounts();
-        if (userMeta?.uid) fetchUserReaction();
+        fetchReactions();
     }, [commentId, userMeta?.uid]);
 
     const toggleReaction = async (newReaction) => {
@@ -91,7 +77,6 @@ const CommentReactions = ({ articleId, commentId }) => {
                     .eq('user_id', userMeta?.uid);
                 if (deleteError) throw deleteError;
 
-                setUserReaction(null);
                 showToast('Reaction removed', 'success');
             } else {
                 // Add or change reaction safely via upsert
@@ -103,11 +88,10 @@ const CommentReactions = ({ articleId, commentId }) => {
                     );
                 if (upsertError) throw upsertError;
 
-                setUserReaction(newReaction);
                 showToast(`You reacted with ${newReaction}`, 'success');
             }
 
-            await fetchReactionCounts();
+            await fetchReactions(); // Refresh both counts and user reaction
         } catch (err) {
             console.error(err);
             showToast('Something went wrong', 'error');
@@ -145,9 +129,6 @@ const CommentReactions = ({ articleId, commentId }) => {
 
                 </div>
             ))}
-
-
-
         </div>
     );
 }

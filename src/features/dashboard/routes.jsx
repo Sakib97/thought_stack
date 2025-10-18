@@ -8,13 +8,22 @@ import ManageCommentsPage from "../dashboard/pages/ManageCommentsPage";
 import { Navigate } from "react-router-dom";
 import AdminOnlyRoute from "../../components/common/AdminOnlyRoute";
 import AdminAndEditorOnlyRoute from "../../components/common/AdminAndEditorOnlyRoute";
+import { lazy } from "react";
+
+const LazyDashboardPage = lazy(() => import("../dashboard/pages/DashboardPage"));
+const LazyProfilePage = lazy(() => import("../dashboard/pages/ProfilePage"));
+const LazyWriteArticlePage = lazy(() => import("../articles/pages/WriteArticlePage"));
+const LazyManageUsersPage = lazy(() => import("../dashboard/pages/ManageUsersPage"));
+const LazyManageArticlesPage = lazy(() => import("../dashboard/pages/ManageArticlesPage"));
+const LazyManageCommentsPage = lazy(() => import("../dashboard/pages/ManageCommentsPage"));
 
 const dashboardRoutes = [
   {
     path: "/dashboard",
     element: (
       <ProtectedRoute>
-        <DashboardPage />
+        {/* <DashboardPage /> */}
+        <LazyDashboardPage />
       </ProtectedRoute>
     ),
     children: [
@@ -24,14 +33,16 @@ const dashboardRoutes = [
       },
       {
         path: "profile",
-        element: <ProfilePage />
+        // element: <ProfilePage />
+        element: <LazyProfilePage />,
       },
       {
         path: "write-article",
         element: 
         (
           <AdminAndEditorOnlyRoute>
-            <WriteArticlePage />
+            {/* <WriteArticlePage /> */}
+            <LazyWriteArticlePage />
           </AdminAndEditorOnlyRoute>
         ),
         
@@ -40,7 +51,8 @@ const dashboardRoutes = [
         path: "manage-articles",
         element: (
           <AdminAndEditorOnlyRoute>
-            <ManageArticlesPage />
+            {/* <ManageArticlesPage /> */}
+            <LazyManageArticlesPage />
           </AdminAndEditorOnlyRoute>
         ),
       },
@@ -49,7 +61,8 @@ const dashboardRoutes = [
         element:
           (
             <AdminAndEditorOnlyRoute>
-              <ManageCommentsPage />
+              {/* <ManageCommentsPage /> */}
+              <LazyManageCommentsPage />
             </AdminAndEditorOnlyRoute>
           ),
       },
@@ -57,7 +70,8 @@ const dashboardRoutes = [
         path: "manage-users",
         element: (
           <AdminOnlyRoute>
-            <ManageUsersPage />
+            {/* <ManageUsersPage /> */}
+            <LazyManageUsersPage />
           </AdminOnlyRoute>
         ),
       },

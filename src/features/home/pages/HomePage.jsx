@@ -8,9 +8,8 @@ import { getFormattedTime } from "../../../utils/dateUtil";
 import { encodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 import SearchBar from "../../../components/layout/SearchBar";
+import { PAGE_SIZE } from "../../../config/appConfig";
 
-
-const pageSize = 4;
 
 export default function HomePage() {
     const { language } = useLanguage();
@@ -65,8 +64,8 @@ export default function HomePage() {
     const fetchArticles = async (pageNum = 1) => {
         setLoadingOthers(true);
 
-        const from = (pageNum - 1) * pageSize + 1; // skip the first one
-        const to = from + pageSize - 1;
+        const from = (pageNum - 1) * PAGE_SIZE + 1; // skip the first one
+        const to = from + PAGE_SIZE - 1;
 
         const { data, count, error } = await supabase
             .from("articles_secure")
@@ -185,7 +184,7 @@ export default function HomePage() {
                             pagination={{
                                 // onChange: (pageNum) => setPage(pageNum),
                                 onChange: handlePageChange,
-                                pageSize: pageSize,
+                                pageSize: PAGE_SIZE,
                                 current: page,
                                 total: total,
                                 align: "center",
