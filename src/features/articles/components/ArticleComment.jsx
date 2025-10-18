@@ -8,7 +8,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { createBurstRateLimitedAction } from "../../../utils/rateLimit";
 import { Toaster } from "react-hot-toast";
-import { PAGE_SIZE as COMMENTS_PER_PAGE } from "../../../config/appConfig";
+import { COMMENTS_PER_PAGE } from "../../../config/appConfig";
 
 const ArticleComment = ({ articleId, userMeta }) => {
     const [comments, setComments] = useState([]);
