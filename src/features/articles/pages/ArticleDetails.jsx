@@ -9,7 +9,10 @@ import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
-import { Helmet } from "react-helmet-async";
+// import { Helmet } from "@dr.pogodin/react-helmet";
+// import { Helmet } from "react-helmet-async";
+// import { Helmet } from "@dr.pogodin/react-helmet";
+
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -112,10 +115,9 @@ const ArticleDetails = () => {
         <div>
 
             {/* dynamic meta tags */}
-            <Helmet>
+            {/* <Helmet> */}
                 <title>{title} | Thought Stack</title>
                 <meta name="description" content={description} />
-                {/* Open Graph */}
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={title} />
                 <meta property="og:description" content={description} />
@@ -124,12 +126,11 @@ const ArticleDetails = () => {
                 <meta property="og:site_name" content="Thought Stack" />
 
                 
-                {/* Twitter */}
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={title} />
                 <meta name="twitter:description" content={description} />
                 <meta name="twitter:image" content={imageUrl} />
-            </Helmet>
+                 {/*  </Helmet> */}
 
             <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
