@@ -4,13 +4,12 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../../config/supabaseClient";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { getFormattedTime } from "../../../utils/dateUtil";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
+import { Helmet } from "react-helmet-async";
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -98,8 +97,40 @@ const ArticleDetails = () => {
         );
     }
 
+    const title = language === "en" ? article.title_en : article.title_bn;
+    const description =
+        language === "en"
+            ? article.subtitle_en
+            : article.subtitle_bn || "Read this article on Thought Stack.";
+    const imageUrl = article.cover_img_link;
+    const url = window.location.href;
+    // console.log("url:", url);
+    
+
+
     return (
         <div>
+
+            {/* dynamic meta tags */}
+            <Helmet>
+                <title>{title} | Thought Stack</title>
+                <meta name="description" content={description} />
+                {/* Open Graph */}
+                <meta property="og:type" content="article" />
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={description} />
+                <meta property="og:image" content={imageUrl} />
+                <meta property="og:url" content={url} />
+                <meta property="og:site_name" content="Thought Stack" />
+
+                
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={title} />
+                <meta name="twitter:description" content={description} />
+                <meta name="twitter:image" content={imageUrl} />
+            </Helmet>
+
             <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
                 rel="stylesheet"
