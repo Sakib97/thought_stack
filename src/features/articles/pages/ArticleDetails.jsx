@@ -108,7 +108,7 @@ const ArticleDetails = () => {
     const imageUrl = article.cover_img_link;
     const url = window.location.href;
     // console.log("url:", url);
-    
+
 
 
     return (
@@ -116,6 +116,7 @@ const ArticleDetails = () => {
 
             {/* dynamic meta tags */}
             {/* <Helmet> */}
+            <article>
                 <title>{title} | Thought Stack</title>
                 <meta name="description" content={description} />
                 <meta property="og:type" content="article" />
@@ -125,12 +126,13 @@ const ArticleDetails = () => {
                 <meta property="og:url" content={url} />
                 <meta property="og:site_name" content="Thought Stack" />
 
-                
+
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={title} />
                 <meta name="twitter:description" content={description} />
                 <meta name="twitter:image" content={imageUrl} />
-                 {/*  </Helmet> */}
+                {/*  </Helmet> */}
+          </article>
 
             <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
