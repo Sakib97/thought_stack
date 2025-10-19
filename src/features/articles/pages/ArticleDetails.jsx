@@ -10,11 +10,6 @@ import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
 import { Helmet } from "@dr.pogodin/react-helmet";
-// import { Helmet } from "react-helmet";
-
-
-
-
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();

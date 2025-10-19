@@ -8,21 +8,19 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.jsx';
 import { LanguageProvider } from './context/LanguageProvider.jsx';
-// import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import { HelmetProvider } from "@dr.pogodin/react-helmet";
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <LanguageProvider>
-      <AuthProvider>
-        <BrowserRouter>
-        {/* HelmetProvider is used for better link previews */}
-          <HelmetProvider> 
+    <HelmetProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <BrowserRouter>
             <App />
-          </HelmetProvider>
-        </BrowserRouter>
-      </AuthProvider>
-    </LanguageProvider>
+          </BrowserRouter>
+        </AuthProvider>
+      </LanguageProvider>
+    </HelmetProvider>
   </StrictMode>
 )
