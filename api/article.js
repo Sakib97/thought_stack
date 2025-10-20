@@ -1,6 +1,5 @@
-import { supabase } from "./src/config/supabaseClient";
-import { decodeId } from "./src/utils/hashUtil";
-
+import { supabase } from "../src/config/supabaseClient";
+import { decodeId } from "../src/utils/hashUtil";
 
 const BOT_USER_AGENTS = [
     /Googlebot/i,
