@@ -32,7 +32,8 @@ export default async function handler(req) {
     const pathname = url.pathname;
     const userAgent = req.headers.get("user-agent") || "";
 
-    const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
+    // const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
+    const match = pathname.match(/^(?:\/api)?\/article\/([^/]+)\/?.*/);
     if (!match) return new Response("OK", { status: 200 });
 
     const encodedId = match[1];
