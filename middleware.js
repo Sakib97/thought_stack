@@ -50,7 +50,7 @@ export async function middleware(req) {
 
     const title = article.title_en || "Thought Stack Article";
     const description = article.subtitle_en || "Read this article on our site.";
-    const image = article.cover_img_link || `/logo3.png`;
+    const image = article.cover_img_link || 'https://placehold.co/600x400/png/?text=Thought+Stack';
 
     const html = `
       <!DOCTYPE html>
