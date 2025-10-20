@@ -1,25 +1,23 @@
-// import { supabase } from "../src/config/supabaseClient.js";
-// import { decodeId } from "../src/utils/hashUtil.js";
-
-import {createClient} from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import Hashids from 'hashids';
 
-const secret_key = import.meta.env.VITE_HASHID_SECRET;
+// 1. **CORRECTION:** Use process.env for Vercel Edge Environment Variables
+const secret_key = process.env.HASHID_SECRET;
 const hashids = new Hashids(secret_key, 7); 
+
 function decodeId(hash) {
   const decoded = hashids.decode(hash);
   return decoded.length ? decoded[0] : null;
 }
 
-// Vite only exposes environment variables prefixed with VITE_ to client-side code for security reasons. 
-// This prevents accidental exposure of sensitive variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// 2. **CORRECTION:** Use process.env for Supabase config
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY; // Use ANON_KEY for read-only access
 
 const supabase = createClient(supabaseUrl, supabaseKey); 
 
 export const config = {
-  runtime: "edge", // ✅ tells Vercel this is an Edge Function
+  runtime: "edge",
 };
 
 const BOT_USER_AGENTS = [
@@ -36,7 +34,7 @@ export default async function handler(req) {
   const pathname = url.pathname;
   const userAgent = req.headers.get("user-agent") || "";
 
-  // ✅ Expect /api/article/:encodedId/:slug
+  // The path comes in as /api/article/ORogKoz/just-add-your-name (due to vercel.json rewrite)
   const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
   if (!match) return new Response("OK", { status: 200 });
 
@@ -44,8 +42,13 @@ export default async function handler(req) {
   const decodedId = decodeId(encodedId);
   const isBot = BOT_USER_AGENTS.some((r) => r.test(userAgent));
 
+  // The original user path to redirect to: /article/ORogKoz/just-add-your-name
+  const originalPath = pathname.replace("/api", ""); 
+
   if (!isBot) {
-    return new Response("Normal user", { status: 200 });
+    // 3. **RECOMMENDED:** Redirect normal users to the correct final URL to prevent 
+    // them from seeing the 'Redirecting...' page when testing the API path directly.
+    return new Response(null, { status: 200 });
   }
 
   try {
@@ -57,9 +60,11 @@ export default async function handler(req) {
 
     if (error || !article) {
       console.error("Article not found:", error);
-      return new Response("Not found", { status: 404 });
+      // Return a 200/404 response that lets the SPA load its own 404 page
+      return new Response(null, { status: 200 }); 
     }
 
+    // ... (title, description, image generation logic remains the same)
     const title = article.title_en || "Thought Stack Article";
     const description = article.subtitle_en || "Read this article on our site.";
     const image = article.cover_img_link || "https://placehold.co/600x400/png/?text=Thought+Stack";
@@ -71,21 +76,21 @@ export default async function handler(req) {
           <meta charset="utf-8" />
           <title>${title}</title>
           <meta name="description" content="${description}" />
-
-          <meta property="og:type" content="article" />
+          <link rel="canonical" href="${SITE_URL}${originalPath}" /> <meta property="og:type" content="article" />
           <meta property="og:title" content="${title}" />
           <meta property="og:description" content="${description}" />
           <meta property="og:image" content="${image}" />
-          <meta property="og:url" content="${SITE_URL}${pathname.replace("/api", "")}" />
+          <meta property="og:url" content="${SITE_URL}${originalPath}" />
 
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="${title}" />
           <meta name="twitter:description" content="${description}" />
           <meta name="twitter:image" content="${image}" />
+          
+          <meta http-equiv="refresh" content="0; url=${SITE_URL}${originalPath}"> 
         </head>
         <body>
-          <p>Redirecting...</p>
-          <script>window.location.href = "${SITE_URL}${pathname.replace("/api", "")}"</script>
+          <p>Redirecting to the article...</p>
         </body>
       </html>
     `;
