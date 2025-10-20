@@ -9,6 +9,10 @@
     {
       "source": "/article/:id*",
       "destination": "/api/article/:id*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
