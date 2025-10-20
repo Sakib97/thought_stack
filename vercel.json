@@ -5,7 +5,11 @@
       "destination": "/api/article/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/[^.]+",
       "destination": "/index.html"
     }
   ]
