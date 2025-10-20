@@ -92,22 +92,40 @@ export default async function handler(req) {
     <title>${title}</title>
     <meta name="description" content="${description}" />
     <link rel="canonical" href="${SITE_URL}${originalPath}" />
+    
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:image" content="${image}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="${SITE_URL}${originalPath}" />
     <meta property="og:site_name" content="Thought Stack" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
     <meta name="twitter:image" content="${image}" />
     
-    <meta http-equiv="refresh" content="0; url=${SITE_URL}${originalPath}">
+    <!-- Only redirect for non-bot browsers via JavaScript -->
+    <script>
+        // Check if this is likely a bot/crawler
+        var userAgent = navigator.userAgent.toLowerCase();
+        var isBotLike = /bot|crawler|spider|crawling/i.test(userAgent);
+        if (!isBotLike) {
+            window.location.href = "${SITE_URL}${originalPath}";
+        }
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=${SITE_URL}${originalPath}">
+    </noscript>
 </head>
 <body>
-    <p>Redirecting to the article...</p>
+    <h1>${title}</h1>
+    <p>${description}</p>
+    <p>If you are not redirected automatically, <a href="${SITE_URL}${originalPath}">click here</a>.</p>
 </body>
 </html>
         `;

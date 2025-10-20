@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/article/:path*",
-      "destination": "/api/article/:path*"
+      "source": "/article/:slug(.*)",
+      "destination": "/api/article/:slug"
     },
     {
-      "source": "/[^.]+",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
