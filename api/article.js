@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import Hashids from 'hashids';
 
 // 1. **CORRECTION:** Use process.env for Vercel Edge Environment Variables
-const secret_key = process.env.HASHID_SECRET;
+const secret_key = process.env.VITE_HASHID_SECRET;
 const hashids = new Hashids(secret_key, 7); 
 
 function decodeId(hash) {
@@ -11,8 +11,8 @@ function decodeId(hash) {
 }
 
 // 2. **CORRECTION:** Use process.env for Supabase config
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY; // Use ANON_KEY for read-only access
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY; // Use ANON_KEY for read-only access
 
 const supabase = createClient(supabaseUrl, supabaseKey); 
 
