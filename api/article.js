@@ -1,39 +1,35 @@
-import { supabase } from "../src/config/supabaseClient";
-import { decodeId } from "../src/utils/hashUtil";
+import { supabase } from "../src/config/supabaseClient.js";
+import { decodeId } from "../src/utils/hashUtil.js";
+
+export const config = {
+  runtime: "edge", // ✅ tells Vercel this is an Edge Function
+};
 
 const BOT_USER_AGENTS = [
-    /Googlebot/i,
-    /Bingbot/i,
-    /facebookexternalhit/i,
-    /twitterbot/i,
-    /linkedinbot/i,
-    /slurp/i,
-    /duckduckbot/i,
-    /yandexbot/i,
-    /facebot/i,
-    /ia_archiver/i,
-    /telegrambot/i,
-    /whatsapp/i,
-    /discordbot/i,
-    /applebot/i,
+  /Googlebot/i, /Bingbot/i, /facebookexternalhit/i, /twitterbot/i,
+  /linkedinbot/i, /slurp/i, /duckduckbot/i, /yandexbot/i,
+  /facebot/i, /ia_archiver/i, /telegrambot/i, /whatsapp/i,
+  /discordbot/i, /applebot/i,
 ];
 
-const SITE_URL = "https://thought-stack.vercel.app"
+const SITE_URL = "https://thought-stack.vercel.app";
 
-export async function middleware(req) {
+export default async function handler(req) {
   const url = new URL(req.url);
   const pathname = url.pathname;
   const userAgent = req.headers.get("user-agent") || "";
 
-  // Match /article/:encodedId/:slug
-  const match = pathname.match(/^\/article\/([^/]+)\/?.*/);
-  if (!match) return new Response(null, { status: 200 }); // let normal SPA load
+  // ✅ Expect /api/article/:encodedId/:slug
+  const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
+  if (!match) return new Response("OK", { status: 200 });
 
   const encodedId = match[1];
   const decodedId = decodeId(encodedId);
-
   const isBot = BOT_USER_AGENTS.some((r) => r.test(userAgent));
-  if (!isBot) return new Response(null, { status: 200 }); // normal user → normal SPA
+
+  if (!isBot) {
+    return new Response("Normal user", { status: 200 });
+  }
 
   try {
     const { data: article, error } = await supabase
@@ -44,12 +40,12 @@ export async function middleware(req) {
 
     if (error || !article) {
       console.error("Article not found:", error);
-      return new Response(null, { status: 200 });
+      return new Response("Not found", { status: 404 });
     }
 
     const title = article.title_en || "Thought Stack Article";
     const description = article.subtitle_en || "Read this article on our site.";
-    const image = article.cover_img_link || 'https://placehold.co/600x400/png/?text=Thought+Stack';
+    const image = article.cover_img_link || "https://placehold.co/600x400/png/?text=Thought+Stack";
 
     const html = `
       <!DOCTYPE html>
@@ -63,7 +59,7 @@ export async function middleware(req) {
           <meta property="og:title" content="${title}" />
           <meta property="og:description" content="${description}" />
           <meta property="og:image" content="${image}" />
-          <meta property="og:url" content="${SITE_URL}${pathname}" />
+          <meta property="og:url" content="${SITE_URL}${pathname.replace("/api", "")}" />
 
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="${title}" />
@@ -72,7 +68,7 @@ export async function middleware(req) {
         </head>
         <body>
           <p>Redirecting...</p>
-          <script>window.location.href = "${SITE_URL}${pathname}"</script>
+          <script>window.location.href = "${SITE_URL}${pathname.replace("/api", "")}"</script>
         </body>
       </html>
     `;
@@ -81,11 +77,7 @@ export async function middleware(req) {
       headers: { "Content-Type": "text/html; charset=utf-8" },
     });
   } catch (err) {
-    console.error("Middleware error:", err);
-    return new Response(null, { status: 200 });
+    console.error("Handler error:", err);
+    return new Response("Server error", { status: 500 });
   }
 }
-
-export const config = {
-  matcher: ["/article/:path*"],
-};
