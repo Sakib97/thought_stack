@@ -1,75 +1,95 @@
 import { createClient } from '@supabase/supabase-js';
 import Hashids from 'hashids';
+import fs from 'fs';
 
 // 1. **CORRECTION:** Use process.env for Vercel Edge Environment Variables
 const secret_key = process.env.VITE_HASHID_SECRET;
-const hashids = new Hashids(secret_key, 7); 
+const hashids = new Hashids(secret_key, 7);
 
 function decodeId(hash) {
-  const decoded = hashids.decode(hash);
-  return decoded.length ? decoded[0] : null;
+    const decoded = hashids.decode(hash);
+    return decoded.length ? decoded[0] : null;
 }
 
 // 2. **CORRECTION:** Use process.env for Supabase config
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY; // Use ANON_KEY for read-only access
 
-const supabase = createClient(supabaseUrl, supabaseKey); 
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const config = {
-  runtime: "edge",
+    runtime: "edge",
 };
 
 const BOT_USER_AGENTS = [
-  /Googlebot/i, /Bingbot/i, /facebookexternalhit/i, /twitterbot/i,
-  /linkedinbot/i, /slurp/i, /duckduckbot/i, /yandexbot/i,
-  /facebot/i, /ia_archiver/i, /telegrambot/i, /whatsapp/i,
-  /discordbot/i, /applebot/i,
+    /Googlebot/i, /Bingbot/i, /facebookexternalhit/i, /twitterbot/i,
+    /linkedinbot/i, /slurp/i, /duckduckbot/i, /yandexbot/i,
+    /facebot/i, /ia_archiver/i, /telegrambot/i, /whatsapp/i,
+    /discordbot/i, /applebot/i,
 ];
 
 const SITE_URL = "https://thought-stack.vercel.app";
 
 export default async function handler(req) {
-  const url = new URL(req.url);
-  const pathname = url.pathname;
-  const userAgent = req.headers.get("user-agent") || "";
+    const url = new URL(req.url);
+    const pathname = url.pathname;
+    const userAgent = req.headers.get("user-agent") || "";
 
-  // The path comes in as /api/article/ORogKoz/just-add-your-name (due to vercel.json rewrite)
-  const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
-  if (!match) return new Response("OK", { status: 200 });
+    // The path comes in as /api/article/ORogKoz/just-add-your-name (due to vercel.json rewrite)
+    const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
+    if (!match) return new Response("OK", { status: 200 });
 
-  const encodedId = match[1];
-  const decodedId = decodeId(encodedId);
-  const isBot = BOT_USER_AGENTS.some((r) => r.test(userAgent));
+    const encodedId = match[1];
+    const decodedId = decodeId(encodedId);
+    const isBot = BOT_USER_AGENTS.some((r) => r.test(userAgent));
 
-  // The original user path to redirect to: /article/ORogKoz/just-add-your-name
-  const originalPath = pathname.replace("/api", ""); 
+    // Fix: Replace /api with /article for canonical/original path
+    const originalPath = pathname.replace(/^\/api/, '/article');
 
-  if (!isBot) {
-    // 3. **RECOMMENDED:** Redirect normal users to the correct final URL to prevent 
-    // them from seeing the 'Redirecting...' page when testing the API path directly.
-    return new Response(null, { status: 200 });
-  }
-
-  try {
-    const { data: article, error } = await supabase
-      .from("articles")
-      .select("title_en, subtitle_en, cover_img_link")
-      .eq("id", decodedId)
-      .single();
-
-    if (error || !article) {
-      console.error("Article not found:", error);
-      // Return a 200/404 response that lets the SPA load its own 404 page
-      return new Response(null, { status: 200 }); 
+    if (!isBot) {
+        // Serve full SPA index.html for users (client router handles the path)
+        let html;
+        try {
+            html = fs.readFileSync('./index.html', 'utf8');
+        } catch (err) {
+            console.error("Failed to read index.html:", err);
+            return new Response("SPA not found", { status: 500 });
+        }
+        return new Response(html, {
+            status: 200,
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+        });
     }
 
-    // ... (title, description, image generation logic remains the same)
-    const title = article.title_en || "Thought Stack Article";
-    const description = article.subtitle_en || "Read this article on our site.";
-    const image = article.cover_img_link || "https://placehold.co/600x400/png/?text=Thought+Stack";
 
-    const html = `
+    try {
+        const { data: article, error } = await supabase
+            .from("articles")
+            .select("title_en, subtitle_en, cover_img_link")
+            .eq("id", decodedId)
+            .single();
+
+        if (error || !article) {
+            console.error("Article not found:", error);
+            // Fallback: Serve SPA (shows client-side 404)
+            let html;
+            try {
+                html = fs.readFileSync('./index.html', 'utf8');
+            } catch (err) {
+                return new Response("SPA not found", { status: 500 });
+            }
+            return new Response(html, {
+                status: 200,
+                headers: { "Content-Type": "text/html; charset=utf-8" },
+            });
+        }
+
+        // ... (title, description, image generation logic remains the same)
+        const title = article.title_en || "Thought Stack Article";
+        const description = article.subtitle_en || "Read this article on our site.";
+        const image = article.cover_img_link || "https://placehold.co/600x400/png/?text=Thought+Stack";
+
+        const html = `
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -77,6 +97,7 @@ export default async function handler(req) {
           <title>${title}</title>
           <meta name="description" content="${description}" />
           <link rel="canonical" href="${SITE_URL}${originalPath}" /> <meta property="og:type" content="article" />
+          <meta property="og:type" content="article" />
           <meta property="og:title" content="${title}" />
           <meta property="og:description" content="${description}" />
           <meta property="og:image" content="${image}" />
@@ -95,11 +116,21 @@ export default async function handler(req) {
       </html>
     `;
 
-    return new Response(html, {
-      headers: { "Content-Type": "text/html; charset=utf-8" },
-    });
-  } catch (err) {
-    console.error("Handler error:", err);
-    return new Response("Server error", { status: 500 });
-  }
+        return new Response(html, {
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+        });
+    } catch (err) {
+        console.error("Handler error:", err);
+        // Fallback to SPA on error
+        let html;
+        try {
+            html = fs.readFileSync('./index.html', 'utf8');
+        } catch (err2) {
+            return new Response("Server error", { status: 500 });
+        }
+        return new Response(html, {
+            status: 200,
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+        });
+    }
 }
