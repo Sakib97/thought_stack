@@ -1,12 +1,14 @@
 {
+  "functions": {
+    "api/article.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
-      "source": "/article/:slug(.*)",
-      "destination": "/api/article/:slug"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/article/:id*",
+      "destination": "/api/article/:id*"
     }
   ]
 }

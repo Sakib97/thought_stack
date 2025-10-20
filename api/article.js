@@ -22,23 +22,44 @@ const BOT_USER_AGENTS = [
     /Googlebot/i, /Bingbot/i, /facebookexternalhit/i, /twitterbot/i,
     /linkedinbot/i, /slurp/i, /duckduckbot/i, /yandexbot/i,
     /facebot/i, /ia_archiver/i, /telegrambot/i, /whatsapp/i,
-    /discordbot/i, /applebot/i,
+    /discordbot/i, /applebot/i, /slackbot/i, /redditbot/i,
 ];
 
 const SITE_URL = "https://thought-stack.vercel.app";
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
 
 export default async function handler(req) {
     const url = new URL(req.url);
     const pathname = url.pathname;
     const userAgent = req.headers.get("user-agent") || "";
 
+    console.log("Pathname:", pathname);
+    console.log("User-Agent:", userAgent);
+
     // const match = pathname.match(/^\/api\/article\/([^/]+)\/?.*/);
     const match = pathname.match(/^(?:\/api)?\/article\/([^/]+)\/?.*/);
-    if (!match) return new Response("OK", { status: 200 });
+    if (!match) {
+        console.log("No match found for pathname");
+        return new Response("OK", { status: 200 });
+    }
 
     const encodedId = match[1];
     const decodedId = decodeId(encodedId);
     const isBot = BOT_USER_AGENTS.some((r) => r.test(userAgent));
+
+    console.log("Encoded ID:", encodedId);
+    console.log("Decoded ID:", decodedId);
+    console.log("Is Bot:", isBot);
 
     const originalPath = pathname.replace(/^\/api/, '/article');
 
@@ -84,19 +105,24 @@ export default async function handler(req) {
         const description = article.subtitle_en || "Read this article on our site.";
         const image = article.cover_img_link || "https://placehold.co/600x400/png/?text=Thought+Stack";
 
+        // Escape HTML to prevent breaking meta tags
+        const safeTitle = escapeHtml(title);
+        const safeDescription = escapeHtml(description);
+
         const html = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>${title}</title>
-    <meta name="description" content="${description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${safeTitle}</title>
+    <meta name="description" content="${safeDescription}" />
     <link rel="canonical" href="${SITE_URL}${originalPath}" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="${title}" />
-    <meta property="og:description" content="${description}" />
+    <meta property="og:title" content="${safeTitle}" />
+    <meta property="og:description" content="${safeDescription}" />
     <meta property="og:image" content="${image}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -105,8 +131,8 @@ export default async function handler(req) {
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${title}" />
-    <meta name="twitter:description" content="${description}" />
+    <meta name="twitter:title" content="${safeTitle}" />
+    <meta name="twitter:description" content="${safeDescription}" />
     <meta name="twitter:image" content="${image}" />
     
     <!-- Only redirect for non-bot browsers via JavaScript -->
@@ -123,15 +149,19 @@ export default async function handler(req) {
     </noscript>
 </head>
 <body>
-    <h1>${title}</h1>
-    <p>${description}</p>
+    <h1>${safeTitle}</h1>
+    <p>${safeDescription}</p>
     <p>If you are not redirected automatically, <a href="${SITE_URL}${originalPath}">click here</a>.</p>
 </body>
 </html>
         `;
 
         return new Response(html, {
-            headers: { "Content-Type": "text/html; charset=utf-8" },
+            status: 200,
+            headers: { 
+                "Content-Type": "text/html; charset=utf-8",
+                "Cache-Control": "public, max-age=3600, s-maxage=3600",
+            },
         });
     } catch (err) {
         console.error("Handler error:", err);
