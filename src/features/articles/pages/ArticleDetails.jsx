@@ -9,7 +9,6 @@ import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
-import { Helmet } from "@dr.pogodin/react-helmet";
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -110,23 +109,6 @@ const ArticleDetails = () => {
 
     return (
         <>
-            <Helmet>
-                <title>{`${title} | Thought Stack`}</title>
-                <meta name="description" content={description} />
-                <meta property="og:type" content="article" />
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={imageUrl} />
-                <meta property="og:url" content={url} />
-                <meta property="og:site_name" content="Thought Stack" />
-
-
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={title} />
-                <meta name="twitter:description" content={description} />
-                <meta name="twitter:image" content={imageUrl} />
-            </Helmet>
-
             <div>
                 <link
                     href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
