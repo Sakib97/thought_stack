@@ -1,5 +1,22 @@
-import { supabase } from "../src/config/supabaseClient.js";
-import { decodeId } from "../src/utils/hashUtil.js";
+// import { supabase } from "../src/config/supabaseClient.js";
+// import { decodeId } from "../src/utils/hashUtil.js";
+
+import {createClient} from '@supabase/supabase-js';
+import Hashids from 'hashids';
+
+const secret_key = import.meta.env.VITE_HASHID_SECRET;
+const hashids = new Hashids(secret_key, 7); 
+function decodeId(hash) {
+  const decoded = hashids.decode(hash);
+  return decoded.length ? decoded[0] : null;
+}
+
+// Vite only exposes environment variables prefixed with VITE_ to client-side code for security reasons. 
+// This prevents accidental exposure of sensitive variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey); 
 
 export const config = {
   runtime: "edge", // ✅ tells Vercel this is an Edge Function
