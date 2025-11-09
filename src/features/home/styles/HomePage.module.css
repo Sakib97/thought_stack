@@ -119,6 +119,8 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    /* Ensure scrollIntoView aligns below any fixed header */
+    scroll-margin-top: 90px;
 }
 
 /* .articleContainer{ */

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { supabase } from "../../../config/supabaseClient";
 import { List, Avatar, Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
@@ -14,12 +14,14 @@ import Spinner from 'react-bootstrap/Spinner';
 export default function HomePage() {
     const { language } = useLanguage();
     const [searchParams, setSearchParams] = useSearchParams();
+    const articlesSectionRef = useRef(null);
 
     const [mainArticle, setMainArticle] = useState(null);
     const [others, setOthers] = useState([]);
 
+    // Derive current page directly from URL search params to avoid duplicate state/race conditions
     const currentPage = parseInt(searchParams.get("page") || "1", 10);
-    const [page, setPage] = useState(currentPage);
+    const hasPageParam = searchParams.has("page");
 
     const [total, setTotal] = useState(0);
 
@@ -98,17 +100,25 @@ export default function HomePage() {
         fetchMainArticle();
     }, []);
 
+    // Fetch other articles whenever current page changes
     useEffect(() => {
-        // fetchMainArticle();
-        fetchArticles(page);
-    }, [page]);
-
-    useEffect(() => {
-        setPage(currentPage);  // update when query changes
+        fetchArticles(currentPage);
     }, [currentPage]);
 
+    // Scroll AFTER articles finish loading ONLY when explicit ?page= param is present
+    useLayoutEffect(() => {
+        if (!hasPageParam) return; // root path without page param: do not auto-scroll
+        if (!loadingOthers && articlesSectionRef.current) {
+            requestAnimationFrame(() => {
+                articlesSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+                const top = articlesSectionRef.current.getBoundingClientRect().top + window.scrollY - 10;
+                window.scrollTo({ top, behavior: "smooth" });
+            });
+        }
+    }, [currentPage, loadingOthers, hasPageParam]);
+
     const handlePageChange = (pageNum) => {
-        setSearchParams({ page: pageNum }); // updates URL ?page=2
+        setSearchParams({ page: pageNum.toString() }); // updates URL ?page=2
     };
 
 
@@ -176,7 +186,7 @@ export default function HomePage() {
                 }
                 <hr />
                 {/* Other Articles List */}
-                <div className={styles.articlesSection}>
+                <div ref={articlesSectionRef} className={styles.articlesSection}>
                     {loadingOthers ? (
                         <div className={styles.listLoader}>
                             {/* <Spin className={styles.content_loader} indicator={<LoadingOutlined spin />} size="large" /> */}
@@ -189,10 +199,9 @@ export default function HomePage() {
                             itemLayout="vertical"
                             size="large"
                             pagination={{
-                                // onChange: (pageNum) => setPage(pageNum),
                                 onChange: handlePageChange,
                                 pageSize: PAGE_SIZE,
-                                current: page,
+                                current: currentPage,
                                 total: total,
                                 align: "center",
                             }}
