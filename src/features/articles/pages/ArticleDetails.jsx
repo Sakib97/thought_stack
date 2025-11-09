@@ -27,6 +27,11 @@ const ArticleDetails = () => {
         if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
     }, [language]);
 
+    // Scroll to top when article changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }, [articleId]);
+
     const fetchArticle = async () => {
         setLoading(true);
         const { data, error } = await supabase
