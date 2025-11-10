@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { supabase } from "../../../config/supabaseClient";
-import { List, Avatar, Spin } from "antd";
-import { LoadingOutlined } from '@ant-design/icons';
+import { List, Avatar } from "antd";
 import { Link, useSearchParams } from "react-router-dom";
 import styles from "../styles/HomePage.module.css";
 import { getFormattedTime } from "../../../utils/dateUtil";
@@ -10,31 +9,30 @@ import { useLanguage } from "../../../context/LanguageProvider";
 import SearchBar from "../../../components/layout/SearchBar";
 import { PAGE_SIZE } from "../../../config/appConfig";
 import Spinner from 'react-bootstrap/Spinner';
+import { useQuery } from "@tanstack/react-query";
+
 
 export default function HomePage() {
     const { language } = useLanguage();
     const [searchParams, setSearchParams] = useSearchParams();
     const articlesSectionRef = useRef(null);
 
-    const [mainArticle, setMainArticle] = useState(null);
-    const [others, setOthers] = useState([]);
-
     // Derive current page directly from URL search params to avoid duplicate state/race conditions
     const currentPage = parseInt(searchParams.get("page") || "1", 10);
     const hasPageParam = searchParams.has("page");
 
-    const [total, setTotal] = useState(0);
-
-    const [loadingMain, setLoadingMain] = useState(true);
-    const [loadingOthers, setLoadingOthers] = useState(true);
-
-    // Fetch main article once
-    const fetchMainArticle = async () => {
-        setLoadingMain(true);
-        const { data, error } = await supabase
-            .from("articles_secure")
-            .select("id,\
-                title_en,\
+    // Fetch main article using useQuery
+    const { 
+        data: mainArticle, 
+        isLoading: loadingMain,
+        error: mainArticleError 
+    } = useQuery({
+        queryKey: ['mainArticle'],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("articles_secure")
+                .select("id,\
+                    title_en,\
                     title_bn,\
                     subtitle_en,\
                     subtitle_bn,\
@@ -47,32 +45,32 @@ export default function HomePage() {
                     author_img_link,\
                     publish_author_email,\
                     author_email")
-            .order("created_at", { ascending: false })
-            .limit(1);
+                .order("created_at", { ascending: false })
+                .limit(1)
+                .single();
 
-        if (error) {
-            console.error("Error fetching main article:", error.message);
-        } else if (data && data.length > 0) {
-            setMainArticle(data[0]);
-            // console.log("main article encode id", encodeId(data[0].id));
-            // console.log("main article decode id", decodeId(encodeId(data[0].id)));
+            if (error) throw error;
+            return data;
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        cacheTime: 30 * 60 * 1000, // 30 minutes
+    });
 
+    // Fetch paginated articles using useQuery
+    const { 
+        data: articlesData, 
+        isLoading: loadingOthers,
+        error: articlesError 
+    } = useQuery({
+        queryKey: ['articles', currentPage],
+        queryFn: async () => {
+            const from = (currentPage - 1) * PAGE_SIZE + 1; // skip the first one
+            const to = from + PAGE_SIZE - 1;
 
-        }
-        setLoadingMain(false);
-    };
-
-    // Fetch paginated list excluding main article
-    const fetchArticles = async (pageNum = 1) => {
-        setLoadingOthers(true);
-
-        const from = (pageNum - 1) * PAGE_SIZE + 1; // skip the first one
-        const to = from + PAGE_SIZE - 1;
-
-        const { data, count, error } = await supabase
-            .from("articles_secure")
-            .select("id,\
-                title_en,\
+            const { data, count, error } = await supabase
+                .from("articles_secure")
+                .select("id,\
+                    title_en,\
                     title_bn,\
                     subtitle_en,\
                     subtitle_bn,\
@@ -83,27 +81,32 @@ export default function HomePage() {
                     author_img_link,\
                     publish_author_email,\
                     author_email", { count: "exact" })
-            // .eq("article_status", "accepted")
-            .order("created_at", { ascending: false })
-            .range(from, to);
+                .order("created_at", { ascending: false })
+                .range(from, to);
 
-        if (error) {
-            console.error("Error fetching articles:", error.message);
-        } else {
-            setOthers(data || []);
-            setTotal((count || 0) - 1); // subtract the main article
+            if (error) throw error;
+            return {
+                articles: data || [],
+                total: (count || 0) - 1 // subtract the main article
+            };
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        cacheTime: 30 * 60 * 1000, // 30 minutes
+        keepPreviousData: true, // Keep showing old data while fetching new page
+    });
+
+    const others = articlesData?.articles || [];
+    const total = articlesData?.total || 0;
+
+    // Log errors to console
+    useEffect(() => {
+        if (mainArticleError) {
+            console.error("Error fetching main article:", mainArticleError.message);
         }
-        setLoadingOthers(false);
-    };
-
-    useEffect(() => {
-        fetchMainArticle();
-    }, []);
-
-    // Fetch other articles whenever current page changes
-    useEffect(() => {
-        fetchArticles(currentPage);
-    }, [currentPage]);
+        if (articlesError) {
+            console.error("Error fetching articles:", articlesError.message);
+        }
+    }, [mainArticleError, articlesError]);
 
     // Scroll AFTER articles finish loading ONLY when explicit ?page= param is present
     useLayoutEffect(() => {

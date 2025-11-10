@@ -9,6 +9,7 @@ import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
+import { useQuery } from "@tanstack/react-query";
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -17,9 +18,6 @@ const ArticleDetails = () => {
 
     const { language } = useLanguage();
 
-    const [article, setArticle] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [fontFamily, setFontFamily] = useState("Roboto Serif");
 
     useEffect(() => {
@@ -32,12 +30,18 @@ const ArticleDetails = () => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }, [articleId]);
 
-    const fetchArticle = async () => {
-        setLoading(true);
-        const { data, error } = await supabase
-            .from("articles_secure")
-            .select(
-                "title_en,\
+    // Fetch article using useQuery
+    const { 
+        data: article, 
+        isLoading: loading, 
+        error: fetchError 
+    } = useQuery({
+        queryKey: ['article', articleId],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("articles_secure")
+                .select(
+                    "title_en,\
                     title_bn,\
                     subtitle_en,\
                     subtitle_bn,\
@@ -55,22 +59,19 @@ const ArticleDetails = () => {
                     event_title_en, \
                     event_title_bn \
                     "
-            )
-            .eq("id", articleId)
-            .single();
+                )
+                .eq("id", articleId)
+                .single();
 
-        if (error) {
-            console.error("Error fetching article:", error.message);
-            setError(error.message);
-        } else {
-            setArticle(data);
-        }
-        setLoading(false);
-    };
+            if (error) throw error;
+            return data;
+        },
+        staleTime: 10 * 60 * 1000, // 10 minutes
+        cacheTime: 30 * 60 * 1000, // 30 minutes
+        enabled: !!articleId, // Only run query if articleId exists
+    });
 
-    useEffect(() => {
-        fetchArticle();
-    }, [articleId]);
+    const error = fetchError?.message;
 
     if (loading) {
         return (

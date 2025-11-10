@@ -11,7 +11,7 @@ import { useAuth } from "../../../context/AuthProvider";
 import { encodeId, decodeId } from "../../../utils/hashUtil";
 import { showToast } from "../../../components/layout/CustomToast";
 import Spinner from 'react-bootstrap/Spinner';
-import { set } from "lodash";
+import { useQueryClient } from "@tanstack/react-query";
 
 const WriteArticlePage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -26,6 +26,7 @@ const WriteArticlePage = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const [contentEn, setContentEn] = useState(localStorage.getItem("articleContent_en") || "");
     const [contentBn, setContentBn] = useState(localStorage.getItem("articleContent_bn") || "");
@@ -170,6 +171,11 @@ const WriteArticlePage = () => {
                     .select(); // this ensures data is returned;
 
                 if (error) throw error;
+                
+                // Invalidate queries to refresh article lists
+                queryClient.invalidateQueries(['mainArticle']);
+                queryClient.invalidateQueries(['articles']);
+                
                 showToast("Article updated successfully!", "success");
                 // Clear only edit keys after successful update
                 localStorage.removeItem("articleEditInfo");
@@ -210,6 +216,10 @@ const WriteArticlePage = () => {
                     .select();
 
                 if (error) throw error;
+
+                // Invalidate queries to refresh article lists
+                queryClient.invalidateQueries(['mainArticle']);
+                queryClient.invalidateQueries(['articles']);
 
                 const inserted = data[0];
                 const articleUrl = `${window.location.origin}/article/${encodeId(inserted.id)}/${slugify(articleInfo.title_en)}`;

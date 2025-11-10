@@ -8,10 +8,11 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider.jsx';
 import { LanguageProvider } from './context/LanguageProvider.jsx';
-
+import CustomQueryClientProvider from './context/QueryClientProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <CustomQueryClientProvider>
       <LanguageProvider>
         <AuthProvider>
           <BrowserRouter>
@@ -19,5 +20,6 @@ createRoot(document.getElementById('root')).render(
           </BrowserRouter>
         </AuthProvider>
       </LanguageProvider>
+    </CustomQueryClientProvider>
   </StrictMode>
 )
