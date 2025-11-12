@@ -13,6 +13,8 @@ import { showToast } from "../../../components/layout/CustomToast";
 import Spinner from 'react-bootstrap/Spinner';
 import { useQueryClient } from "@tanstack/react-query";
 
+import ArticleAudioTranscript from "../components/ArticleAudioTranscript";
+
 const WriteArticlePage = () => {
     const [showModal, setShowModal] = useState(false);
     const { userMeta } = useAuth();
@@ -285,6 +287,8 @@ const WriteArticlePage = () => {
             <hr />
             <RTE contentLanguage="bn" content={contentBn}
                 setContent={setContentBn} isEditMode={isEditMode} />
+            <hr />
+            <ArticleAudioTranscript />
             <hr />
 
             <div className={styles.buttonContainer}>

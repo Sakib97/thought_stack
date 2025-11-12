@@ -1,3 +1,5 @@
+import AudioWordHighlighterSample from "./AudioWordHighlighterSample";
+
 const ContactPage = () => {
     return (
         <div className="container"
@@ -28,6 +30,11 @@ const ContactPage = () => {
 
             </div>
             <br /><br />
+
+            {/* demo audio transcript section */}
+                    
+                <AudioWordHighlighterSample />
+
             {/* <h5>Send Us a Message</h5>
             <br />
             <form>

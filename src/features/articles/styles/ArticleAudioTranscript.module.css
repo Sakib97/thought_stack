@@ -1,0 +1,64 @@
+.sectionHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Custom collapse header to allow wrapping and larger font */
+.collapseHeader {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+/* Increase list text size (ListGroup) */
+.instructionList :global(.list-group-item) {
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+.mobileBreak {
+    display: none;
+}
+
+.uploadBtnContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 20px;
+}
+.uploadBtn{
+    font-size: 22px !important;
+    background-color: green !important;
+}
+.uploadBtn:hover{
+    background-color: darkgreen !important;
+}
+.uploadIcon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+    transform: translateY(2px);
+}
+
+@media screen and (max-width: 600px) {
+    .sectionHeader {
+        font-size: 24px;
+    }
+
+    .collapseHeader {
+        font-size: 18px;
+
+    }
+
+    .instructionList :global(.list-group-item) {
+        font-size: 15.5px;
+    }
+
+    .mobileBreak {
+        display: block;
+    }
+}
