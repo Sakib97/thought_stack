@@ -13,6 +13,8 @@ import { showToast } from "../../../components/layout/CustomToast";
 import Spinner from 'react-bootstrap/Spinner';
 import { useQueryClient } from "@tanstack/react-query";
 
+import ArticleAudioTranscript from "../components/ArticleAudioTranscript";
+
 const WriteArticlePage = () => {
     const [showModal, setShowModal] = useState(false);
     const { userMeta } = useAuth();
@@ -27,6 +29,9 @@ const WriteArticlePage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    // to pass into upload audio files component
+    const [articleTitleEn, setArticleTitleEn] = useState("");
 
     const [contentEn, setContentEn] = useState(localStorage.getItem("articleContent_en") || "");
     const [contentBn, setContentBn] = useState(localStorage.getItem("articleContent_bn") || "");
@@ -94,6 +99,7 @@ const WriteArticlePage = () => {
             localStorage.setItem("articleEditContent_en", data.content_en || "");
             localStorage.setItem("articleEditContent_bn", data.content_bn || "");
 
+            setArticleTitleEn(data.title_en || "");
             setContentEn(data.content_en || "");
             setContentBn(data.content_bn || "");
 
@@ -181,7 +187,8 @@ const WriteArticlePage = () => {
                 localStorage.removeItem("articleEditInfo");
                 localStorage.removeItem("articleEditContent_en");
                 localStorage.removeItem("articleEditContent_bn");
-
+                
+                setArticleTitleEn("");
                 // Clear RTE editors
                 setContentEn("");
                 setContentBn("");
@@ -231,6 +238,7 @@ const WriteArticlePage = () => {
                 localStorage.removeItem("articleContent_en");
                 localStorage.removeItem("articleContent_bn");
 
+                setArticleTitleEn("");
                 // Clear RTE editors
                 setContentEn("");
                 setContentBn("");
@@ -285,6 +293,8 @@ const WriteArticlePage = () => {
             <hr />
             <RTE contentLanguage="bn" content={contentBn}
                 setContent={setContentBn} isEditMode={isEditMode} />
+            <hr />
+            <ArticleAudioTranscript editArticleTitleEn={articleTitleEn} isEditMode={isEditMode} />
             <hr />
 
             <div className={styles.buttonContainer}>

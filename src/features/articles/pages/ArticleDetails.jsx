@@ -19,7 +19,6 @@ const ArticleDetails = () => {
     const { language } = useLanguage();
 
     const [fontFamily, setFontFamily] = useState("Roboto Serif");
-
     useEffect(() => {
         if (language === "en") setFontFamily("Roboto Serif");
         if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
@@ -31,10 +30,10 @@ const ArticleDetails = () => {
     }, [articleId]);
 
     // Fetch article using useQuery
-    const { 
-        data: article, 
-        isLoading: loading, 
-        error: fetchError 
+    const {
+        data: article,
+        isLoading: loading,
+        error: fetchError
     } = useQuery({
         queryKey: ['article', articleId],
         queryFn: async () => {
@@ -69,6 +68,57 @@ const ArticleDetails = () => {
         staleTime: 10 * 60 * 1000, // 10 minutes
         cacheTime: 30 * 60 * 1000, // 30 minutes
         enabled: !!articleId, // Only run query if articleId exists
+    });
+
+    const { data: audioExists } = useQuery({
+        queryKey: ["article-audio-exists", article?.article_slug, language],
+        enabled: !!article?.article_slug && !!language,
+        queryFn: async () => {
+            const folder = language === "bn" ? "bn" : "en";
+            const filename = `${article.article_slug}_${language}.mp3`;
+            const { data, error } = await supabase
+                .storage
+                .from("article-audio")
+                .list(folder, { search: filename, limit: 1 });
+
+            if (error) throw error;
+            return Array.isArray(data) && data.some(f => f.name === filename);
+        },
+        staleTime: 20 * 60 * 1000, // 20 minutes
+    });
+
+    // Fetch audio URL from Supabase Storage based on language and slug
+    const {
+        data: audioUrl,
+        isLoading: audioLoading,
+        error: audioError,
+    } = useQuery({
+        queryKey: ["article-audio", article?.article_slug, language],
+        enabled: !!article?.article_slug && !!language,
+        queryFn: async () => {
+            // Files are stored in bucket 'article-audio' under /en and /bn
+            const folder = language === "bn" ? "bn" : "en";
+            const filename = `${article.article_slug}_${language}.mp3`;
+            const path = `${folder}/${filename}`;
+
+            // If bucket is public, getPublicUrl is enough (no network request)
+            const { data } = supabase.storage
+                .from("article-audio")
+                .getPublicUrl(path);
+
+            // If bucket is private, switch to createSignedUrl:
+            // const { data, error } = await supabase.storage
+            //   .from('article-audio')
+            //   .createSignedUrl(path, 60 * 60); // 1 hour
+            // if (error) throw error;
+
+            // Set audio availability based on whether the URL exists
+            console.log("audio data: ", data);
+
+
+            return data.publicUrl;
+        },
+        staleTime: 10 * 60 * 1000, // 10 minutes
     });
 
     const error = fetchError?.message;
@@ -189,6 +239,31 @@ const ArticleDetails = () => {
 
                         {/* Article Body */}
                         <div className={`${styles.articleBody}`}>
+                            {/* audio transcript section */}
+                            <div style={{ textAlign: 'center' }}>
+                                {audioLoading && (
+                                    <div style={{ padding: "0.5rem" }}>
+                                        <Spinner animation="border" role="status" size="sm">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner>
+                                    </div>
+                                )}
+                                {!audioLoading && audioUrl && audioExists && (
+                                    <audio
+                                        key={`${articleId}-${language}`}
+                                        src={audioUrl}
+                                        controls
+                                        preload="metadata"
+                                        style={{ width: "100%" }}
+                                    />
+                                )}
+                                {!audioLoading && !audioUrl && (
+                                    <div style={{ fontSize: "14px", color: "gray" }}>
+                                        {audioError ? "Audio unavailable" : "No audio provided for this article."}
+                                    </div>
+                                )}
+                            </div>
+
                             <div
                                 style={{ textAlign: "justify", fontSize: "18px" }}
                                 className={`${styles.articleBodyText}`}
