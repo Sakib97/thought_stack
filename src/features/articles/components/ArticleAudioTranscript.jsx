@@ -9,11 +9,12 @@ import { InboxOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';
 import { useLanguage } from "../../../context/LanguageProvider";
 import { slugify } from "../../../utils/slugAndStringUtil";
-// import { set } from "lodash"; // not used
 
 const { Dragger } = Upload;
 
-const ArticleAudioTranscript = () => {
+const ArticleAudioTranscript = ({ editArticleTitleEn, isEditMode }) => {
+    // console.log("article title: ", editArticleTitleEn, isEditMode);
+
     const { language } = useLanguage();
     const [fileList, setFileList] = useState([]);
     const [progress, setProgress] = useState({}); // { filename: { percent, status } }
@@ -22,6 +23,20 @@ const ArticleAudioTranscript = () => {
     const [deletingFile, setDeletingFile] = useState(null); // Track which file is being deleted
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [fileToDelete, setFileToDelete] = useState(null); // Which uploaded file is selected to delete
+
+    // Get the correct article title based on mode
+    const getArticleTitleEn = () => {
+        if (isEditMode) {
+            return editArticleTitleEn;
+        }
+        const savedDraft = localStorage.getItem('articleInfo');
+        const parsedDraft = savedDraft ? JSON.parse(savedDraft) : null;
+        return parsedDraft ? parsedDraft.title_en : null;
+    };
+
+    const articleTitleEn = getArticleTitleEn();
+
+
 
     const instructions = {
         en: [
@@ -53,13 +68,14 @@ const ArticleAudioTranscript = () => {
 
     // Fetch uploaded files on component mount and language change
     const fetchUploadedFiles = async () => {
-        const articleInfoStr = localStorage.getItem('articleInfo');
-        if (!articleInfoStr) return;
+        const currentTitle = getArticleTitleEn();
+        if (!currentTitle) {
+            setFileList([]);
+            setUploadedFiles([]);
+            return;
+        };
 
-        const articleInfo = JSON.parse(articleInfoStr);
-        if (!articleInfo.title_en) return;
-
-        const articleSlug = slugify(articleInfo.title_en);
+        const articleSlug = slugify(currentTitle);
 
         try {
             const { data, error } = await supabase.storage
@@ -81,10 +97,10 @@ const ArticleAudioTranscript = () => {
         }
     };
 
-    // Fetch files on mount and when language changes
+    // Fetch files when component mounts, language changes, edit mode changes, or editArticleTitleEn changes
     useEffect(() => {
         fetchUploadedFiles();
-    }, [language]);
+    }, [language, isEditMode, editArticleTitleEn]);
 
     const handleDeleteFile = async (fileName) => {
         setDeletingFile(fileName); // Set the file being deleted
@@ -124,23 +140,14 @@ const ArticleAudioTranscript = () => {
             return;
         }
 
-        // Get article title from localStorage
-        const articleInfoStr = localStorage.getItem('articleInfo');
-        if (!articleInfoStr) {
-            showToast(language === 'bn' ? 'প্রথমে একটি শিরোনাম সেট করুন' : 'Please set a title first !', "error");
-            // clear file list
-            setFileList([]);
-            return;
-        }
-
-        const articleInfo = JSON.parse(articleInfoStr);
-        if (!articleInfo.title_en) {
+        const currentTitle = getArticleTitleEn();
+        if (!currentTitle) {
             showToast(language === 'bn' ? 'প্রথমে একটি শিরোনাম সেট করুন' : 'Please set a title first !', "error");
             setFileList([]);
             return;
         }
 
-        const articleSlug = slugify(articleInfo.title_en);
+        const articleSlug = slugify(currentTitle);
         setIsUploading(true);
 
         for (const file of fileList) {
@@ -271,7 +278,7 @@ const ArticleAudioTranscript = () => {
     return (
         <div>
             <div className={styles.sectionHeader}>
-                Audio & Transcript Upload
+                {language === 'bn' ? 'Audio & Transcript Upload (বাংলা)' : 'Audio & Transcript Upload (English)'}
             </div>
             <div>
                 <Collapse
