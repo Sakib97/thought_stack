@@ -72,7 +72,15 @@ export default async function handler(request, response) {
     const { path } = request.query;
 
     let articleData = null;
-    let originalUrl = `https://thought-stack.vercel.app/${path || ''}`;
+
+    // Derive host and protocol dynamically to work on previews/custom domains
+    const forwardedProto = request.headers['x-forwarded-proto'] || 'https';
+    const proto = Array.isArray(forwardedProto)
+        ? forwardedProto[0]
+        : String(forwardedProto).split(',')[0];
+    const host = request.headers['x-forwarded-host'] || request.headers.host || 'thought-stack.vercel.app';
+    const baseUrl = `${proto}://${host}`;
+    let originalUrl = `${baseUrl}/${path || ''}`;
 
     try {
         // Fixed regex - path parameter doesn't include leading slash in Vercel
@@ -97,12 +105,18 @@ export default async function handler(request, response) {
                     setTimeout(() => reject(new Error('Supabase query timeout')), 5000)
                 );
 
-                const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-                if (error) {
-                    console.error("Error fetching article data:", error);
-                } else if (data) {
-                    articleData = data;
+                // Gracefully handle timeouts/errors so we can still inject default tags
+                try {
+                    const result = await Promise.race([fetchPromise, timeoutPromise]);
+                    const { data, error } = result || {};
+                    if (error) {
+                        console.error('Error fetching article data:', error);
+                    } else if (data) {
+                        articleData = data;
+                    }
+                } catch (raceError) {
+                    console.warn('Supabase query failed or timed out:', raceError?.message || raceError);
+                    // Continue with defaults (articleData stays null)
                 }
             } else {
                 console.warn("Invalid encoded ID:", encodedId);
@@ -110,7 +124,7 @@ export default async function handler(request, response) {
         }
 
         // Fetch SPA's index.html file
-        const spaUrl = `https://thought-stack.vercel.app/index.html`;
+        const spaUrl = `${baseUrl}/index.html`;
         const spaResponse = await fetch(spaUrl);
         
         if (!spaResponse.ok) {
@@ -135,7 +149,12 @@ export default async function handler(request, response) {
 
         try {
             // If anything fails, send the unmodified HTML as a fallback
-            const spaHtml = await fetch(`https://thought-stack.vercel.app/index.html`).then((res) => res.text());
+            const forwardedProto = request.headers['x-forwarded-proto'] || 'https';
+            const proto = Array.isArray(forwardedProto)
+                ? forwardedProto[0]
+                : String(forwardedProto).split(',')[0];
+            const host = request.headers['x-forwarded-host'] || request.headers.host || 'thought-stack.vercel.app';
+            const spaHtml = await fetch(`${proto}://${host}/index.html`).then((res) => res.text());
             response.setHeader('Content-Type', 'text/html');
             response.status(200).send(spaHtml);
         } catch (fallbackError) {
