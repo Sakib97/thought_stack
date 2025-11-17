@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/:path(.*)",
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/:path((?!api/).*)",
       "has": [
         {
           "type": "header",
@@ -9,18 +13,10 @@
           "value": "(?i)(facebookexternalhit|whatsapp|twitterbot|slackbot|linkedinbot|discordbot|telegrambot|pinterest|redditbot).*"
         }
       ],
-      "missing": [
-        { "type": "path", "value": "/api/.*" },
-        { "type": "path", "value": "/.*\\..*" }
-      ],
       "destination": "/api/preview?path=:path"
     },
     {
       "source": "/(.*)",
-      "missing": [
-        { "type": "path", "value": "/api/.*" },
-        { "type": "path", "value": "/.*\\..*" }
-      ],
       "destination": "/index.html"
     }
   ]
