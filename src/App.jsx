@@ -3,11 +3,13 @@ import NavigationBar from './components/layout/NavigationBar'
 import AppRoutes from './components/common/AppRoutes'
 import Footer from './components/layout/Footer'
 import GoToTopButton from './components/layout/GoToTopButton'
+import ScrollToTop from './components/common/ScrollToTop'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
     <>
+      <ScrollToTop />
       <div>
         <NavigationBar />
       </div>

@@ -1,7 +1,26 @@
 {
   "rewrites": [
     {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "User-Agent",
+          "value": "(?i)(facebookexternalhit|whatsapp|twitterbot|slackbot|linkedinbot|discordbot|telegrambot|pinterest|redditbot).*"
+        }
+      ],
+      "missing": [
+        { "type": "path", "value": "/api/.*" },
+        { "type": "path", "value": "/.*\\..*" }
+      ],
+      "destination": "/api/preview?path=:path"
+    },
+    {
       "source": "/(.*)",
+      "missing": [
+        { "type": "path", "value": "/api/.*" },
+        { "type": "path", "value": "/.*\\..*" }
+      ],
       "destination": "/index.html"
     }
   ]
