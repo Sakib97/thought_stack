@@ -7,43 +7,30 @@ import { showToast } from '../../../components/layout/CustomToast';
 import { createBurstRateLimitedAction } from '../../../utils/rateLimit';
 
 
-const CommentReactions = ({ articleId, commentId }) => {
+const CommentReactions = ({ articleId, commentId, initialReactionData, onReactionUpdate }) => {
     const { userMeta } = useAuth();
     const [reactionCounts, setReactionCounts] = useState({
         like: 0,
         dislike: 0,
     });
-    const [userReaction, setUserReaction] = useState(null); // 'like' / 'love' / 'sad' / 'angry' / null
+    const [userReaction, setUserReaction] = useState(null); // 'like' / 'dislike' / null
     const [loading, setLoading] = useState(false);
 
-    // Single-call fetch for reactions and user reaction
-    const fetchReactions = async () => {
-        const { data, error } = await supabase
-            .from('comment_reactions')
-            .select('reaction_type, user_id')
-            .eq('comment_id', commentId);
-
-        if (error) {
-            console.error(error);
-            showToast('Failed to load reactions', 'error');
-            return;
-        }
-
-        // Aggregate counts and find user reaction
-        const counts = { like: 0, dislike: 0 };
-        let userReact = null;
-        data.forEach(r => {
-            counts[r.reaction_type]++;
-            if (r.user_id === userMeta?.uid) userReact = r.reaction_type;
-        });
-        setReactionCounts(counts);
-        setUserReaction(userReact);
-    };
-
+    // Initialize from props when available
     useEffect(() => {
-        if (!commentId) return;
-        fetchReactions();
-    }, [commentId, userMeta?.uid]);
+        if (initialReactionData) {
+            setReactionCounts(initialReactionData.counts);
+            setUserReaction(initialReactionData.userReaction);
+        }
+    }, [initialReactionData]);
+
+    // Initialize from props when available
+    useEffect(() => {
+        if (initialReactionData) {
+            setReactionCounts(initialReactionData.counts);
+            setUserReaction(initialReactionData.userReaction);
+        }
+    }, [initialReactionData]);
 
     const toggleReaction = async (newReaction) => {
         if (!userMeta?.uid) {
@@ -77,6 +64,24 @@ const CommentReactions = ({ articleId, commentId }) => {
                     .eq('user_id', userMeta?.uid);
                 if (deleteError) throw deleteError;
 
+                // Update local state
+                setReactionCounts(prev => ({
+                    ...prev,
+                    [newReaction]: Math.max(0, prev[newReaction] - 1)
+                }));
+                setUserReaction(null);
+
+                // Update parent
+                if (onReactionUpdate) {
+                    onReactionUpdate(commentId, {
+                        counts: {
+                            ...reactionCounts,
+                            [newReaction]: Math.max(0, reactionCounts[newReaction] - 1)
+                        },
+                        userReaction: null
+                    });
+                }
+
                 showToast('Reaction removed', 'success');
             } else {
                 // Add or change reaction safely via upsert
@@ -88,10 +93,27 @@ const CommentReactions = ({ articleId, commentId }) => {
                     );
                 if (upsertError) throw upsertError;
 
+                // Update local state
+                const newCounts = { ...reactionCounts };
+                if (existing) {
+                    // Switching from one reaction to another
+                    newCounts[existing.reaction_type] = Math.max(0, newCounts[existing.reaction_type] - 1);
+                }
+                newCounts[newReaction] = newCounts[newReaction] + 1;
+                
+                setReactionCounts(newCounts);
+                setUserReaction(newReaction);
+
+                // Update parent
+                if (onReactionUpdate) {
+                    onReactionUpdate(commentId, {
+                        counts: newCounts,
+                        userReaction: newReaction
+                    });
+                }
+
                 showToast(`You reacted with ${newReaction}`, 'success');
             }
-
-            await fetchReactions(); // Refresh both counts and user reaction
         } catch (err) {
             console.error(err);
             showToast('Something went wrong', 'error');

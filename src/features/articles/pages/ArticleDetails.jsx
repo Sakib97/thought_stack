@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../../../config/supabaseClient";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { getFormattedTime } from "../../../utils/dateUtil";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
@@ -15,6 +15,13 @@ const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
     const { articleID, articleTitleSlug } = useParams();
     const articleId = decodeId(articleID);
+
+    const audioRef = useRef(null);
+    const articleRef = useRef(null);
+    const currentWordIndexRef = useRef(-1);
+    const currentHighlightedElementRef = useRef(null);
+
+    const [transcript, setTranscript] = useState(null);
 
     const { language } = useLanguage();
 
@@ -70,6 +77,7 @@ const ArticleDetails = () => {
         enabled: !!articleId, // Only run query if articleId exists
     });
 
+    // Check if audio file exists in Supabase Storage
     const { data: audioExists } = useQuery({
         queryKey: ["article-audio-exists", article?.article_slug, language],
         enabled: !!article?.article_slug && !!language,
@@ -106,20 +114,166 @@ const ArticleDetails = () => {
                 .from("article-audio")
                 .getPublicUrl(path);
 
-            // If bucket is private, switch to createSignedUrl:
-            // const { data, error } = await supabase.storage
-            //   .from('article-audio')
-            //   .createSignedUrl(path, 60 * 60); // 1 hour
-            // if (error) throw error;
-
-            // Set audio availability based on whether the URL exists
-            console.log("audio data: ", data);
-
-
             return data.publicUrl;
         },
         staleTime: 10 * 60 * 1000, // 10 minutes
     });
+
+    // Fetch the transcript from Supabase Storage
+    // const { data: transcript } = useQuery({
+    const { data: transcriptData } = useQuery({
+        queryKey: ["article-transcript", article?.article_slug, language],
+        enabled: !!article?.article_slug && !!language,
+        queryFn: async () => {
+            const folder = language === "bn" ? "bn" : "en";
+            const filename = `${article.article_slug}_${language}.json`;
+            const path = `${folder}/${filename}`;
+
+            const { data, error } = await supabase.storage
+                .from("article-audio")
+                .download(path);
+
+            if (error) {
+                if (error.status === 404) {
+                    return null; // Transcript does not exist
+                }
+                throw error;
+            }
+
+            const text = await data.text();
+            return JSON.parse(text); // { words: [ {word,start,end}, ... ] }
+        },
+        staleTime: 60 * 60 * 1000, // 1 hour - cache longer since transcripts rarely change
+        cacheTime: 24 * 60 * 60 * 1000, // 24 hours - keep in cache even when unmounted
+        retry: false, // Don't retry if transcript doesn't exist (404)
+        refetchOnWindowFocus: false, // Don't refetch when window regains focus
+        refetchOnReconnect: false, // Don't refetch when network reconnects
+    });
+
+    useEffect(() => {
+        setTranscript(transcriptData);
+    }, [transcriptData]);
+
+    // wrap words in DOM after HTML renders
+    function wrapWords(rootElement) {
+        if (!rootElement) return;
+
+        let index = 0;
+
+        const walk = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const parts = node.textContent.split(/(\s+)/);
+
+                if (parts.length > 1) {
+                    const frag = document.createDocumentFragment();
+
+                    parts.forEach((part) => {
+                        if (part.trim().length === 0) {
+                            frag.appendChild(document.createTextNode(part));
+                        } else {
+                            const span = document.createElement("span");
+                            span.textContent = part;
+                            span.dataset.wordIndex = index++;
+                            frag.appendChild(span);
+                        }
+                    });
+
+                    node.replaceWith(frag);
+                }
+            } else {
+                Array.from(node.childNodes).forEach(walk);
+            }
+        };
+
+        walk(rootElement);
+    }
+
+    useEffect(() => {
+        if (!transcript) return;
+        if (!articleRef.current) return;
+        if (!article) return;
+
+        // Clear previous spans (important when navigating)
+        articleRef.current.innerHTML =
+            language === "en" ? article.content_en : article.content_bn;
+
+        wrapWords(articleRef.current);
+        
+        // Reset highlight tracking
+        currentWordIndexRef.current = -1;
+        currentHighlightedElementRef.current = null;
+    }, [transcript, articleId, language, article]);
+
+    // Highlight the Word During Audio Playback - Optimized version
+    function highlightWord(i) {
+        // Skip if already highlighting this word
+        if (currentWordIndexRef.current === i) return;
+
+        // Remove previous highlight
+        if (currentHighlightedElementRef.current) {
+            currentHighlightedElementRef.current.classList.remove(styles.highlightedWord);
+        }
+
+        // Add new highlight
+        const el = document.querySelector(`[data-word-index="${i}"]`);
+        if (el) {
+            el.classList.add(styles.highlightedWord);
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            currentHighlightedElementRef.current = el;
+            currentWordIndexRef.current = i;
+        }
+    }
+
+    // listen for audio timeupdate - Optimized with binary search
+    useEffect(() => {
+        const audioElement = audioRef.current;
+        if (!audioElement || !transcript?.words?.length) return;
+
+        let lastWordIndex = -1;
+
+        const onTimeUpdate = () => {
+            const t = audioElement.currentTime;
+
+            // Binary search for better performance on large transcripts
+            let left = 0;
+            let right = transcript.words.length - 1;
+            let foundIndex = -1;
+
+            while (left <= right) {
+                const mid = Math.floor((left + right) / 2);
+                const word = transcript.words[mid];
+
+                if (t >= word.start && t <= word.end) {
+                    foundIndex = mid;
+                    break;
+                } else if (t < word.start) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            // Only update if we found a word and it's different from the last one
+            if (foundIndex !== -1 && foundIndex !== lastWordIndex) {
+                highlightWord(foundIndex);
+                lastWordIndex = foundIndex;
+            }
+        };
+
+        // Small delay to ensure audio element is ready after language toggle
+        const timeoutId = setTimeout(() => {
+            if (audioElement) {
+                audioElement.addEventListener("timeupdate", onTimeUpdate);
+            }
+        }, 100);
+
+        return () => {
+            clearTimeout(timeoutId);
+            if (audioElement) {
+                audioElement.removeEventListener("timeupdate", onTimeUpdate);
+            }
+        };
+    }, [transcript, audioUrl, language]); // Re-attach listener when audio changes
 
     const error = fetchError?.message;
 
@@ -250,6 +404,7 @@ const ArticleDetails = () => {
                                 )}
                                 {!audioLoading && audioUrl && audioExists && (
                                     <audio
+                                        ref={audioRef}
                                         key={`${articleId}-${language}`}
                                         src={audioUrl}
                                         controls
@@ -273,6 +428,7 @@ const ArticleDetails = () => {
                                     className={styles.articleBodyText}
                                 >
                                     <div
+                                        ref={articleRef}
                                         style={{
                                             textAlign: "justify",
                                             fontFamily: fontFamily,
