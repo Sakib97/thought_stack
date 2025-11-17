@@ -33,7 +33,7 @@ const ContactPage = () => {
 
             {/* demo audio transcript section */}
                     
-                <AudioWordHighlighterSample />
+                {/* <AudioWordHighlighterSample /> */}
 
             {/* <h5>Send Us a Message</h5>
             <br />

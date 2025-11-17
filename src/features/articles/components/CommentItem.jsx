@@ -22,7 +22,10 @@ const CommentItem = ({
     onReplyAdded,
     // isReply = false,
     isReply,
-    sortOrder
+    sortOrder,
+    reactionsData,
+    onReactionUpdate,
+    fetchReactionsForComments
 }) => {
 
     const { userMeta } = useAuth();
@@ -110,6 +113,12 @@ const CommentItem = ({
                 text: r.content,
                 likes: 0,
             }));
+
+            // Batch-fetch reactions for replies
+            if (filtered.length > 0 && fetchReactionsForComments) {
+                const replyIds = filtered.map(r => r.id);
+                await fetchReactionsForComments(replyIds);
+            }
 
             // Update total replies count from count returned by Supabase
             if (count !== null) setTotalRepliesCount(count);
@@ -237,7 +246,12 @@ const CommentItem = ({
 
             {/* Actions */}
             <div className={styles.actions}>
-                <CommentReactions articleId={articleId} commentId={comment.id} />
+                <CommentReactions 
+                    articleId={articleId} 
+                    commentId={comment.id}
+                    initialReactionData={reactionsData?.[comment.id]}
+                    onReactionUpdate={onReactionUpdate}
+                />
                 {!isReply && <button className={styles.action} onClick={() => handleReplyClick(comment.id)}>
                     <i className="fa-solid fa-reply"></i> Reply
                 </button>}
@@ -298,6 +312,9 @@ const CommentItem = ({
                                     openReplies={openReplies}
                                     setOpenReplies={setOpenReplies}
                                     articleId={articleId}
+                                    reactionsData={reactionsData}
+                                    onReactionUpdate={onReactionUpdate}
+                                    fetchReactionsForComments={fetchReactionsForComments}
                                 />
                             ))}
 

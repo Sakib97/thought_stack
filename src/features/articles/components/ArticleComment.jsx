@@ -18,6 +18,7 @@ const ArticleComment = ({ articleId, userMeta }) => {
     const [totalCount, setTotalCount] = useState(0);
     const [openReplyId, setOpenReplyId] = useState(null);
     const [openReplies, setOpenReplies] = useState({});
+    const [reactionsData, setReactionsData] = useState({}); // Store all reactions by commentId
 
     const [sortOrder, setSortOrder] = useState("desc"); // default newest first
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -77,6 +78,12 @@ const ArticleComment = ({ articleId, userMeta }) => {
                 replies: [],
             }));
 
+            // Batch-fetch reactions for all comments in one API call
+            if (filtered.length > 0) {
+                const commentIds = filtered.map(c => c.id);
+                await fetchReactionsForComments(commentIds);
+            }
+
             if (count !== null) setTotalCount(count);
 
             setComments(prev =>
@@ -88,6 +95,48 @@ const ArticleComment = ({ articleId, userMeta }) => {
             console.error("Error fetching comments:", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchReactionsForComments = async (commentIds) => {
+        try {
+            const { data, error } = await supabase
+                .from('comment_reactions')
+                .select('comment_id, reaction_type, user_id')
+                .in('comment_id', commentIds);
+
+            if (error) throw error;
+
+            // Aggregate reactions by comment_id
+            const reactionsMap = {};
+            data.forEach(reaction => {
+                if (!reactionsMap[reaction.comment_id]) {
+                    reactionsMap[reaction.comment_id] = {
+                        counts: { like: 0, dislike: 0 },
+                        userReaction: null
+                    };
+                }
+                reactionsMap[reaction.comment_id].counts[reaction.reaction_type]++;
+                
+                // Check if this is the current user's reaction
+                if (userMeta?.uid && reaction.user_id === userMeta.uid) {
+                    reactionsMap[reaction.comment_id].userReaction = reaction.reaction_type;
+                }
+            });
+
+            // Initialize missing comments with zero counts
+            commentIds.forEach(id => {
+                if (!reactionsMap[id]) {
+                    reactionsMap[id] = {
+                        counts: { like: 0, dislike: 0 },
+                        userReaction: null
+                    };
+                }
+            });
+
+            setReactionsData(prev => ({ ...prev, ...reactionsMap }));
+        } catch (err) {
+            console.error("Error fetching reactions:", err);
         }
     };
 
@@ -134,6 +183,15 @@ const ArticleComment = ({ articleId, userMeta }) => {
             parent_id: newComment.parent_id ?? null,
         };
 
+        // Initialize reactions for new comment
+        setReactionsData(prev => ({
+            ...prev,
+            [newComment.id]: {
+                counts: { like: 0, dislike: 0 },
+                userReaction: null
+            }
+        }));
+
         // If sorting is newest first, prepend; else append
         setComments(prev =>
             sortOrder === "desc" ? [normalized, ...prev] : [...prev, normalized]
@@ -152,6 +210,13 @@ const ArticleComment = ({ articleId, userMeta }) => {
                 };
             }
             return c;
+        }));
+    };
+
+    const handleReactionUpdate = (commentId, newReactionData) => {
+        setReactionsData(prev => ({
+            ...prev,
+            [commentId]: newReactionData
         }));
     };
 
@@ -212,6 +277,9 @@ const ArticleComment = ({ articleId, userMeta }) => {
                         articleId={articleId}
                         isReply={false}
                         sortOrder={sortOrder}
+                        reactionsData={reactionsData}
+                        onReactionUpdate={handleReactionUpdate}
+                        fetchReactionsForComments={fetchReactionsForComments}
                     />
                 ))}
             </div>
