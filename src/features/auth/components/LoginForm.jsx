@@ -2,7 +2,8 @@ import { supabase } from "../../../config/supabaseClient";
 import styles from '../styles/LoginFrom.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { useState } from "react";
 
 /**
  * LoginForm component
@@ -10,51 +11,64 @@ import { useLocation } from "react-router-dom";
  * After login, redirects the user to their intended page or the homepage.
  */
 const LoginForm = () => {
-    // Get the current location object from React Router
     const location = useLocation();
-    // console.log('Location State: ', location.state);
-    
-    /**
-     * Handles the Google login process using Supabase OAuth.
-     * Redirects the user to the original page they tried to access, or to "/".
-     */
+    const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
+
     const handleLogin = async () => {
-        // Determine redirect URL after login
-        // window.location.origin gives the base URL of the app (e.g., http://localhost:3000 or https://myapp.com)
-        // location.state?.from?.pathname checks if there's a saved path to redirect to
-        // If not, it defaults to "/"
-        const redirectTo = `${window.location.origin}${location.state?.from?.pathname || "/"
-            }`;
-
-        // Initiate Supabase OAuth sign-in with Google
-        const { user, error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo // tell supabase where to send user back after login
+        if (loading) return; // prevent duplicate clicks
+        setErrorMsg(null);
+        setLoading(true);
+        try {
+            const redirectTo = `${window.location.origin}${location.state?.from?.pathname || "/"}`;
+            // In Supabase JS v2, signInWithOAuth returns { data, error }
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo }
+            });
+            if (error) {
+                console.log('Error: ', error.message);
+                setErrorMsg(error.message || 'Login failed. Please try again.');
+            } else {
+                // data.url will redirect automatically; nothing else to do
             }
-        });
-
-        // Log any errors or the user object for debugging
-        if (error) console.log('Error: ', error.message);
-        else console.log('User: ', user);
+        } catch (e) {
+            console.error(e);
+            setErrorMsg('Unexpected error. Please retry.');
+        } finally {
+            // We don't unset loading because the browser will navigate; but if there's an error we want to re-enable
+            setLoading(false);
+        }
     };
 
-    // Render the login form UI
     return (
         <div className={styles.container}>
-            <div className={styles.loginForm}>
-                <h2>Continue with Google</h2>
-                <br />
-                <button className={styles.loginButton} onClick={handleLogin}>
-                    <FontAwesomeIcon icon={faGoogle} style={{ marginRight: '8px' }} /> 
-                     {/* divider */}
-                     <span style={{ margin: '0 3px' }}>|</span>
-                     &nbsp;
-                    Sign in with Google
+            <div className={styles.loginForm} role="group" aria-labelledby="login-title">
+                <h2 id="login-title" className={styles.title}>Welcome Back</h2>
+                <p className={styles.subtext}>Sign in to continue. We currently support Google accounts.</p>
+                {errorMsg && (
+                    <div className={styles.error} role="alert">{errorMsg}</div>
+                )}
+                <button
+                    className={styles.loginButton}
+                    onClick={handleLogin}
+                    disabled={loading}
+                    aria-label="Sign in with Google"
+                    aria-busy={loading}
+                >
+                    <span className={styles.buttonContent}>
+                        {loading ? (
+                            <span className={styles.spinner} aria-hidden="true" />
+                        ) : (
+                            <FontAwesomeIcon icon={faGoogle} className={styles.icon} />
+                        )}
+                        <span className={styles.btnText}>{loading ? 'Redirecting…' : 'Continue with Google'}</span>
+                    </span>
                 </button>
+                <div className={styles.footerNote}>By continuing you agree to our <Link to="/usage-policy" className={styles.policyLink}>Usage Policy</Link>.</div>
             </div>
         </div>
     );
-}
+};
 
 export default LoginForm;

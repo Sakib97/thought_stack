@@ -1,5 +1,6 @@
 import './App.css'
 import NavigationBar from './components/layout/NavigationBar'
+import CookieConsent from './components/layout/CookieConsent'
 import AppRoutes from './components/common/AppRoutes'
 import Footer from './components/layout/Footer'
 import GoToTopButton from './components/layout/GoToTopButton'
@@ -42,6 +43,7 @@ function App() {
       <div>
         <Footer />
       </div>
+      <CookieConsent />
     </>
   )
 }
