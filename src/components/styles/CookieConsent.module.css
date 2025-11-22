@@ -34,7 +34,11 @@
   box-shadow: 0 18px 38px -10px rgba(0,0,0,0.55), 0 8px 18px -6px rgba(0,0,0,0.5);
 }
 
-.textBlock { flex: 1 1 480px; min-width: 280px; }
+.textBlock { 
+  flex: 1 1 80px; 
+  min-width:280px; 
+  /* max-width: 100px; */
+}
 .heading { margin: 0 0 .5rem; font-size: 1.15rem; font-weight: 600; letter-spacing: .4px; }
 .paragraph { margin: 0 0 .75rem; font-size: .9rem; line-height: 1.5; }
 .inlineLink { color: #93c5fd; text-decoration: underline; }
@@ -73,7 +77,10 @@
 
 @media (max-width: 780px) {
   .contentArea { flex-direction: column; }
-  .actions { flex-wrap: wrap; }
+  .actions {
+    flex-wrap: wrap;
+    margin-top: 0.25rem; /* reduce gap between text and buttons on mobile */
+  }
 }
 
 @media (prefers-color-scheme: light) {
