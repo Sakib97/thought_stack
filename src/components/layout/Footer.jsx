@@ -22,6 +22,9 @@ const Footer = () => {
                     <div className={styles.support_text}>Support</div>
                     <Link to="/contact" className={styles.contact}>Contact us</Link>
                     <Link to="/" className={styles.faq}>FAQ</Link>
+                    <Link to="/privacy-policy" className={styles.faq}>Privacy Policy</Link>
+                    <Link to="/usage-policy" className={styles.faq}>Usage Policy</Link>
+                    <Link to="/terms-of-service" className={styles.faq}>Terms of Service</Link>
                 </div>
                 <div className={styles.socials_area}>
                     <Link to="/" className={styles.social}><FaFacebook /></Link>
