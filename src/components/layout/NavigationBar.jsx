@@ -38,7 +38,7 @@ const NavigationBar = () => {
                             className="d-inline-block align-top"
                         />
                         &nbsp;
-                        Thought Stack
+                        The Fountainhead
                     </Navbar.Brand>
 
                     <Navbar.Toggle onClick={handleShow} aria-controls="offcanvasNavbar-expand-lg" />

@@ -12,7 +12,7 @@ const Footer = () => {
             <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet" />
 
             <div className={styles.footer_area}>
-                <Link to="/" className={styles.logo}>Thought Stack</Link>
+                <Link to="/" className={styles.logo}>The Fountainhead</Link>
                 <div className={styles.about_area}>
                     <div className={styles.about_text}>About</div>
                     <Link to="/" className={styles.about}>About us</Link>
@@ -39,7 +39,7 @@ const Footer = () => {
                 borderTop: '0px solid #5C86A0',
             }} className={styles.copyright_area}>
                 <span style={{ fontSize: '14px', color: 'white' }}>
-                    © {new Date().getFullYear()} Thought Stack. All rights reserved.
+                    © {new Date().getFullYear()} The Fountainhead. All rights reserved.
                 </span>
                 <br />
                 <span style={{ fontSize: '14px', color: 'grey' }}>
