@@ -10,6 +10,9 @@ import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
 import Spinner from 'react-bootstrap/Spinner';
 import { useQuery } from "@tanstack/react-query";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ArticlePDF from "../components/ArticlePDF";
+
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -198,7 +201,7 @@ const ArticleDetails = () => {
             language === "en" ? article.content_en : article.content_bn;
 
         wrapWords(articleRef.current);
-        
+
         // Reset highlight tracking
         currentWordIndexRef.current = -1;
         currentHighlightedElementRef.current = null;
@@ -326,6 +329,29 @@ const ArticleDetails = () => {
                 />
                 <div className={`${styles.article}`}>
                     <div className={`containers ${styles.articleContainer}`}>
+                        <div style={{ textAlign: "right", marginBottom: "10px" }}>
+                            <PDFDownloadLink
+                                document={
+                                    <ArticlePDF
+                                        article={article}
+                                        language={language}
+                                    />
+                                }
+                                fileName={`${article.article_slug}_${language}.pdf`}
+                                style={{
+                                    display: "inline-block",
+                                    padding: "8px 14px",
+                                    background: "#000",
+                                    color: "#fff",
+                                    borderRadius: "4px",
+                                    textDecoration: "none",
+                                    fontSize: "14px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
+                            </PDFDownloadLink>
+                        </div>
                         <div className={`${styles.articleHead}`}>
                             <h6 style={{ color: 'grey', fontFamily: fontFamily }}>
                                 {language === "en" ? article.event_title_en
