@@ -12,7 +12,10 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useQuery } from "@tanstack/react-query";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ArticlePDF from "../components/ArticlePDF";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import html2pdf from "html2pdf.js";
+import { showToast } from "../../../components/layout/CustomToast";
 
 const ArticleDetails = () => {
     const { user, userMeta } = useAuth();
@@ -25,6 +28,8 @@ const ArticleDetails = () => {
     const currentHighlightedElementRef = useRef(null);
 
     const [transcript, setTranscript] = useState(null);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+    const [isPdfButtonHovered, setIsPdfButtonHovered] = useState(false);
 
     const { language } = useLanguage();
 
@@ -278,6 +283,128 @@ const ArticleDetails = () => {
         };
     }, [transcript, audioUrl, language]); // Re-attach listener when audio changes
 
+    // Function to generate PDF from HTML content
+    const generatePDF = async () => {
+        if (!article) return;
+
+        setIsGeneratingPDF(true);
+
+        try {
+            // Create a temporary container with the article content
+            const tempContainer = document.createElement('div');
+            tempContainer.style.padding = '40px';
+            tempContainer.style.paddingTop = '60px'; // Extra space for header
+            tempContainer.style.fontFamily = fontFamily;
+            tempContainer.style.lineHeight = '1.6';
+            tempContainer.style.maxWidth = '800px';
+            tempContainer.style.margin = '0 auto';
+            tempContainer.style.position = 'relative';
+
+            // Add title, subtitle, and content
+            const titleEl = document.createElement('h1');
+            titleEl.textContent = language === "en" ? article.title_en : article.title_bn;
+            titleEl.style.marginBottom = '10px';
+            tempContainer.appendChild(titleEl);
+
+            const subtitleEl = document.createElement('p');
+            subtitleEl.textContent = language === "en" ? article.subtitle_en : article.subtitle_bn;
+            subtitleEl.style.fontSize = '16px';
+            subtitleEl.style.color = '#666';
+            subtitleEl.style.marginBottom = '20px';
+            tempContainer.appendChild(subtitleEl);
+
+            const authorEl = document.createElement('p');
+            authorEl.textContent = `${article.author_name} • ${getFormattedTime(article.created_at)}`;
+            authorEl.style.fontSize = '14px';
+            authorEl.style.color = '#999';
+            authorEl.style.marginBottom = '30px';
+            tempContainer.appendChild(authorEl);
+
+            const contentEl = document.createElement('div');
+            contentEl.innerHTML = language === "en" ? article.content_en : article.content_bn;
+            contentEl.style.fontSize = '14px';
+            contentEl.style.textAlign = 'justify';
+            tempContainer.appendChild(contentEl);
+
+            // Temporarily add to document
+            document.body.appendChild(tempContainer);
+
+            // Configure html2pdf options with custom page handler for header, footer, and watermark
+            const options = {
+                margin: [25, 15, 25, 15], // top, right, bottom, left - increased for header/footer
+                filename: `${article.article_slug}_${language}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Generate PDF with header, footer, and watermark
+            const worker = html2pdf().set(options).from(tempContainer);
+
+            await worker.toPdf().get('pdf').then((pdf) => {
+                const totalPages = pdf.internal.getNumberOfPages();
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+
+                    // Add Header
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text('The Fountainhead', pageWidth /2 , 12, { align: 'center' });
+
+                    // Add header line
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(15, 16, pageWidth - 15, 16);
+
+                    // Add Watermark (diagonal across the page)
+                    pdf.setFontSize(60);
+                    pdf.setTextColor(189,189,189); // Light gray for watermark
+                    pdf.saveGraphicsState();
+                    pdf.setGState(new pdf.GState({ opacity: 0.3 }));
+
+                    // Rotate and position watermark in center
+                    const watermarkText = 'The Fountainhead';
+                    pdf.text(watermarkText, pageWidth / 1.5, pageHeight / 1.5, {
+                        align: 'center',
+                        angle: 45
+                    });
+                    pdf.restoreGraphicsState();
+
+                    // Add footer line
+                    pdf.setDrawColor(200, 200, 200);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(15, pageHeight - 16, pageWidth - 15, pageHeight - 16);
+
+                    // Add Footer with page number
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text('The Fountainhead', 15, pageHeight - 10);
+                    pdf.text(`Page ${i} of ${totalPages}`, pageWidth - 15, pageHeight - 10, { align: 'right' });
+                }
+            }).save();
+
+            // Clean up
+            document.body.removeChild(tempContainer);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            showToast('Error generating PDF. Please try again later.', 'error');
+        } finally {
+            setIsGeneratingPDF(false);
+        }
+    };
+
     const error = fetchError?.message;
 
     if (loading) {
@@ -318,8 +445,6 @@ const ArticleDetails = () => {
     const url = window.location.href;
     // console.log("url:", url);
 
-
-
     return (
         <>
             <div>
@@ -330,28 +455,35 @@ const ArticleDetails = () => {
                 <div className={`${styles.article}`}>
                     <div className={`containers ${styles.articleContainer}`}>
                         <div style={{ textAlign: "right", marginBottom: "10px" }}>
-                            <PDFDownloadLink
-                                document={
-                                    <ArticlePDF
-                                        article={article}
-                                        language={language}
-                                    />
-                                }
-                                fileName={`${article.article_slug}_${language}.pdf`}
+                            <button
+                                onClick={generatePDF}
+                                disabled={isGeneratingPDF}
+                                onMouseEnter={() => setIsPdfButtonHovered(true)}
+                                onMouseLeave={() => setIsPdfButtonHovered(false)}
                                 style={{
                                     display: "inline-block",
                                     padding: "8px 14px",
-                                    background: "#000",
+                                    background: isGeneratingPDF ? "#666" : (isPdfButtonHovered ? "#333" : "#000"),
                                     color: "#fff",
+                                    border: "none",
                                     borderRadius: "4px",
                                     textDecoration: "none",
                                     fontSize: "14px",
-                                    cursor: "pointer"
+                                    cursor: isGeneratingPDF ? "not-allowed" : "pointer",
+                                    transition: "background 0.2s ease"
                                 }}
                             >
-                                {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
-                            </PDFDownloadLink>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <div style={{transform: 'translateY(2px)'}}>
+                                        <i style={{ fontSize: '20px' }} className="fi fi-bs-cloud-download"></i>
+                                    </div>
+                                    &nbsp;&nbsp;
+                                    {isGeneratingPDF ? "Generating PDF..." : "Download PDF"}
+                                </div>
+                                
+                            </button>
                         </div>
+
                         <div className={`${styles.articleHead}`}>
                             <h6 style={{ color: 'grey', fontFamily: fontFamily }}>
                                 {language === "en" ? article.event_title_en
