@@ -37,7 +37,7 @@ function escapeHtml(text) {
 // Helper function to create the HTML meta tags
 function generateMetaTags(data, originalUrl) {
     // Create default tags for homepage or errors
-    let title = "Thought Stack";
+    let title = "The Fountainhead";
     let description = "Read and engage with thought-provoking articles.";
     let image = "https://thought-stack.vercel.app/logo3.png";
 
@@ -52,12 +52,12 @@ function generateMetaTags(data, originalUrl) {
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:image" content="${image}" />
-    <meta property="og:image:alt" content="${data ? 'Article Cover' : 'Thought Stack Logo'}" />
+    <meta property="og:image:alt" content="${data ? 'Article Cover' : 'The Fountainhead Logo'}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="${originalUrl}" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Thought Stack" />
+    <meta property="og:site_name" content="The Fountainhead" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
