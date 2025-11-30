@@ -313,6 +313,25 @@ const ArticleDetails = () => {
             subtitleEl.style.marginBottom = '20px';
             tempContainer.appendChild(subtitleEl);
 
+            // // Add cover image
+            // const coverImgEl = document.createElement('img');
+            // coverImgEl.src = article.cover_img_link;
+            // coverImgEl.style.width = '100%';
+            // coverImgEl.style.height = 'auto';
+            // coverImgEl.style.marginBottom = '10px';
+            // coverImgEl.style.borderRadius = '4px';
+            // tempContainer.appendChild(coverImgEl);
+
+            // // Add cover image caption
+            // const coverImgCaptionEl = document.createElement('p');
+            // coverImgCaptionEl.textContent = language === "en" ? article.cover_img_cap_en : article.cover_img_cap_bn;
+            // coverImgCaptionEl.style.fontSize = '12px';
+            // coverImgCaptionEl.style.color = '#999';
+            // coverImgCaptionEl.style.fontStyle = 'italic';
+            // coverImgCaptionEl.style.textAlign = 'center';
+            // coverImgCaptionEl.style.marginBottom = '30px';
+            // tempContainer.appendChild(coverImgCaptionEl);
+
             const authorEl = document.createElement('p');
             authorEl.textContent = `${article.author_name} • ${getFormattedTime(article.created_at)}`;
             authorEl.style.fontSize = '14px';
@@ -320,11 +339,36 @@ const ArticleDetails = () => {
             authorEl.style.marginBottom = '30px';
             tempContainer.appendChild(authorEl);
 
+
+
             const contentEl = document.createElement('div');
             contentEl.innerHTML = language === "en" ? article.content_en : article.content_bn;
             contentEl.style.fontSize = '14px';
             contentEl.style.textAlign = 'justify';
             tempContainer.appendChild(contentEl);
+
+            // Add disclaimer at the end
+            const disclaimerEl = document.createElement('div');
+            disclaimerEl.style.fontStyle = 'italic';
+            disclaimerEl.style.fontSize = '12px';
+            disclaimerEl.style.color = '#666';
+            disclaimerEl.style.marginTop = '30px';
+            disclaimerEl.style.marginBottom = '10px';
+            disclaimerEl.textContent = language === "en"
+                ? "* The views and opinions expressed in this article are author's own and do not necessarily reflect the publisher's point of view."
+                : "* লেখকের নিজস্ব মতামত";
+            tempContainer.appendChild(disclaimerEl);
+
+            // Add author email if publish_author_email is true
+            if (article.publish_author_email && article.author_email) {
+                const authorEmailEl = document.createElement('div');
+                authorEmailEl.style.fontSize = '12px';
+                authorEmailEl.style.fontWeight = 'bold';
+                authorEmailEl.style.color = '#666';
+                authorEmailEl.style.marginBottom = '10px';
+                authorEmailEl.textContent = `Author Email: ${article.author_email}`;
+                tempContainer.appendChild(authorEmailEl);
+            }
 
             // Temporarily add to document
             document.body.appendChild(tempContainer);
@@ -361,7 +405,7 @@ const ArticleDetails = () => {
                     // Add Header
                     pdf.setFontSize(10);
                     pdf.setTextColor(100, 100, 100);
-                    pdf.text('The Fountainhead', pageWidth /2 , 12, { align: 'center' });
+                    pdf.text('The Fountainhead', pageWidth / 2, 12, { align: 'center' });
 
                     // Add header line
                     pdf.setDrawColor(200, 200, 200);
@@ -370,7 +414,7 @@ const ArticleDetails = () => {
 
                     // Add Watermark (diagonal across the page)
                     pdf.setFontSize(60);
-                    pdf.setTextColor(189,189,189); // Light gray for watermark
+                    pdf.setTextColor(189, 189, 189); // Light gray for watermark
                     pdf.saveGraphicsState();
                     pdf.setGState(new pdf.GState({ opacity: 0.3 }));
 
@@ -474,13 +518,13 @@ const ArticleDetails = () => {
                                 }}
                             >
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <div style={{transform: 'translateY(2px)'}}>
+                                    <div style={{ transform: 'translateY(2px)' }}>
                                         <i style={{ fontSize: '20px' }} className="fi fi-bs-cloud-download"></i>
                                     </div>
                                     &nbsp;&nbsp;
                                     {isGeneratingPDF ? "Generating PDF..." : "Download PDF"}
                                 </div>
-                                
+
                             </button>
                         </div>
 

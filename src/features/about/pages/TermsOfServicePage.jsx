@@ -9,7 +9,7 @@ const TermsOfService = () => {
                 <h1 className={styles.title}>Terms of Service</h1>
                 <p className={styles.lastUpdated}>Effective date: {formatDate(new Date())}</p>
                 <p className={styles.intro}>
-                    These Terms of Service ("Terms") govern your access to and use of the Thought Stack platform, website,
+                    These Terms of Service ("Terms") govern your access to and use of the The Fountainhead platform, website,
                     and related services (collectively, the "Services"). By creating an account, accessing, or using the
                     Services you agree to be bound by these Terms. If you do not agree, you must discontinue use.
                 </p>
@@ -57,7 +57,7 @@ const TermsOfService = () => {
                 <h2>3. User Content & License</h2>
                 <p>
                     "User Content" includes articles, comments, media, and other material you submit or publish. You retain
-                    ownership of your User Content. By submitting, you grant Thought Stack a worldwide, non-exclusive,
+                    ownership of your User Content. By submitting, you grant  The Fountainhead a worldwide, non-exclusive,
                     royalty-free license to host, store, display, reproduce, and distribute your User Content solely for
                     operating, promoting, and improving the Services. You represent you have the rights necessary to grant
                     this license and that your content does not infringe third-party rights.
@@ -68,7 +68,7 @@ const TermsOfService = () => {
             <section id="ip" className={styles.section}>
                 <h2>4. Intellectual Property</h2>
                 <p>
-                    All platform code, trademarks, logos, and design elements are the property of Thought Stack or its
+                    All platform code, trademarks, logos, and design elements are the property of  The Fountainhead or its
                     licensors. Except for limited rights granted herein, no intellectual property rights are transferred.
                 </p>
             </section>
@@ -114,7 +114,7 @@ const TermsOfService = () => {
             <section id="liability" className={styles.section}>
                 <h2>9. Limitation of Liability</h2>
                 <p>
-                    TO THE MAXIMUM EXTENT PERMITTED BY LAW, THOUGHT STACK AND ITS AFFILIATES SHALL NOT BE LIABLE FOR INDIRECT,
+                    TO THE MAXIMUM EXTENT PERMITTED BY LAW,  THE FOUNTAINHEAD AND ITS AFFILIATES SHALL NOT BE LIABLE FOR INDIRECT,
                     INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF DATA, PROFITS, OR REVENUE, ARISING
                     FROM OR RELATED TO YOUR USE OF THE SERVICES. TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT PAID BY YOU (IF ANY)
                     TO USE THE SERVICES IN THE SIX (6) MONTHS PRECEDING THE CLAIM.
@@ -124,7 +124,7 @@ const TermsOfService = () => {
             <section id="indemnification" className={styles.section}>
                 <h2>10. Indemnification</h2>
                 <p>
-                    You agree to defend, indemnify, and hold harmless Thought Stack and its officers, directors, employees, and
+                    You agree to defend, indemnify, and hold harmless The Fountainhead and its officers, directors, employees, and
                     agents from any claims, damages, liabilities, costs, or expenses (including reasonable legal fees) arising out
                     of your User Content, misuse of the Services, violation of these Terms, or infringement of third-party rights.
                 </p>
@@ -159,7 +159,7 @@ const TermsOfService = () => {
                 <h2>14. Contact</h2>
                 <p>
                     Questions about these Terms? Reach out via the <a href="/contact">Contact page</a> or email:
-                    <strong> legal@thoughtstack.example</strong>.
+                    <strong> connect@thefountainhead.org </strong>.
                 </p>
             </section>
         </main>

@@ -1,4 +1,5 @@
 import AudioWordHighlighterSample from "./AudioWordHighlighterSample";
+import styles from '../styles/ContactPage.module.css';
 
 const ContactPage = () => {
     return (
@@ -10,21 +11,22 @@ const ContactPage = () => {
                 below.
             </p>
             <br /> <br />
-            <h5>Contact Information</h5>
+            <h3>Contact Information</h3>
             <hr />
-            <div className="contact-info">
-                <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
-                    <div style={{ fontWeight: 'bold' }}>Email:</div>
-                    <div>contact.thought_stack@gmail.com <br />
-                    </div>
+            <div style={{fontSize:"20px"}} className="contact-info">
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <div style={{ fontWeight: 'bold' }}>For any queries / collaborations:</div>
+                    <a href="mailto:connect@thefountainhead.org">
+                        connect@thefountainhead.org
+                    </a>
                 </div>
 
 
                 <hr />
 
-                <div style={{ display: 'flex', gap: '20px', flexWrap: 'nowrap' }}>
+                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'nowrap' }}>
                     <div style={{ fontWeight: 'bold' }}>Address:</div>
-                    <div>Dhaka - 1208, Bangladesh</div>
+                    <div>Dhaka, Bangladesh</div>
                 </div>
 
 
@@ -32,8 +34,8 @@ const ContactPage = () => {
             <br /><br />
 
             {/* demo audio transcript section */}
-                    
-                {/* <AudioWordHighlighterSample /> */}
+
+            {/* <AudioWordHighlighterSample /> */}
 
             {/* <h5>Send Us a Message</h5>
             <br />

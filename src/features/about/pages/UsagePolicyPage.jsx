@@ -13,7 +13,7 @@ const sections = [
         id: "comment-guidelines",
         title: "2. Comment Guidelines",
         body: [
-            "You are solely responsible for the comments you share on Thought Stack.",
+            "You are solely responsible for the comments you share on The Fountainhead.",
             "Comments must not be illegal, harmful, defamatory, or infringe on intellectual property or privacy rights.",
             "We may remove or restrict comments that violate these guidelines, at our discretion."
         ]
@@ -58,7 +58,7 @@ export default function UsagePolicyPage() {
         <main className={styles.wrapper}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Usage Policy</h1>
-                <p className={styles.lead}>Your use of Thought Stack implies agreement with the practices outlined below. Please read carefully.</p>
+                <p className={styles.lead}>Your use of <b>The Fountainhead</b> implies agreement with the practices outlined below. Please read carefully.</p>
             </header>
             <nav className={styles.toc} aria-label="Usage policy table of contents">
                 <ul>
@@ -76,7 +76,7 @@ export default function UsagePolicyPage() {
                 ))}
             </div>
             <footer className={styles.footer}>
-                <p>Questions or concerns? Reach us at <a href="mailto:support@thoughtstack.com" className={styles.link}>support@thoughtstack.com</a>.</p>
+                <p>Questions or concerns? Reach us at <a href="mailto:connect@thefountainhead.org" className={styles.link}>connect@thefountainhead.org</a>.</p>
                 {/* <p className={styles.version}>Last updated: Nov 22, 2025</p> */}
             </footer>
         </main>

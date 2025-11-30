@@ -12,7 +12,7 @@ const PrivacyPolicyPage = () => {
                 <h1 className={styles.title}>Privacy Policy</h1>
                 <p className={styles.lastUpdated}>Last updated: {formatDate(new Date())}</p>
                 <p className={styles.intro}>
-                    Your privacy matters. This Privacy Policy explains how <strong>Thought Stack</strong> collects,
+                    Your privacy matters. This Privacy Policy explains how <strong>The Fountainhead</strong> collects,
                     uses, discloses, and safeguards personal information when you use our website, platform, and related
                     services (collectively, the "Services"). If you disagree with any part of this Policy, please
                     discontinue use of the Services.
@@ -130,7 +130,7 @@ const PrivacyPolicyPage = () => {
 
             <section id="contact" className={styles.section}>
                 <h2>Contact Us</h2>
-                <p>If you have questions, requests, or concerns about privacy, contact us through the <a href="/contact">Contact page</a> or email: <strong>privacy@thoughtstack.example</strong>.</p>
+                <p>If you have questions, requests, or concerns about privacy, contact us through the <a href="/contact">Contact page</a> or email: <strong>connect@thefountainhead.org</strong>.</p>
             </section>
         </main>
     );
