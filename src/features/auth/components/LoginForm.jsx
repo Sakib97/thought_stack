@@ -1,7 +1,6 @@
 import { supabase } from "../../../config/supabaseClient";
 import styles from '../styles/LoginFrom.module.css';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import GoogleLogo from "../../../components/common/GoogleLogo";
 import { useLocation, Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -60,7 +59,7 @@ const LoginForm = () => {
                         {loading ? (
                             <span className={styles.spinner} aria-hidden="true" />
                         ) : (
-                            <FontAwesomeIcon icon={faGoogle} className={styles.icon} />
+                            <GoogleLogo className={styles.icon} size={20} />
                         )}
                         <span className={styles.btnText}>{loading ? 'Redirecting…' : 'Continue with Google'}</span>
                     </span>
