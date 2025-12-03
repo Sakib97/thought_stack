@@ -10,6 +10,7 @@ import SearchBar from "../../../components/layout/SearchBar";
 import { PAGE_SIZE } from "../../../config/appConfig";
 import Spinner from 'react-bootstrap/Spinner';
 import { useQuery } from "@tanstack/react-query";
+import FeaturedArticlesSection from "../components/FeaturedArticlesSection";
 
 
 export default function HomePage() {
@@ -187,6 +188,8 @@ export default function HomePage() {
                     )
                 )
                 }
+                <hr />
+                <FeaturedArticlesSection />
                 <hr />
                 {/* Other Articles List */}
                 <div ref={articlesSectionRef} className={styles.articlesSection}>

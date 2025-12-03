@@ -1,0 +1,166 @@
+.featuredSection {
+    padding: 60px 20px;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 40px;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.underline {
+    width: 60px;
+    height: 4px;
+    background-color: #16a34a;
+    border-radius: 2px;
+}
+
+.articlesGrid {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+}
+
+.articlesGrid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.articlesGrid::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.articlesGrid::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 4px;
+}
+
+.articlesGrid::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+.articleCard {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    min-width: 350px;
+    max-width: 350px;
+    flex-shrink: 0;
+}
+
+.articleCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.imageWrapper {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: #e5e7eb;
+}
+
+.articleImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.articleCard:hover .articleImage {
+    transform: scale(1.05);
+}
+
+.cardContent {
+    padding: 24px;
+}
+
+.articleTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.articleDescription {
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.articleMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.authorInfo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.authorIcon {
+    width: 16px;
+    height: 16px;
+    color: #9ca3af;
+}
+
+.authorName {
+    color: #4b5563;
+}
+
+.date {
+    color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+    .featuredSection {
+        padding: 40px 16px;
+    }
+
+    .title {
+        font-size: 1.75rem;
+    }
+
+    .articlesGrid {
+        gap: 16px;
+    }
+
+    .articleCard {
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    .cardContent {
+        padding: 20px;
+    }
+
+    .articleTitle {
+        font-size: 1.1rem;
+    }
+}
