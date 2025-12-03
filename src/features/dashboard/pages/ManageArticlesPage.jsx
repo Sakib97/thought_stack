@@ -4,6 +4,7 @@ import styles from "../styles/ManageArticlesPage.module.css";
 import ArticleFilter from "../components/manageArticles/ArticleFilter";
 import ArticleList from "../components/manageArticles/ArticleList";
 import RefreshBtn from "../components/RefreshBtn";
+import ArticleFeature from "../components/manageArticles/ArticleFeature";
 
 const ManageArticlesPage = () => {
     const [filter, setFilter] = useState('all_articles');
@@ -20,6 +21,11 @@ const ManageArticlesPage = () => {
             </div>
             <hr />
             <ArticleList filter={filter} refreshTrigger={refreshTrigger} />
+
+            <hr />
+            <hr />
+            <ArticleFeature />
+            <hr />
         </div>
     );
 }
