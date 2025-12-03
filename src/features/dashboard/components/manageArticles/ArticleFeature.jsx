@@ -379,19 +379,9 @@ const ArticleFeature = () => {
                                             className={styles.articleFeatureCard}
                                             hoverable
                                             styles={{ body: { padding: 16 } }}
-                                            // cover={
-                                            //     <div
-                                            //         style={{
-                                            //             height: 90,
-                                            //             background:
-                                            //                 'linear-gradient(135deg, #e0f2ff 0%, #f5f7ff 50%, #fff 100%)',
-                                            //             borderBottom: '1px solid #f0f0f0'
-                                            //         }}
-                                            //     />
-                                            // }
                                             extra={
                                                 <Space>
-                                                    <Button
+                                                    {/* <Button
                                                         type="text"
                                                         icon={<EditOutlined />}
                                                         title="Edit dates"
@@ -399,7 +389,7 @@ const ArticleFeature = () => {
                                                             e.stopPropagation();
                                                             showEditModal(item);
                                                         }}
-                                                    />
+                                                    /> */}
                                                     <Button
                                                         type="text"
                                                         danger
@@ -415,20 +405,20 @@ const ArticleFeature = () => {
                                             }
                                         >
                                             <Space direction="vertical" size={8} style={{ width: '100%' }}>
-                                                <Typography.Title level={5} style={{ margin: 0 }}>
+                                                <Typography.Title level={5} style={{ margin: 0, fontSize: '20px' }}>
                                                     {item.title}
                                                 </Typography.Title>
                                                 <hr />
 
                                                 <Space align="center" style={{ justifyContent: 'space-between' }}>
                                                     <Space size={8}>
-                                                        <Tag color="blue">Author</Tag>
-                                                        <Typography.Text>{item.author}</Typography.Text>
+                                                        <Tag color="blue" style={{ fontSize: '16px' }}>Author</Tag>
+                                                        <Typography.Text style={{ fontSize: '18px' }}>{item.author}</Typography.Text>
                                                     </Space>
                                                 </Space>
                                                 <hr />
 
-                                                <div
+                                                {/* <div
                                                     style={{
                                                         display: 'grid',
                                                         gridTemplateColumns: '1fr 1fr',
@@ -444,7 +434,7 @@ const ArticleFeature = () => {
                                                         <Typography.Text type="secondary">Featured Until</Typography.Text>
                                                         <div>{item.end_date || 'N/A'}</div>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </Space>
                                         </Card>
                                     </Badge.Ribbon>

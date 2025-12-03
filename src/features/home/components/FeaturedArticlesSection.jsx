@@ -1,7 +1,14 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import styles from '../styles/FeaturedArticlesSection.module.css';
+import {useQuery} from '@tanstack/react-query';
+import { supabase } from "../../../config/supabaseClient";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { Link } from "react-router-dom";
+import { getFormattedTime } from '../../../utils/dateUtil';
+
 
 const FeaturedArticlesSection = () => {
+    const { language } = useLanguage();
     const scrollContainerRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -41,48 +48,66 @@ const FeaturedArticlesSection = () => {
         scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     };
 
-    const featuredArticles = [
-        {
-            id: 1,
-            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800',
-            title: 'The Future of Global Trade Agreements',
-            description: 'An in-depth look at how recent geopolitical shifts are reshaping international commerce and what it means for the global economy.',
-            author: 'Eleanor Vance',
-            date: '15 November 2025'
+    const { data: featuredArticlesData, isLoading, error } = useQuery({
+        queryKey: ['featuredArticles'],
+        queryFn: async () => {
+            // Single API call: join featured -> articles_secure via FK (article_id)
+            const nowIso = new Date().toISOString();
+            const { data, error } = await supabase
+                .from("featured_articles")
+                .select(`
+                    id,
+                    priority,
+                    start_at,
+                    end_at,
+                    article_id,
+                    articles_secure:articles_secure (* )
+                `)
+                // .lte('start_at', nowIso)
+                // .or('end_at.is.null,end_at.gte.' + nowIso)
+                .order('priority', { ascending: true })
+                .limit(5);
+
+            if (error) throw error;
+            return data;
         },
-        {
-            id: 2,
-            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800',
-            title: 'Tech Innovations Driving the Next Industrial Revolution',
-            description: 'From AI to quantum computing, we explore the groundbreaking technologies that are set to redefine industries worldwide.',
-            author: 'Marcus Holloway',
-            date: '14 November 2025'
-        },
-        {
-            id: 3,
-            image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800',
-            title: 'Diplomacy in the Digital Age: Challenges & Opportunities',
-            description: 'How social media and instant communication are changing the landscape of international relations and foreign policy.',
-            author: 'Anya Sharma',
-            date: '13 November 2025'
-        },
-        {
-            id: 4,
-            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800',
-            title: 'Sustainable Energy Solutions for Tomorrow',
-            description: 'Exploring renewable energy innovations and their impact on combating climate change while meeting global energy demands.',
-            author: 'James Chen',
-            date: '12 November 2025'
-        },
-        {
-            id: 5,
-            image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800',
-            title: 'The Rise of Remote Work Culture',
-            description: 'Understanding how distributed teams are reshaping corporate structures and employee expectations in the modern workplace.',
-            author: 'Sarah Mitchell',
-            date: '11 November 2025'
-        }
-    ];
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+    });
+
+    const cards = useMemo(() => {
+        if (!featuredArticlesData) return [];
+        return featuredArticlesData
+            .map((row) => {
+                const a = row?.articles_secure;
+                if (!a) return null;
+                const isBn = language === 'bn';
+                const title = isBn ? a.title_bn ?? a.title_en : a.title_en ?? a.title_bn;
+                const description = isBn ? a.subtitle_bn ?? a.subtitle_en : a.subtitle_en ?? a.subtitle_bn;
+                return {
+                    id: a.id,
+                    image: a.cover_img_link,
+                    title,
+                    description,
+                    author: a.author_name,
+                    // date: new Date(a.created_at).toLocaleDateString(undefined, {
+                    //     year: 'numeric', month: 'long', day: 'numeric'
+                    // }),
+                    date: getFormattedTime(a.created_at, language),
+                    slug: a.article_slug,
+                    priority: row.priority ?? 99,
+                };
+            })
+            .filter(Boolean);
+    }, [featuredArticlesData, language]);
+
+    
+    const [fontFamily, setFontFamily] = useState('Roboto Serif');
+
+    useEffect(() => {
+        if (language === "en") setFontFamily('Roboto Serif');
+        if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
+    }, [language]);
 
     return ( 
         <section className={styles.featuredSection}>
@@ -100,7 +125,13 @@ const FeaturedArticlesSection = () => {
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                 >
-                    {featuredArticles.map((article) => (
+                    {isLoading && (
+                        <div className={styles.loading}>Loading featured articles…</div>
+                    )}
+                    {error && (
+                        <div className={styles.error}>Failed to load featured articles.</div>
+                    )}
+                    {!isLoading && !error && cards.map((article) => (
                         <article key={article.id} className={styles.articleCard}>
                             <div className={styles.imageWrapper}>
                                 <img 
