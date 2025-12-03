@@ -1,10 +1,12 @@
 import { useMemo, useRef, useState, useEffect } from 'react';
 import styles from '../styles/FeaturedArticlesSection.module.css';
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from "../../../config/supabaseClient";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { Link } from "react-router-dom";
 import { getFormattedTime } from '../../../utils/dateUtil';
+import { encodeId } from '../../../utils/hashUtil';
+import { Spinner } from 'react-bootstrap';
 
 
 const FeaturedArticlesSection = () => {
@@ -13,10 +15,12 @@ const FeaturedArticlesSection = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+    const hasMoved = useRef(false);
 
     const handleMouseDown = (e) => {
         if (!scrollContainerRef.current) return;
         setIsDragging(true);
+        hasMoved.current = false;
         scrollContainerRef.current.style.scrollBehavior = 'auto';
         setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
         setScrollLeft(scrollContainerRef.current.scrollLeft);
@@ -46,6 +50,9 @@ const FeaturedArticlesSection = () => {
         const x = e.pageX - scrollContainerRef.current.offsetLeft;
         const walk = (x - startX) * 1.5;
         scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+        if (Math.abs(x - startX) > 5) {
+            hasMoved.current = true;
+        }
     };
 
     const { data: featuredArticlesData, isLoading, error } = useQuery({
@@ -71,9 +78,18 @@ const FeaturedArticlesSection = () => {
             if (error) throw error;
             return data;
         },
-        staleTime: 5 * 60 * 1000,
+        staleTime: 20 * 60 * 1000,
         cacheTime: 30 * 60 * 1000,
     });
+
+    const truncate = (str, max) => {
+        if (!str) return '';
+        if (str.length <= max) return str;
+        const cut = str.slice(0, max);
+        const lastSpace = cut.lastIndexOf(' ');
+        const safeCut = lastSpace > 0 ? cut.slice(0, lastSpace) : cut;
+        return safeCut + '...';
+    };
 
     const cards = useMemo(() => {
         if (!featuredArticlesData) return [];
@@ -83,17 +99,18 @@ const FeaturedArticlesSection = () => {
                 if (!a) return null;
                 const isBn = language === 'bn';
                 const title = isBn ? a.title_bn ?? a.title_en : a.title_en ?? a.title_bn;
-                const description = isBn ? a.subtitle_bn ?? a.subtitle_en : a.subtitle_en ?? a.subtitle_bn;
+                const rawDescription = isBn ? a.subtitle_bn ?? a.subtitle_en : a.subtitle_en ?? a.subtitle_bn;
+                const description = truncate(rawDescription, 100);
                 return {
                     id: a.id,
                     image: a.cover_img_link,
                     title,
                     description,
                     author: a.author_name,
-                    // date: new Date(a.created_at).toLocaleDateString(undefined, {
-                    //     year: 'numeric', month: 'long', day: 'numeric'
-                    // }),
-                    date: getFormattedTime(a.created_at, language),
+                    date: new Date(a.created_at).toLocaleDateString(undefined, {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                    }),
+                    // date: getFormattedTime(a.created_at, language),
                     slug: a.article_slug,
                     priority: row.priority ?? 99,
                 };
@@ -101,7 +118,7 @@ const FeaturedArticlesSection = () => {
             .filter(Boolean);
     }, [featuredArticlesData, language]);
 
-    
+
     const [fontFamily, setFontFamily] = useState('Roboto Serif');
 
     useEffect(() => {
@@ -109,59 +126,87 @@ const FeaturedArticlesSection = () => {
         if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
     }, [language]);
 
-    return ( 
-        <section className={styles.featuredSection}>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h2 className={styles.title}>Featured Articles</h2>
-                    <div className={styles.underline}></div>
-                </div>
-                
-                <div 
-                    ref={scrollContainerRef}
-                    className={styles.articlesGrid}
-                    onMouseDown={handleMouseDown}
-                    onMouseLeave={handleMouseLeave}
-                    onMouseUp={handleMouseUp}
-                    onMouseMove={handleMouseMove}
-                >
-                    {isLoading && (
-                        <div className={styles.loading}>Loading featured articles…</div>
-                    )}
-                    {error && (
-                        <div className={styles.error}>Failed to load featured articles.</div>
-                    )}
-                    {!isLoading && !error && cards.map((article) => (
-                        <article key={article.id} className={styles.articleCard}>
-                            <div className={styles.imageWrapper}>
-                                <img 
-                                    src={article.image} 
-                                    alt={article.title}
-                                    className={styles.articleImage}
-                                    draggable="false"
-                                />
+    if (!isLoading && !error && cards.length === 0) return null;
+
+    return (
+        <>
+            {/* <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet" /> */}
+
+            <section className={styles.featuredSection}>
+                <div className={styles.container}>
+                    <div className={styles.header}>
+                        <h2 style={{ fontFamily: fontFamily }} className={styles.title}>Featured Articles</h2>
+                        <div className={styles.underline}></div>
+                    </div>
+
+                    <div
+                        ref={scrollContainerRef}
+                        className={styles.articlesGrid}
+                        onMouseDown={handleMouseDown}
+                        onMouseLeave={handleMouseLeave}
+                        onMouseUp={handleMouseUp}
+                        onMouseMove={handleMouseMove}
+                    >
+                        {isLoading && (
+                            // <div className={styles.loading}>Loading featured articles…</div>
+                            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '2rem' }}>
+                                <Spinner className={styles.content_loader} animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
                             </div>
-                            
-                            <div className={styles.cardContent}>
-                                <h3 className={styles.articleTitle}>{article.title}</h3>
-                                <p className={styles.articleDescription}>{article.description}</p>
-                                
-                                <div className={styles.articleMeta}>
-                                    <div className={styles.authorInfo}>
-                                        <svg className={styles.authorIcon} viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                        </svg>
-                                        <span className={styles.authorName}>{article.author}</span>
+                        )}
+                        {error && (
+                            <div className={styles.error}>Failed to load featured articles.</div>
+                        )}
+                        {!isLoading && !error && cards.map((article) => (
+                            <Link
+                                to={`/article/${encodeId(article.id)}/${article.slug}`}
+                                key={article.id}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                                onClick={(e) => {
+                                    if (hasMoved.current) e.preventDefault();
+                                }}
+                                onDragStart={(e) => e.preventDefault()}
+                            >
+                                <article key={article.id} className={styles.articleCard}>
+                                    <div className={styles.imageWrapper}>
+                                        <img
+                                            src={article.image}
+                                            alt={article.title}
+                                            className={styles.articleImage}
+                                            draggable="false"
+                                        />
                                     </div>
-                                    <span className={styles.date}>{article.date}</span>
-                                </div>
-                            </div>
-                        </article>
-                    ))}
+
+                                    <div className={styles.cardContent}>
+                                        <h3 style={{ fontFamily: fontFamily }} className={styles.articleTitle}>{article.title}</h3>
+                                        <p style={{ fontFamily: fontFamily }} className={styles.articleDescription}>{article.description}</p>
+
+                                        <div className={styles.articleMeta}>
+                                            <div className={styles.authorInfo}>
+                                                <i className="fi fi-br-user-pen" style={{ fontSize: 14 }}></i>
+                                                <span style={{ fontFamily: fontFamily }} className={styles.authorName}>{article.author}</span>
+                                            </div>
+                                            <div>
+                                                <div style={{ display: 'inline-block', transform: 'translateY(1px)' }}>
+                                                    <i className="fi fi-br-clock" style={{ fontSize: 14 }}></i>
+                                                </div>
+                                                &nbsp;
+                                                <span style={{ fontFamily: fontFamily }} className={styles.date}>{article.date}</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </article>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </section>
-     );
+            </section>
+            <hr />
+
+        </>
+    );
 }
- 
+
 export default FeaturedArticlesSection;

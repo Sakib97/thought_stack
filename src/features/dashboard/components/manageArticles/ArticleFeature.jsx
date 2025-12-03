@@ -106,7 +106,7 @@ const ArticleFeature = () => {
             const activeIndex = oldData.findIndex(i => i.key === active.id);
             const overIndex = oldData.findIndex(i => i.key === over.id);
             const newData = arrayMove(oldData, activeIndex, overIndex);
-            
+
             // Update UI immediately with new priorities
             const updatedData = newData.map((item, index) => ({
                 ...item,
@@ -335,8 +335,8 @@ const ArticleFeature = () => {
                 <SortableContext items={data.map(item => item.key)}>
                     <List
                         loading={loading}
-                        grid={{ 
-                            gutter: 16, 
+                        grid={{
+                            gutter: 16,
                             xs: 1,
                             sm: 1,
                             md: 2,
@@ -379,31 +379,31 @@ const ArticleFeature = () => {
                                             className={styles.articleFeatureCard}
                                             hoverable
                                             styles={{ body: { padding: 16 } }}
-                                            extra={
-                                                <Space>
-                                                    {/* <Button
-                                                        type="text"
-                                                        icon={<EditOutlined />}
-                                                        title="Edit dates"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            showEditModal(item);
-                                                        }}
-                                                    /> */}
-                                                    <Button
-                                                        type="text"
-                                                        danger
-                                                        icon={<DeleteOutlined />}
-                                                        title="Remove from featured"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            // handleRemoveArticle(item.article_id);
-                                                            showDeleteModal(item.article_id);
-                                                        }}
-                                                    />
-                                                </Space>
-                                            }
                                         >
+                                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                                                {/* <Button
+                                                    type="text"
+                                                    icon={<EditOutlined />}
+                                                    title="Edit dates"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        showEditModal(item);
+                                                    }}
+                                                /> */}
+                                                <Button
+                                                    style={{fontSize:'20px'}}
+                                                    type="text"
+                                                    danger
+                                                    icon={<DeleteOutlined />}
+                                                    title="Remove from featured"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        showDeleteModal(item.article_id);
+                                                    }}
+                                                />
+
+                                            </div>
+                                            <hr />
                                             <Space direction="vertical" size={8} style={{ width: '100%' }}>
                                                 <Typography.Title level={5} style={{ margin: 0, fontSize: '20px' }}>
                                                     {item.title}
@@ -537,7 +537,7 @@ const ArticleFeature = () => {
             </div>
         </Modal>
 
-        
+
 
     </div>);
 }

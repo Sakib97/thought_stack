@@ -80,7 +80,7 @@ const ArticleDetails = () => {
             if (error) throw error;
             return data;
         },
-        staleTime: 10 * 60 * 1000, // 10 minutes
+        staleTime: 20 * 60 * 1000, // 20 minutes
         cacheTime: 30 * 60 * 1000, // 30 minutes
         enabled: !!articleId, // Only run query if articleId exists
     });

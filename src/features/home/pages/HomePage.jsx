@@ -53,7 +53,7 @@ export default function HomePage() {
             if (error) throw error;
             return data;
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 20 * 60 * 1000, // 20 minutes
         cacheTime: 30 * 60 * 1000, // 30 minutes
     });
 
@@ -91,7 +91,7 @@ export default function HomePage() {
                 total: (count || 0) - 1 // subtract the main article
             };
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 20 * 60 * 1000, // 20 minutes
         cacheTime: 30 * 60 * 1000, // 30 minutes
         keepPreviousData: true, // Keep showing old data while fetching new page
     });
@@ -190,7 +190,6 @@ export default function HomePage() {
                 }
                 <hr />
                 <FeaturedArticlesSection />
-                <hr />
                 {/* Other Articles List */}
                 <div ref={articlesSectionRef} className={styles.articlesSection}>
                     {loadingOthers ? (
