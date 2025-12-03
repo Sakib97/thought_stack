@@ -1,0 +1,19 @@
+.articleFeatureCard{
+    min-height: 440px;
+}
+
+.addCard {
+    min-height: 200px;
+}
+
+@media screen and (max-width: 768px) {
+    .articleFeatureCard{
+        display: flex;
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .addCard {
+        min-height: 150px;
+    }
+}

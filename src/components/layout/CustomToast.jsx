@@ -16,6 +16,8 @@ const getIcon = (type) => {
             return "fi fi-rr-trash";
         case "exclamation":
             return "fi fi-br-exclamation";
+        case "loading":
+            return "fa-solid fa-spinner fa-spin";
         default:
             return "fa-solid fa-circle-info";
     }
@@ -37,6 +39,8 @@ const getBorderColor = (type) => {
             return 'red';
         case "exclamation":
             return 'red';
+        case "loading":
+            return 'blue';
         default:
             return 'white';
     }
