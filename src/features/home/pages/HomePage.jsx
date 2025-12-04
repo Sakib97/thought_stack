@@ -3,7 +3,7 @@ import { supabase } from "../../../config/supabaseClient";
 import { List, Avatar } from "antd";
 import { Link, useSearchParams } from "react-router-dom";
 import styles from "../styles/HomePage.module.css";
-import { getFormattedTime } from "../../../utils/dateUtil";
+import { getFormattedDate } from "../../../utils/dateUtil";
 import { encodeId } from "../../../utils/hashUtil";
 import { useLanguage } from "../../../context/LanguageProvider";
 import SearchBar from "../../../components/layout/SearchBar";
@@ -179,7 +179,7 @@ export default function HomePage() {
                                         </div>
                                         
                                         &nbsp;&nbsp;
-                                        {getFormattedTime(mainArticle.created_at)}
+                                        {getFormattedDate(mainArticle.created_at)}
                                     </div>
                                 </div>
 
@@ -256,7 +256,7 @@ export default function HomePage() {
                                                     <i className="fi fi-br-clock" style={{ fontSize: 14, color: 'grey' }}></i>
                                                 </div>
                                                 &nbsp;&nbsp;
-                                                {getFormattedTime(item.created_at)}
+                                                {getFormattedDate(item.created_at)}
                                             </div>
                                         </div>
                                     </List.Item>

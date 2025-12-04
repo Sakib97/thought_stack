@@ -16,6 +16,17 @@ export const getFormattedTime = (dateStr) => {
     return finalFormattedString;
 };
 
+export const getFormattedDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const formattedDate = date.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+    const finalFormattedString = `${formattedDate}`;
+    return finalFormattedString;
+};
+
 export const getOnlyYear = (dateStr) => {
     const date = new Date(dateStr);
     const formattedDate = date.toLocaleDateString('en-GB', {
