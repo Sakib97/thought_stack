@@ -55,6 +55,8 @@
 .infoText {
   color: #6c757d;
   text-decoration: none;
+  font-size: 25px;
+  color: #2575fc;
 }
 
 .infoText:hover {

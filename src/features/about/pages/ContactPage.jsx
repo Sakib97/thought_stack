@@ -34,7 +34,8 @@ const ContactPage = () => {
 
                 <Row className="g-4">
                     {/* Contact Information Column */}
-                    <Col lg={5} md={12}>
+                    {/* <Col lg={7} md={12}> */}
+                    <Col lg={12} md={12}>
                         <div className="d-flex flex-column gap-4 h-100">
                             <Card className={styles.infoCard}>
                                 <Card.Body className="d-flex flex-column align-items-center text-center p-4">
@@ -54,8 +55,8 @@ const ContactPage = () => {
                                     <div className={styles.iconWrapper}>
                                         <FaMapMarkerAlt />
                                     </div>
-                                    <h5 className={styles.infoTitle}>Visit Us</h5>
-                                    <p className="text-muted mb-2">Our Office Location</p>
+                                    {/* <h5 className={styles.infoTitle}>Visit Us</h5> */}
+                                    {/* <p className="text-muted mb-2">Our Office Location</p> */}
                                     <span className={styles.infoText}>
                                         Dhaka, Bangladesh
                                     </span>
@@ -65,7 +66,7 @@ const ContactPage = () => {
                     </Col>
 
                     {/* Contact Form Column */}
-                    <Col lg={7} md={12}>
+                    {/* <Col lg={7} md={12}>
                         <Card className={styles.formCard}>
                             <h4 className="mb-4 fw-bold text-dark">Send a Message</h4>
                             <Form onSubmit={handleSubmit}>
@@ -99,7 +100,7 @@ const ContactPage = () => {
                                 </Button>
                             </Form>
                         </Card>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Container>
             
