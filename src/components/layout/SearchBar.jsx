@@ -4,12 +4,12 @@ import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../config/supabaseClient";
 import { encodeId } from "../../utils/hashUtil";
-import { getFormattedTime } from "../../utils/dateUtil";
+import { getFormattedDate } from "../../utils/dateUtil";
 import { useLanguage } from "../../context/LanguageProvider";
 import styles from "../styles/SearchBar.module.css";
 
 
-export default function SearchBar({ maxResults = 8, className = "" }) {
+export default function SearchBar({ maxResults = 10, className = "" }) {
     const navigate = useNavigate();
     const { language } = useLanguage();
 
@@ -37,10 +37,10 @@ export default function SearchBar({ maxResults = 8, className = "" }) {
             const { data, error } = await supabase
                 .from("articles_secure")
                 .select(
-                    "id, title_en, title_bn, author_name, created_at, cover_img_link, article_slug, author_img_link"
+                    "id, title_en, title_bn, author_name, created_at, cover_img_link, article_slug, author_img_link, event_title_en, event_title_bn"
                 )
                 .or(
-                    `title_en.ilike.${like},title_bn.ilike.${like},author_name.ilike.${like}`
+                    `title_en.ilike.${like},title_bn.ilike.${like},author_name.ilike.${like},event_title_en.ilike.${like},event_title_bn.ilike.${like}`
                 )
                 .order("created_at", { ascending: false })
                 .limit(maxResults);
@@ -54,9 +54,11 @@ export default function SearchBar({ maxResults = 8, className = "" }) {
 
             const mapped = (data || []).map((row) => {
                 const title = language === "en" ? row.title_en : row.title_bn;
+                const eventTitle = language === "en" ? row.event_title_en : row.event_title_bn;
 
                 return {
                     value: `/article/${encodeId(row.id)}/${row.article_slug}`,
+                    // value: row.title_en,
                     label: (
                         <div className={styles.row}>
                             <img
@@ -68,19 +70,28 @@ export default function SearchBar({ maxResults = 8, className = "" }) {
                             />
                             <div className={styles.meta}>
                                 <div className={styles.title} title={title}>
+                                    {eventTitle ?
+                                        <>
+                                            <span style={{ fontSize: '12px', color: 'grey' }}>
+                                                {eventTitle}
+                                            </span>
+                                            <br />
+                                        </>
+                                        : ""}
+
                                     {title}
                                 </div>
-                               <div className={styles.author}>
-                                <Avatar
-                                    size={22}
-                                    src={row.author_img_link} 
-                                    alt={row.author_name}
-                                />
-                                <span>{row.author_name}</span>
+                                <div className={styles.author}>
+                                    <Avatar
+                                        size={22}
+                                        src={row.author_img_link}
+                                        alt={row.author_name}
+                                    />
+                                    <span>{row.author_name}</span>
                                 </div>
                             </div>
-                            <div className={styles.date} title={getFormattedTime(row.created_at)}>
-                                {getFormattedTime(row.created_at)}
+                            <div className={styles.date} title={getFormattedDate(row.created_at)}>
+                                {getFormattedDate(row.created_at)}
                             </div>
                         </div>
                     ),
@@ -116,12 +127,12 @@ export default function SearchBar({ maxResults = 8, className = "" }) {
                 // dropdownMatchSelectWidth
                 popupMatchSelectWidth
                 classNames={{ popup: { root: styles.dropdown } }}
-                // dropdownClassName={styles.dropdown}
+            // dropdownClassName={styles.dropdown}
             >
                 <Input
                     size="large"
                     allowClear
-                    placeholder={language === "en" ? "Search by Title or Author..." : "শিরোনাম বা লেখক দিয়ে খুঁজুন..."}
+                    placeholder={language === "en" ? "Search by Title, Author or Topic label..." : "শিরোনাম, লেখক বা বিষয়সূচক লেবেল দিয়ে খুঁজুন..."}
                     prefix={<SearchOutlined />}
                     suffix={
                         loading ? <Spin indicator={<LoadingOutlined spin />} size="small" /> : null

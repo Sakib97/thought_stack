@@ -168,13 +168,13 @@ export default function HomePage() {
                                     <h2 style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.title_en : mainArticle.title_bn}</h2>
                                     <p style={{ fontFamily: fontFamily }}>{language === "en" ? mainArticle.subtitle_en : mainArticle.subtitle_bn}</p>
 
-                                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
+                                    <div style={{ fontFamily: fontFamily , fontSize: '16px', fontWeight: 'bold', color: 'white', marginBottom: '13px' }}>
                                         <i className="fi fi-br-user-pen" style={{ fontSize: 16 }}></i>
                                         &nbsp;&nbsp;
                                         {mainArticle.author_name}
                                     </div>
-                                    <div className={styles.date}>
-                                        <div style={{ display: 'inline-block', transform: 'translateY(2px)' }}>
+                                    <div style={{fontFamily: fontFamily }} className={styles.date}>
+                                        <div style={{  display: 'inline-block', transform: 'translateY(2px)' }}>
                                             <i className="fi fi-br-clock" style={{ fontSize: 14 }}></i>
                                         </div>
                                         
@@ -237,7 +237,7 @@ export default function HomePage() {
                                             }
                                             //   description={item.subtitle_en}
                                             description={
-                                                <div style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                                                <div style={{ fontFamily: fontFamily, fontSize: '14px', fontWeight: 'bold' }}>
                                                     <i className="fi fi-br-user-pen" style={{ fontSize: 17 }}></i>
                                                     &nbsp;&nbsp;
                                                     {item.author_name}
@@ -251,7 +251,7 @@ export default function HomePage() {
                                             </div>
 
                                             <br />
-                                            <div className={styles.date} style={{ fontSize: 14, color: 'grey' }}>
+                                            <div className={styles.date} style={{ fontFamily: fontFamily, fontSize: 14, color: 'grey' }}>
                                                 <div style={{ display: 'inline-block', transform: 'translateY(2px)' }}>
                                                     <i className="fi fi-br-clock" style={{ fontSize: 14, color: 'grey' }}></i>
                                                 </div>

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from "../../../config/supabaseClient";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { Link } from "react-router-dom";
-import { getFormattedTime } from '../../../utils/dateUtil';
+import { getFormattedDate } from '../../../utils/dateUtil';
 import { encodeId } from '../../../utils/hashUtil';
 import { Spinner } from 'react-bootstrap';
 
@@ -107,10 +107,10 @@ const FeaturedArticlesSection = () => {
                     title,
                     description,
                     author: a.author_name,
-                    date: new Date(a.created_at).toLocaleDateString(undefined, {
-                        year: 'numeric', month: 'long', day: 'numeric'
-                    }),
-                    // date: getFormattedTime(a.created_at, language),
+                    // date: new Date(a.created_at).toLocaleDateString(undefined, {
+                    //     year: 'numeric', month: 'long', day: 'numeric'
+                    // }),
+                    date: getFormattedDate(a.created_at, language),
                     slug: a.article_slug,
                     priority: row.priority ?? 99,
                 };

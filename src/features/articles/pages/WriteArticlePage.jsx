@@ -334,6 +334,7 @@ const WriteArticlePage = () => {
                     {isEditMode
                         ? "Do you want to save changes to this article?"
                         : "Please save all drafts before publishing."}
+                        
                 </div>
             </Modal>
 
@@ -344,8 +345,10 @@ const WriteArticlePage = () => {
                         marginTop: "20px",
                         fontSize: "20px",
                         textAlign: "center",
+                        wordBreak: "break-all",
                     }}
                 >
+
                     {articleStatus !== "restricted" ? <>
                         <span>View your {isEditMode ? "edited" : "published"} article: </span>
                         <a

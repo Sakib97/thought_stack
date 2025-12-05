@@ -29,9 +29,9 @@ const Footer = () => {
 
                 </div>
                 <div className={styles.socials_area}>
-                    <Link to="/" className={styles.social}><FaFacebook /></Link>
-                    <Link to="/" className={styles.social}><IoMail /></Link>
-                    <Link to="/" className={styles.social}><FaGlobe /></Link>
+                    {/* <Link to="/" className={styles.social}><FaFacebook /></Link> */}
+                    {/* <Link to="/" className={styles.social}><IoMail /></Link> */}
+                    {/* <Link to="/" className={styles.social}><FaGlobe /></Link> */}
                 </div>
             </div>
             {/* <div style={{ backgroundColor: 'rgb(230, 226, 222)' }}> */}
