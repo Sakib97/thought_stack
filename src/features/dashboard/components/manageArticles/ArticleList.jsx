@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import { supabase } from '../../../../config/supabaseClient';
-import { PAGE_SIZE } from '../../../../config/appConfig';
+import { ADMIN_SECTION_PAGE_SIZE } from '../../../../config/appConfig';
 import Badge from 'react-bootstrap/Badge';
 import { Grid } from 'antd';
 const { useBreakpoint } = Grid;
@@ -36,8 +36,8 @@ const ArticleList = ({ filter, refreshTrigger }) => {
     const fetchArticles = async (pageNumber = 1, filterValue = filter, field = null, value = '') => {
         setLoading(true);
         try {
-            const from = (pageNumber - 1) * PAGE_SIZE;
-            const to = from + PAGE_SIZE - 1;
+            const from = (pageNumber - 1) * ADMIN_SECTION_PAGE_SIZE;
+            const to = from + ADMIN_SECTION_PAGE_SIZE - 1;
 
             let query = supabase
                 .from('articles')
@@ -261,7 +261,7 @@ const ArticleList = ({ filter, refreshTrigger }) => {
                 loading={loading}
                 pagination={{
                     current: page,
-                    pageSize: PAGE_SIZE,
+                    pageSize: ADMIN_SECTION_PAGE_SIZE,
                     total: totalCount,
                     onChange: (p) => setPage(p),
                 }}

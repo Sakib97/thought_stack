@@ -30,7 +30,8 @@ const ProfilePage = () => {
                     <p className={styles.email}>{user.email}</p>
                     {userMeta?.is_active ? (
                         <>
-                            Role : <Badge
+                            {/* Role :  */}
+                            <Badge
                                 bg={
                                     userMeta?.role === "admin"
                                         ? "success"

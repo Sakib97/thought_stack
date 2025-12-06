@@ -65,16 +65,30 @@ const DashboardPage = () => {
                         display: "flex",
                         alignItems: "center", // Vertically center items
                         justifyContent: "center", // Horizontally center items
-                        gap: 8,
+                        gap: collapsed ? 0 : 8,
+                        transition: "all 0.3s ease",
                     }}
                 >
-                    <div style={{ transform: `translateY(7%) ${collapsed ? "translateX(20%)" : "translateX(0%)"}` }}>
+                    <div style={{ 
+                        transform: `translateY(7%) ${collapsed ? "translateX(1%)" : "translateX(0%)"}`,
+                        transition: "transform 0.3s ease"
+                    }}>
                         <i className="fi fi-rr-dashboard-panel"
-                            style={{ fontSize: collapsed ? 21 : 19 }}
+                            style={{ 
+                                fontSize: collapsed ? 30 : 19,
+                                transition: "font-size 0.3s ease"
+                            }}
                         ></i>
+                        
                     </div>
-                    <div>
-                        {!collapsed && "Dashboard"}
+                    <div style={{
+                        opacity: collapsed ? 0 : 1,
+                        maxWidth: collapsed ? 0 : "100px",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        transition: "all 0.3s ease",
+                    }}>
+                        Dashboard
                     </div>
                 </div>
                 <Menu

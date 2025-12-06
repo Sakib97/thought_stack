@@ -68,7 +68,7 @@ const ArticleFeature = () => {
                     priority,
                     start_at,
                     end_at,
-                    articles (
+                    articles_secure (
                         title_en,
                         author_name
                     )
@@ -91,7 +91,7 @@ const ArticleFeature = () => {
         } catch (error) {
             console.error('Error fetching featured articles:', error);
             // message.error('Failed to fetch featured articles');
-            showToast('Failed to fetch featured articles', 'error');
+            showToast('Failed to fetch featured article(s) !', 'error');
         } finally {
             setLoading(false);
         }
@@ -136,7 +136,7 @@ const ArticleFeature = () => {
                 showToast('Article order updated successfully', 'success');
             } catch (error) {
                 toast.dismiss(loadingToastId);
-                showToast('Failed to update article order', 'error');
+                showToast('Failed to update article order !', 'error');
                 setData(oldData); // Revert on error
             }
         }
@@ -153,7 +153,7 @@ const ArticleFeature = () => {
             const featuredIds = data.map(item => item.article_id);
 
             const { data: articles, error } = await supabase
-                .from('articles')
+                .from('articles_secure')
                 .select('id, title_en, author_name')
                 .not('id', 'in', `(${featuredIds.length > 0 ? featuredIds.join(',') : -1})`)
                 .order('created_at', { ascending: false });

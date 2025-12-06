@@ -4,7 +4,7 @@ import { Grid } from 'antd';
 const { useBreakpoint } = Grid;
 import styles from '../../styles/CommentsList.module.css';
 import { supabase } from '../../../../config/supabaseClient';
-import { PAGE_SIZE } from '../../../../config/appConfig';
+import { ADMIN_SECTION_PAGE_SIZE } from '../../../../config/appConfig';
 import { useState, useEffect, useRef } from 'react';
 import { getFormattedTime, getShortFormattedTime } from '../../../../utils/dateUtil';
 import { Link } from 'react-router-dom';
@@ -38,8 +38,8 @@ const CommentsList = ({ filter, refreshTrigger }) => {
     // Fetch from Supabase view
     const fetchReports = async (pageNumber = 1, filterValue = filter, field = null, value = '',) => {
         try {
-            const from = (pageNumber - 1) * PAGE_SIZE;
-            const to = from + PAGE_SIZE - 1;
+            const from = (pageNumber - 1) * ADMIN_SECTION_PAGE_SIZE;
+            const to = from + ADMIN_SECTION_PAGE_SIZE - 1;
 
             setLoading(true);
             let query = supabase
@@ -408,7 +408,7 @@ const CommentsList = ({ filter, refreshTrigger }) => {
                 loading={loading}
                 pagination={{
                     current: page,
-                    pageSize: PAGE_SIZE,
+                    pageSize: ADMIN_SECTION_PAGE_SIZE,
                     total: totalCount,
                     onChange: (p) => setPage(p),
                 }}
