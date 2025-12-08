@@ -76,6 +76,13 @@
     transition: background 0.2s ease;
 }
 
+.audioPlayer {
+    width: 100%;
+    max-width: 800px;
+    /* margin-top: 10px; */
+    margin-bottom: 20px;
+}
+
 /* For smaller devices (phones) */
 @media (max-width: 768px) {
     .articleContainer {
@@ -99,6 +106,10 @@
 
     .articleHead span {
         font-size: 15px !important;
+    }
+
+    .audioPlayer {
+        width: 100% !important;
     }
 }
 

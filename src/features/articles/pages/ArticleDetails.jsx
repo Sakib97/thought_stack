@@ -612,7 +612,7 @@ const ArticleDetails = () => {
                                         controls
                                         preload="metadata"
                                         // style={{ width: "100%" }}
-                                        style={{ minWidth: "800px", marginBottom: "15px" }}
+                                        className={styles.audioPlayer}
                                     />
                                     
                                 )}
