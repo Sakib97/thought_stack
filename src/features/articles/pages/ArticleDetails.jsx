@@ -3,7 +3,7 @@ import { decodeId } from "../../../utils/hashUtil";
 import { useParams } from "react-router-dom";
 import { supabase } from "../../../config/supabaseClient";
 import { useLanguage } from "../../../context/LanguageProvider";
-import { getFormattedTime } from "../../../utils/dateUtil";
+import { getFormattedTime, getFormattedDate } from "../../../utils/dateUtil";
 import { useState, useEffect, useRef } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
@@ -586,7 +586,7 @@ const ArticleDetails = () => {
                                     <div
                                         style={{ fontSize: "13px", color: "gray" }}
                                     >
-                                        {getFormattedTime(article.created_at)}
+                                        {getFormattedDate(article.created_at)}
                                     </div>
                                 </div>
                             </div>
