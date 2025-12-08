@@ -3,7 +3,8 @@
     padding-top: 20px;
     padding-bottom: 20px;
 }
-.articleContainer{
+
+.articleContainer {
     margin: 10px 90px;
 }
 
@@ -53,9 +54,12 @@
     /* max-width: 1100px; */
     margin: 0 auto;
     box-sizing: border-box;
+    /* word-break: break-word; */
+    /* hyphens: auto; */
+    max-width: 1100px;
 }
 
-    
+
 .audioSection {
     width: 100%;
     height: auto;
@@ -65,19 +69,20 @@
 }
 
 .highlightedWord {
-  background: yellow;
-  /* color: red; */
-  /* font-weight: bold; */
-  border-radius: 3px;
-  padding: 2px;
-  transition: background 0.2s ease;
+    background: yellow;
+    /* color: red; */
+    /* font-weight: bold; */
+    border-radius: 3px;
+    padding: 2px;
+    transition: background 0.2s ease;
 }
 
 /* For smaller devices (phones) */
 @media (max-width: 768px) {
-    .articleContainer{
+    .articleContainer {
         margin: 10px;
     }
+
     .articleBodyText p,
     .articleBodyText {
         font-size: 17px !important;
@@ -85,8 +90,8 @@
         padding: 0 1px !important;
         text-align: justify !important;
         box-sizing: border-box;
-        word-break: break-word;
-        hyphens: auto;
+        /* word-break: break-word; */
+        /* hyphens: auto; */
     }
 
     .articleHead h1 {
@@ -111,4 +116,3 @@
         padding-right: 8px;
     }
 }
-
