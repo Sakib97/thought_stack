@@ -126,11 +126,20 @@ const FeaturedArticlesSection = () => {
         if (language === "bn") setFontFamily('"Noto Serif Bengali", serif');
     }, [language]);
 
+    if (isLoading) {
+        return <div style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '2rem' }}>
+            {/* <Spinner className={styles.content_loader} animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner> */}
+        </div>
+    }
     if (!isLoading && !error && cards.length === 0) return null;
+
 
     return (
         <>
             {/* <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet" /> */}
+
 
             <section className={styles.featuredSection}>
                 <div className={styles.container}>
@@ -147,14 +156,14 @@ const FeaturedArticlesSection = () => {
                         onMouseUp={handleMouseUp}
                         onMouseMove={handleMouseMove}
                     >
-                        {isLoading && (
+                        {/* {isLoading && (
                             // <div className={styles.loading}>Loading featured articles…</div>
                             <div style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '2rem' }}>
                                 <Spinner className={styles.content_loader} animation="border" role="status">
                                     <span className="visually-hidden">Loading...</span>
                                 </Spinner>
                             </div>
-                        )}
+                        )} */}
                         {error && (
                             <div className={styles.error}>Failed to load featured articles.</div>
                         )}

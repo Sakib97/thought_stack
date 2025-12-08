@@ -611,8 +611,10 @@ const ArticleDetails = () => {
                                         src={audioUrl}
                                         controls
                                         preload="metadata"
-                                        style={{ width: "100%" }}
+                                        // style={{ width: "100%" }}
+                                        style={{ minWidth: "800px", marginBottom: "15px" }}
                                     />
+                                    
                                 )}
                                 {!audioLoading && !audioUrl && (
                                     <div style={{ fontSize: "14px", color: "gray" }}>
