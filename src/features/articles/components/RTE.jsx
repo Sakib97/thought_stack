@@ -213,29 +213,35 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
             footer={null}
             width={900}
             style={{ top: 20 }}
+            bodyStyle={{ padding: 0 }}
         >
-            <link
-                href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
-                rel="stylesheet"
-            />
-            <div
-                style={{ textAlign: "justify", fontSize: "18px" }}
-                className={`${articleDetailsStyles.articleBodyText}`}
-            >
+            <div style={{ padding: '0 24px' }}>
+                <hr style={{ margin: '10px 0 0 0' }} />
+            </div>
+            <div style={{ maxHeight: 'calc(100vh - 150px)', overflowY: 'auto', padding: '24px' }}>
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
+                    rel="stylesheet"
+                />
                 <div
-                    style={{ textAlign: "justify" }}
-                    className={articleDetailsStyles.articleBodyText}
+                    style={{ textAlign: "justify", fontSize: "18px" }}
+                    className={`${articleDetailsStyles.articleBodyText}`}
                 >
                     <div
-                        style={{
-                            // textAlign: "justify",
-                            fontFamily: contentLanguage === 'en' ? 'Roboto Serif' : '"Noto Serif Bengali", serif',
-                        }}
+                        style={{ textAlign: "justify" }}
                         className={articleDetailsStyles.articleBodyText}
-                        dangerouslySetInnerHTML={{
-                            __html: content,
-                        }}
-                    />
+                    >
+                        <div
+                            style={{
+                                // textAlign: "justify",
+                                fontFamily: contentLanguage === 'en' ? 'Roboto Serif' : '"Noto Serif Bengali", serif',
+                            }}
+                            className={articleDetailsStyles.articleBodyText}
+                            dangerouslySetInnerHTML={{
+                                __html: content,
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </Modal>
