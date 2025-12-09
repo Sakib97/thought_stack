@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import JoditEditor from 'jodit-react';
 import styles from "../styles/ArticleInfo.module.css";
+import articleDetailsStyles from "../styles/ArticleDetails.module.css";
 import { Button, Modal } from "antd";
 import { Toaster } from "react-hot-toast";
 import { showToast } from "../../../components/layout/CustomToast";
 
 const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
     const [showModal, setShowModal] = useState(false);
+    const [showPreviewModal, setShowPreviewModal] = useState(false);
     const editor = useRef(null);
     // const [content, setContent] = useState('');
 
@@ -172,25 +174,7 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
             {/* preview button */}
             <Button className={styles.previewButton}
                 type="primary"
-                onClick={() => {
-                    const previewWindow = window.open("", "_blank");
-                    previewWindow.document.write(`
-                        <html>
-                            <head>
-                                <title>Article Preview</title>
-                                <style>
-                                    body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
-                                    img { max-width: 100%; height: auto; display: block; margin: 10px 0; object-fit: contain; }
-                                </style>
-                            </head>
-                            <body>
-                            
-                                ${content}
-                            </body>
-                        </html>
-                    `);
-                    previewWindow.document.close();
-                }}
+                onClick={() => setShowPreviewModal(true)}
             >
                 <i className="fi fi-rr-eye"></i>
                 {contentLanguage === 'en' ? 'Preview' : 'প্রিভিউ'}
@@ -219,6 +203,41 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
                 </>
             }
 
+        </Modal>
+
+        <Modal
+            title={contentLanguage === 'en' ? "Article Preview" : "আর্টিকেল প্রিভিউ"}
+            centered
+            open={showPreviewModal}
+            onCancel={() => setShowPreviewModal(false)}
+            footer={null}
+            width={900}
+            style={{ top: 20 }}
+        >
+            <link
+                href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap"
+                rel="stylesheet"
+            />
+            <div
+                style={{ textAlign: "justify", fontSize: "18px" }}
+                className={`${articleDetailsStyles.articleBodyText}`}
+            >
+                <div
+                    style={{ textAlign: "justify" }}
+                    className={articleDetailsStyles.articleBodyText}
+                >
+                    <div
+                        style={{
+                            // textAlign: "justify",
+                            fontFamily: contentLanguage === 'en' ? 'Roboto Serif' : '"Noto Serif Bengali", serif',
+                        }}
+                        className={articleDetailsStyles.articleBodyText}
+                        dangerouslySetInnerHTML={{
+                            __html: content,
+                        }}
+                    />
+                </div>
+            </div>
         </Modal>
 
     </div>);
