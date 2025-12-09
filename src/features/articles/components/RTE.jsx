@@ -168,6 +168,33 @@ const RTE = ({ contentLanguage, content, setContent, isEditMode  }) => {
                 <i className="fi fi-rr-trash"></i>
                 {contentLanguage === 'en' ? 'Clear Draft' : 'ড্রাফট মুছে ফেলুন'}
             </Button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            {/* preview button */}
+            <Button className={styles.previewButton}
+                type="primary"
+                onClick={() => {
+                    const previewWindow = window.open("", "_blank");
+                    previewWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>Article Preview</title>
+                                <style>
+                                    body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+                                    img { max-width: 100%; height: auto; display: block; margin: 10px 0; object-fit: contain; }
+                                </style>
+                            </head>
+                            <body>
+                            
+                                ${content}
+                            </body>
+                        </html>
+                    `);
+                    previewWindow.document.close();
+                }}
+            >
+                <i className="fi fi-rr-eye"></i>
+                {contentLanguage === 'en' ? 'Preview' : 'প্রিভিউ'}
+            </Button>
         </div>
 
         <Modal
