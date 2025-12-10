@@ -37,7 +37,7 @@ export default function CookieConsent() {
         <div className={styles.textBlock}>
           <h2 className={styles.heading}>We value your privacy</h2>
           <p className={styles.paragraph}>
-            Thought Stack uses cookies to keep you signed in, remember preferences, 
+            The Fountainhead uses cookies to keep you signed in, remember preferences, 
             and gather anonymous usage stats that help improve the platform. 
             By continuing you consent to our cookie usage. 
             See our <Link to="/usage-policy" className={styles.inlineLink}>Usage Policy</Link> for details.

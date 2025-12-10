@@ -7,7 +7,9 @@ const TermsOfService = () => {
         <main className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Terms of Service</h1>
-                <p className={styles.lastUpdated}>Effective date: {formatDate(new Date())}</p>
+
+                {/* <p className={styles.lastUpdated}>Effective date: {formatDate(new Date())}</p> */}
+                <p className={styles.lastUpdated}>Effective date: 10 December 2025</p>
                 <p className={styles.intro}>
                     These Terms of Service ("Terms") govern your access to and use of the The Fountainhead platform, website,
                     and related services (collectively, the "Services"). By creating an account, accessing, or using the

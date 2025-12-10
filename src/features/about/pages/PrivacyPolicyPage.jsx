@@ -10,7 +10,8 @@ const PrivacyPolicyPage = () => {
         <main className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Privacy Policy</h1>
-                <p className={styles.lastUpdated}>Last updated: {formatDate(new Date())}</p>
+                <p className={styles.lastUpdated}>Last updated: 10 December 2025</p>
+                {/* <p className={styles.lastUpdated}>Last updated: {formatDate(new Date(new Date().setDate(new Date().getDate() - 15)))}</p> */}
                 <p className={styles.intro}>
                     Your privacy matters. This Privacy Policy explains how <strong>The Fountainhead</strong> collects,
                     uses, discloses, and safeguards personal information when you use our website, platform, and related
