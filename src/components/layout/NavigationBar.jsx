@@ -21,6 +21,8 @@ const NavigationBar = () => {
     const handleShow = () => setShow(true);
 
     const showNavbar = useScrollDirection();
+    // see if mobile view
+    const isMobile = window.innerWidth < 768;
 
     return (
         <div >
@@ -28,17 +30,19 @@ const NavigationBar = () => {
             <Navbar bg="light" expand="lg"
                 // className="shadow-sm mb-3"
                 className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
-                <Container style={{ padding:'0px 12px', margin: '0 0 0 9vw' }}>
+                <Container style={{ padding:'0px 10px', margin: '0 0 0 10vw' }}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""
-                            src="/logo3.png"
-                            width="35"
-                            height="35"
-                            className="d-inline-block align-top"
+                            // src="/logo3.png"
+                            src="/logo_v1-.png"
+                            width= {isMobile ? "40" : "60"}
+                            height={isMobile ? "40" : "65"}
+                            // className={styles.logo}
+                            // className="d-inline-block align-top"
                         />
                         &nbsp;
-                        The Fountainhead
+                        <span >The Fountainhead</span>
                     </Navbar.Brand>
 
                     <Navbar.Toggle onClick={handleShow} aria-controls="offcanvasNavbar-expand-lg" />

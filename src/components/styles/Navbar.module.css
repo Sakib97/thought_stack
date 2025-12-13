@@ -16,6 +16,18 @@
   margin-left:0vw;
 }
 
+/* .logo {
+  height: 60px;
+  width: 90px;
+ 
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+} */
+
 
 .offcanvasBody {
   display: flex;
@@ -37,5 +49,9 @@
     align-items: flex-end;
     text-align: right;
     padding: 0;
+  }
+  .logo {
+    height: 40px;
+    width: 40px;
   }
 }

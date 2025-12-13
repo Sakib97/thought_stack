@@ -39,7 +39,7 @@ function generateMetaTags(data, originalUrl) {
     // Create default tags for homepage or errors
     let title = "The Fountainhead";
     let description = "Read and engage with thought-provoking articles.";
-    let image = "https://thought-stack.vercel.app/logo3.png";
+    let image = "https://thought-stack.vercel.app/logo_v1-.png";
 
     // If we have specific post data, override the defaults
     if (data && data.title_en) {
