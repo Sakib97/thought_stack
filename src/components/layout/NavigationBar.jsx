@@ -29,15 +29,15 @@ const NavigationBar = () => {
             {/* <Navbar bg="light" expand="lg" className="bg-body-tertiary" */}
             <Navbar bg="light" expand="lg"
                 // className="shadow-sm mb-3"
-                className={`shadow-sm fixed-top ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
+                className={`shadow-sm fixed-top py-1 ${showNavbar ? styles.navbarShow : styles.navbarHide}`}>
                 <Container style={{ padding:'0px 10px', margin: '0 0 0 10vw' }}>
                     <Navbar.Brand href="/">
                         <img
                             alt=""
                             // src="/logo3.png"
                             src="/logo_v1-.png"
-                            width= {isMobile ? "40" : "60"}
-                            height={isMobile ? "40" : "65"}
+                            width= {isMobile ? "35" : "45"}
+                            height={isMobile ? "35" : "50"}
                             // className={styles.logo}
                             // className="d-inline-block align-top"
                         />
