@@ -36,8 +36,8 @@ const NavigationBar = () => {
                             alt=""
                             // src="/logo3.png"
                             src="/logo_v1-.png"
-                            width= {isMobile ? "35" : "45"}
-                            height={isMobile ? "35" : "50"}
+                            width= {isMobile ? "45" : "45"}
+                            height={isMobile ? "50" : "50"}
                             // className={styles.logo}
                             // className="d-inline-block align-top"
                         />
