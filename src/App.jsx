@@ -5,6 +5,7 @@ import AppRoutes from './components/common/AppRoutes'
 import Footer from './components/layout/Footer'
 import GoToTopButton from './components/layout/GoToTopButton'
 import ScrollToTop from './components/common/ScrollToTop'
+import PageTransitionOverlay from './components/layout/PageTransitionOverlay'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
@@ -16,29 +17,9 @@ function App() {
       </div>
       <Toaster />
       <GoToTopButton />
-
-
-      {/* <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/articles/write' element={<WriteArticlePage />} />
-        <Route path='/auth' element={<AuthPage />}>
-          <Route path='signin' element={
-            <AuthRedirect>
-              <LoginForm />
-            </AuthRedirect>
-          } />
-        </Route>
-
-        <Route path='/dashboard' element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        }> </Route>
-
-        <Route path="*" element={<NotFound />} />
-      </Routes> */}
-
-      <AppRoutes />
+      <PageTransitionOverlay>
+        <AppRoutes />
+      </PageTransitionOverlay>
 
       <div>
         <Footer />
