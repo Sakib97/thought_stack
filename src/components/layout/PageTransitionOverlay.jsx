@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation, useNavigation } from 'react-router-dom';
 import styles from '../styles/PageTransitionOverlay.module.css';
 
-const MIN_TRANSITION_DURATION = 100; // minimum ms to show the overlay
+const MIN_TRANSITION_DURATION = 20; // minimum ms to show the overlay
 
 export default function PageTransitionOverlay({ children }) {
     const location = useLocation();
