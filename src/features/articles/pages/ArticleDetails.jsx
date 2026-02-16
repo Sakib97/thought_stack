@@ -720,14 +720,14 @@ const ArticleDetails = () => {
                   <i
                     className="fi fi-rr-eye"
                     style={{
-                      fontSize: "16px",
+                      fontSize: "15px",
                       color: "gray",
                       transform: "translateY(2px)",
                     }}
                   ></i>{" "}
                   &nbsp;
-                  <span style={{ color: "gray", fontSize: "14px" }}>
-                    {readCount || 0} {(readCount || 0) > 1 ? "reads" : "read"}
+                  <span style={{ color: "gray", fontSize: "13px" }}>
+                    {readCount || 0} {(readCount || 0) > 1 ? "Reads" : "Read"}
                   </span>
                 </div>
               </div>
