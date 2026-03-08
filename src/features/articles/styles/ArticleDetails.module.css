@@ -8,6 +8,14 @@
     margin: 10px 90px;
 }
 
+.articleHead {
+    /* text-align: center; */
+    /* margin-bottom: 20px; */
+    /* margin: 0 200px 0 200px; */
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
 .articleMenu {
     display: flex;
     justify-content: space-between;
@@ -16,9 +24,14 @@
 
 .articleImage {
     margin-top: 20px;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 450px;
+    /* height: auto; */
+    /* width: auto; */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* object-fit: contain; */
 }
 
 .articleImageCaption {
@@ -87,6 +100,15 @@
 @media (max-width: 768px) {
     .articleContainer {
         margin: 10px;
+    }
+
+    .articleHead {
+        margin: 0 0px 0 0px;
+    }
+
+    .articleImage {
+        width: 100%;
+        height: auto;
     }
 
     .articleBodyText p,
