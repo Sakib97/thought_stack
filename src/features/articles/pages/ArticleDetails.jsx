@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import ArticleReactions from "../components/ArticleReactions";
 import { useAuth } from "../../../context/AuthProvider";
 import ArticleComment from "../components/ArticleComment";
-import Spinner from "react-bootstrap/Spinner";
+import ArticleDetailsSkeleton from "../../../components/skeletons/ArticleDetailsSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ArticlePDF from "../components/ArticlePDF";
@@ -486,20 +486,12 @@ const ArticleDetails = () => {
   const error = fetchError?.message;
 
   if (loading) {
-    return (
-      <div
-        className={styles.article}
-        style={{ textAlign: "center", padding: "2rem", height: "60vh" }}
-      >
-        {/* <Spin indicator={<LoadingOutlined spin />} size="large" /> */}
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <ArticleDetailsSkeleton />;
   }
 
-  if (error || !article || article.article_slug !== articleTitleSlug) {
+  if (error || 
+    !article || 
+    article.article_slug !== articleTitleSlug) {
     return (
       <div
         className={styles.article}
@@ -637,9 +629,16 @@ const ArticleDetails = () => {
               <div style={{ textAlign: "center" }}>
                 {audioLoading && (
                   <div style={{ padding: "0.5rem" }}>
-                    <Spinner animation="border" role="status" size="sm">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>
+                    <div
+                      style={{
+                        width: "min(100%, 800px)",
+                        height: 40,
+                        background: "#e8e8e8",
+                        borderRadius: 20,
+                        margin: "0 auto",
+                        animation: "pulse 1.5s ease-in-out infinite",
+                      }}
+                    />
                   </div>
                 )}
                 {!audioLoading && audioUrl && audioExists && (
