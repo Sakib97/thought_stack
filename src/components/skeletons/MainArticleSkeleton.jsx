@@ -10,7 +10,8 @@ const MainArticleSkeleton = () => {
         height: "67vh",
         borderRadius: "6px",
         overflow: "hidden",
-        background: "#e8e8e8",
+        // background: "#e8e8e8",
+        background: "#f5f1f1",
       }}
     >
       {/* Image placeholder */}
@@ -29,8 +30,8 @@ const MainArticleSkeleton = () => {
           display: "flex",
           alignItems: "flex-end",
           padding: "5vh 7vw 2vh 5vw",
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0) 100%)",
+        //   background:
+        //     "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0) 100%)",
         }}
       >
         <Skeleton
@@ -39,7 +40,8 @@ const MainArticleSkeleton = () => {
             width: "60%",
             style: {
               height: 32,
-              background: "rgba(255,255,255,0.25)",
+            //   background: "rgba(255,255,255,0.25)",
+              background: "rgba(27, 26, 26, 0.19)",
               borderRadius: 4,
             },
           }}
@@ -49,8 +51,8 @@ const MainArticleSkeleton = () => {
             width: ["80%", "40%"],
           }}
           style={{
-            "--ant-skeleton-color": "rgba(255,255,255,0.2)",
-            "--ant-skeleton-to-color": "rgba(255,255,255,0.35)",
+            "--ant-skeleton-color": "rgba(27, 26, 26, 0.19)",
+            "--ant-skeleton-to-color": "rgba(27, 26, 26, 0.35)",
           }}
         />
       </div>
